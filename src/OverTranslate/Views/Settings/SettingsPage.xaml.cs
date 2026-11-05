@@ -1255,9 +1255,8 @@ public partial class SettingsPage : UserControl
     /// A resource reference rather than an assignment, so it survives a language change — the page
     /// rebuilds itself on one, and a plain Text assignment would come back in the old language.
     ///
-    /// A build with no endpoint is a supported state, not a broken one: it is what every build was
-    /// until the worker was deployed, and what a user gets by pointing OVERTRANSLATE_DIAG_ENDPOINT
-    /// at something that is not an address.
+    /// A build with no endpoint is a supported state, not a broken one: it is what this build ships
+    /// with, so the button only exports unless OVERTRANSLATE_DIAG_ENDPOINT names a server.
     /// </remarks>
     private void ApplyDiagnosticUploadAvailability()
     {

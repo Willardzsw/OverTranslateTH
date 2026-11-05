@@ -1,118 +1,39 @@
-# Privacy Policy
+# 隐私说明
 
+_最后更新：2026-11-05_
 
+OverTranslateTH 是基于 OverTranslate 修改的 Windows 屏幕翻译工具。本说明只适用于本仓库的版本，不适用于原项目。
 
-_Last updated: 2026-08-21_
+## 数据收集
 
+本程序没有用户账号、统计分析、广告追踪或遥测，也不会向本项目的维护者发送任何数据。
 
+程序不检查更新，不会向 GitHub 或原项目请求版本信息。
 
-OverTranslate is a Windows screen translation tool.
+## 截图和 OCR
 
+截图和 OCR 识别在你的电脑上本地完成，截图本身不会被上传。
 
+## 翻译和词典服务
 
-## Data Collection
+使用翻译、词典或朗读功能时，要处理的文字会发送给你选择的服务，这些数据由该服务按其隐私政策处理。可选服务包括 Bing、Google、DeepL、有道、腾讯翻译君、Yandex，以及你自己配置的 OpenAI 兼容接口。有道和腾讯的服务由中国大陆运营。
 
+## 下载
 
+设置里的可选 OCR 模型和显卡运行库，只有在你选择准备时才会下载，下载时会连接对应的下载站点。
 
-OverTranslate does not collect, store, track, or sell any personal information.
+## 密钥和设置
 
+API 密钥和其他设置保存在程序旁边的 `profile-thai` 文件夹，只用于程序运行，不会发送给本项目的维护者。填写的密钥会发送给对应的翻译服务，用于验证你的身份。
 
+## 日志和诊断
 
-This application does not provide user accounts, analytics tracking, advertising tracking, or telemetry collection.
+日志写在你自己的电脑上，不会自动发送。打开“记录详细信息”后，日志还会包含屏幕上识别到的文字，这个选项默认关闭。
 
+“导出诊断信息”会把日志、设备信息和当前设置打包成一个 zip 文件，保存在你的电脑上，其中的 API 密钥会替换为只说明长度的备注。这个文件会在创建 30 天后自动删除。
 
+本版本没有内置上传地址，诊断文件不会被上传。如果你要在反馈问题时附上它，请先自行检查里面的内容，公开的 Issue 任何人都能看到。
 
-The one thing that is ever sent to the developer is the diagnostic file described under "Logs and Diagnostics" below, and only when the user presses the button that sends it.
+## 联系方式
 
-
-
-## Screen Capture and OCR
-
-
-
-OverTranslate may process screenshots locally on the user's device for OCR and translation purposes.
-
-
-
-The screenshot or recognized text is used only to perform the translation requested by the user.
-
-
-
-## Third-Party Translation Services
-
-
-
-Depending on the translation provider configured by the user, recognized text may be sent to third-party translation services in order to generate translations.
-
-
-
-These services may include providers such as Microsoft Translator, Bing Translator, Google Translate, Youdao Translate, Tencent Translate (TranSmart), Yandex Translate, DeepL, OpenAI, or other translation APIs configured by the user. Youdao Translate and Tencent Translate are operated from mainland China; text is only sent to them when the user chooses one of them as the translation service.
-
-
-
-OverTranslate does not control how third-party services process data. Please refer to the privacy policy of the selected translation provider.
-
-
-
-## API Keys
-
-
-
-If the user configures an API key, the key is stored locally on the user's device for application functionality.
-
-
-
-OverTranslate does not upload API keys to any server operated by the developer.
-
-
-
-## Local Settings
-
-
-
-Application settings may be stored locally on the user's device.
-
-
-
-These settings are used only for application functionality.
-
-
-
-## Logs and Diagnostics
-
-
-
-OverTranslate writes a log file to the user's own device. It is never sent anywhere automatically.
-
-
-
-When "Record detailed information" is switched on in Settings, the log also records text recognised on screen. That setting is off by default and is intended for troubleshooting.
-
-
-
-Settings offers "Export and upload diagnostics", which packs the log files, information about the device, and the current settings into a single zip file stored with the application's own data on the user's device. API keys are replaced by a note giving only their length. That local copy is deleted automatically 30 days after it is created, whether or not it was uploaded.
-
-
-
-Pressing that button also uploads the file and returns a short code the user can quote in a problem report. This happens only when that button is pressed. There is no automatic upload, no background upload, and no crash reporting. Whether the upload succeeds or fails, the file remains on the user's device, and a user who does not want to upload anything can still attach it by hand.
-
-
-
-Uploaded files are held by Cloudflare (Workers KV) in an account operated by the project maintainer, under a name that cannot be worked out from the code shown to the user, and are deleted automatically 30 days after upload. No IP address or other identifier is stored with them: the only information kept alongside the file is the time of upload, the application version, and the operating system it reported. The code identifies an upload to the maintainer only — the application offers no way to browse or download uploaded files.
-
-
-
-The source code of the receiving endpoint is public and can be read at https://github.com/Hon-Lu/OverTranslate-Diag-Worker
-
-
-
-## Contact
-
-
-
-For questions about this privacy policy, please contact the project maintainer through GitHub:
-
-
-
-https://github.com/Hon-Lu/OverTranslate
-
+有关本说明的问题，请提交到[本仓库的 Issues](https://github.com/Willardzsw/OverTranslateTH/issues)。

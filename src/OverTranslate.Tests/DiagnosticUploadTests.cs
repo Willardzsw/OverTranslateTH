@@ -89,16 +89,14 @@ public class DiagnosticUploadTests
     }
 
     [Fact]
-    public void TheEndpointCompiledIn_IsAnAddressThatCanBeUploadedTo()
+    public void NoEndpointIsCompiledIn_SoNothingCanBeUploadedByDefault()
     {
         var saved = Environment.GetEnvironmentVariable("OVERTRANSLATE_DIAG_ENDPOINT");
         Environment.SetEnvironmentVariable("OVERTRANSLATE_DIAG_ENDPOINT", null);
         try
         {
-            // Not that it answers — that needs a network and belongs in a manual pass — but that a
-            // shipped build would try. A typo here turns the whole feature off silently.
-            Assert.True(DiagnosticUploadService.IsConfigured);
-            Assert.StartsWith("https://", DiagnosticUploadService.Endpoint);
+            // This build must not send logs to the upstream project's server.
+            Assert.False(DiagnosticUploadService.IsConfigured);
         }
         finally
         {

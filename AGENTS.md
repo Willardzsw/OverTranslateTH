@@ -13,6 +13,8 @@
 - Generated public/synthetic image reports live under .test-artifacts and must be labeled as such. Do not claim a live API call or user-game screenshot was tested unless it actually was.
 
 - User-approved compact UI: expose only text translation and settings, with text translation as the startup/default home. Keep screenshot OCR on that page and via its shortcut. Do not restore realtime navigation, realtime start/pause hotkeys, or the manga-model download card.
+- User-approved diagnostics policy: export only. Do not compile in an upload endpoint or send diagnostics to the upstream project's server.
+
 - OCR model selection belongs to OcrModels in the independent profile. Default preserves language routing. Explicit local selections must match supported source languages. The user rejected large local-service OCR models; Typhoon and its service configuration are removed. Do not add a large inference runtime or model without a new user request. Prefer lightweight in-process candidates and verify accuracy before offering a replacement.
 
 - User-approved single build location: `src/OverTranslate/bin/Release/net8.0-windows10.0.26100.0/win-x64/OverTranslate.exe`; the only user launch script is `Start-Thai.cmd`. The `OverTranslate-Thai-Dev` Windows startup entry must point to that latest executable. Keep its existing `profile-thai` in place.

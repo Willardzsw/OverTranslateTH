@@ -51,19 +51,15 @@ public sealed class DiagnosticUploadException(DiagnosticUploadFailure reason, st
 /// user's screen — which is exactly the log worth sending, and exactly why sending it can never be
 /// something that happens on its own.
 ///
-/// The receiving end is a Cloudflare Worker in front of an R2 bucket, kept in its own public
-/// repository so that what happens to the upload can be read rather than promised:
-/// https://github.com/Hon-Lu/OverTranslate-Diag-Worker
+/// This build ships with no receiving endpoint, so diagnostics are exported locally and nothing is
+/// uploaded unless <see cref="EndpointVariable"/> names a server the user chose.
 /// </remarks>
 public static class DiagnosticUploadService
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
-    /// Where bundles go. Baked into the build rather than fetched from anywhere: it is one string,
-    /// and standing up a remote configuration mechanism to hold one string costs more than it saves
-    /// — including in the failure mode, where a broken config endpoint would take the diagnostic
-    /// upload down with it.
+    /// Empty on purpose: the upstream project's server must not receive this build's logs.
     /// </summary>
     /// <remarks>
     /// Having none is still a working state rather than a broken one — <see cref="IsConfigured"/>
@@ -71,7 +67,7 @@ public static class DiagnosticUploadService
     /// That is what every build was before the worker existed.
     /// </remarks>
     private const string DefaultEndpoint =
-        "https://overtranslate-diag.overtranslate.workers.dev/v1/bundle";
+        "";
 
     /// <summary>
     /// Overrides <see cref="DefaultEndpoint"/>, for pointing a local build at a `wrangler dev`
