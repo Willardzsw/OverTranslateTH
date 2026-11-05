@@ -19,7 +19,7 @@ if (Test-Path $work) { Remove-Item $work -Recurse -Force }
 New-Item -ItemType Directory -Force $out | Out-Null
 
 dotnet publish $project -c Release -r win-x64 --self-contained true `
-    --artifacts-path (Join-Path $work "build") -o $stage -p:DebugType=none -p:DebugSymbols=false
+    --source https://api.nuget.org/v3/index.json --artifacts-path (Join-Path $work "build") -o $stage -p:DebugType=none -p:DebugSymbols=false
 if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed" }
 
 # Nothing personal or stray may reach a public package.
