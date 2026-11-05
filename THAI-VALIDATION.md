@@ -96,3 +96,12 @@ OverTranslate 官方项目 https://github.com/Hon-Lu/OverTranslate ；泰语 Pad
 - 显示名改为 OverTranslateTH，图标换为暖色双 T（`tools/icons/generate_app_icon.py`）；`OverTranslate.exe`、开机启动项名和 `profile-thai` 不变。
 - 移除官方版本检查、更新提示窗口和主窗口更新徽章；关于页移除 GitHub、官网、赞助入口，保留上游署名并可打开随程序分发的 `LICENSE.txt`、`THIRD-PARTY-NOTICES.txt`。
 - 关于页由 `LayoutProbe about` 离屏渲染核对，输出在 `.test-artifacts/rebrand/about/`，是合成渲染；未启动真实主程序，也未读取用户配置或密钥。
+
+## 恢复实时翻译入口（2026-11-05）
+
+- 应用户要求接回实时翻译的导航、会话控制、暂停快捷键、设置项和托盘行为；启动默认页仍是文字翻译，漫画模型不恢复。
+- 这里只记录自动化和离屏结果，未在真实游戏或视频上跑过实时翻译，也未发起真实翻译请求。
+
+## 1.0.0 发布（2026-11-05）
+
+- 用户报告实时翻译和通知图标实测没有问题。便携版和安装版由 `tools/release/build-release.ps1` 生成，版本号从上游基线 2.10.0 改为本项目自己的 1.0.0。

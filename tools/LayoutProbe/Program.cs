@@ -81,6 +81,9 @@ internal static class Program
                 case "about":
                     AboutLayout.Report(args.Length > 1 ? args[1] : ".test-artifacts/about");
                     break;
+                case "realtime-page":
+                    RealtimePageLayout.Report(args.Length > 1 ? args[1] : ".test-artifacts/realtime-page");
+                    break;
                 case "compact-ocr":
                     CompactOcrLayout.Report(args.Length > 1 ? args[1] : ".test-artifacts/compact-ocr");
                     break;

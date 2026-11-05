@@ -21,6 +21,9 @@ public partial class App
     [STAThread]
     private static void Main(string[] args)
     {
+        // Before any window or tray icon, which is when the shell settles who this process is.
+        NotificationIdentityService.Register();
+
         var app = new App();
         app.InitializeComponent();
         app.Run();

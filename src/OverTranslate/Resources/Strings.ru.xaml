@@ -682,4 +682,13 @@
     <sys:String x:Key="S.OcrModel.ActualDevice">Последнее устройство выполнения: {0}</sys:String>
     <sys:String x:Key="S.OcrModel.NextRun">Изменения применятся при следующем распознавании.</sys:String>
     <sys:String x:Key="S.OcrModel.DeviceUnavailable">Выбранный GPU недоступен (можно выбрать CPU)</sys:String>
+
+    <sys:String x:Key="S.Main.RealtimeRunningBody">Всплывающий перевод недоступен во время редактирования областей.</sys:String>
+    <sys:String x:Key="S.Main.RealtimeRunningTitle">Идет перевод в реальном времени</sys:String>
+    <sys:String x:Key="S.Realtime.SessionEndedTitle">Перевод в реальном времени завершен</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkey">Перевод в реальном времени</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">Нажмите сочетание, чтобы [[выбрать области и перевести]]</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">Если перевод не запущен, первое нажатие выбирает области, второе запускает перевод; во время перевода — пауза и продолжение.</sys:String>
+    <sys:String x:Key="S.Shell.RealtimeTranslate">Реальное время</sys:String>
+
 </ResourceDictionary>

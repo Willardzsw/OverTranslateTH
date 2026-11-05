@@ -261,6 +261,21 @@
                                     </StackPanel>
                                 </RadioButton>
 
+                                <!-- Its own destination rather than a mode of 文字翻譯: nothing on
+                                     that page applies here, and a session started from it keeps
+                                     running long after the user has navigated away. -->
+                                <RadioButton x:Name="RealtimeNav"
+                                             Style="{StaticResource NavItem}"
+                                             GroupName="ShellNav"
+                                             Checked="Nav_Checked">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Path Style="{StaticResource DrawnMark}"
+                                              Data="{StaticResource RealtimeMarkGeometry}"
+                                              Width="24"/>
+                                        <TextBlock Text="{DynamicResource S.Shell.RealtimeTranslate}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </RadioButton>
+
                                 <RadioButton x:Name="SettingsNav"
                                              Style="{StaticResource NavItem}"
                                              GroupName="ShellNav"

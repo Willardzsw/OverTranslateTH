@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using OverTranslate.Services;
+using OverTranslate.Views.Realtime;
 using OverTranslate.Views.Settings;
 using OverTranslate.Views.Translation;
 // UseWindowsForms puts System.Windows.Forms in the implicit usings, so these names collide
@@ -17,6 +18,7 @@ namespace OverTranslate.Views.Shell;
 public enum ShellPage
 {
     Translation,
+    Realtime,
     Settings
 }
 
@@ -28,6 +30,7 @@ public enum ShellPage
 public partial class ShellWindow : Window
 {
     private static ShellWindow? _instance;
+    private static ShellPage _lastPage = ShellPage.Translation;
 
     /// <summary>
     /// The open shell, or null when it is closed to the tray.
@@ -84,6 +87,7 @@ public partial class ShellWindow : Window
     private object? _contentTransition;
 
     private readonly TranslationPage _translationPage = new();
+    private readonly RealtimePage    _realtimePage    = new();
     private readonly SettingsPage    _settingsPage    = new();
 
     private ShellPage? _current;
@@ -103,7 +107,7 @@ public partial class ShellWindow : Window
     {
         // Read before the window is built: constructing one mounts a page, which writes _lastPage,
         // so asking for it after would only ever get back the page the constructor chose.
-        var target = page ?? ShellPage.Translation;
+        var target = page ?? _lastPage;
 
         if (_instance == null)
         {
@@ -231,6 +235,8 @@ public partial class ShellWindow : Window
     /// </summary>
     /// <summary>Puts the 即時翻譯 shortcut's refusal on the realtime page — see MainWindow.</summary>
 
+
+    public void ShowRealtimeShortcutRefusal(string key) => _realtimePage.ShowShortcutRefusal(key);
 
     public void RefreshHotkeyHints() { }
 
@@ -455,6 +461,7 @@ public partial class ShellWindow : Window
     private void Nav_Checked(object sender, RoutedEventArgs e)
     {
         var page =
+            ReferenceEquals(sender, RealtimeNav) ? ShellPage.Realtime :
             ReferenceEquals(sender, SettingsNav) ? ShellPage.Settings :
             ShellPage.Translation;
         if (_current == page) return;
@@ -464,14 +471,17 @@ public partial class ShellWindow : Window
     private void ShowPage(ShellPage page)
     {
         _current = page;
+        _lastPage = page;
 
         // These pages read state that can change while the user is elsewhere: shared translation
         // preferences, the settings file, and attached monitors plus realtime session state.
         if (page == ShellPage.Translation) _translationPage.Reload();
+        if (page == ShellPage.Realtime) _realtimePage.Reload();
         if (page == ShellPage.Settings) _settingsPage.Reload();
 
         ContentHost.Child = page switch
         {
+            ShellPage.Realtime => _realtimePage,
             ShellPage.Settings => _settingsPage,
             _                  => (UIElement)_translationPage
         };
@@ -482,6 +492,7 @@ public partial class ShellWindow : Window
 
     private System.Windows.Controls.RadioButton NavItemFor(ShellPage page) => page switch
     {
+        ShellPage.Realtime => RealtimeNav,
         ShellPage.Settings => SettingsNav,
         _                  => TranslationNav
     };
@@ -616,6 +627,9 @@ public partial class ShellWindow : Window
         // The window is destroyed on close (not hidden), so the pages' timers, TTS playback
         // and HTTP handles have to go with it.
         _translationPage.Teardown();
+        // Only detaches the page from the session controller: a realtime session already running is
+        // on the screen, not in this window, and closing the shell is not a request to end it.
+        _realtimePage.Teardown();
         // Only detaches the page from the session controller: a realtime session already running is
         // on the screen, not in this window, and closing the shell is not a request to end it.
         _instance = null;

@@ -712,4 +712,13 @@
     <sys:String x:Key="S.OcrModel.ActualDevice">上次實際執行裝置：{0}</sys:String>
     <sys:String x:Key="S.OcrModel.NextRun">設定將於下次辨識時生效。</sys:String>
     <sys:String x:Key="S.OcrModel.DeviceUnavailable">所選顯卡目前無法使用（可改選 CPU）</sys:String>
+
+    <sys:String x:Key="S.Main.RealtimeRunningBody">編輯翻譯區塊時無法使用取詞翻譯。</sys:String>
+    <sys:String x:Key="S.Main.RealtimeRunningTitle">即時翻譯進行中</sys:String>
+    <sys:String x:Key="S.Realtime.SessionEndedTitle">即時翻譯已結束</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkey">即時翻譯</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">按下快捷鍵開始[[框選翻譯]]</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">未啟動時按下快捷鍵開始框選，框選時再按一次開始翻譯；翻譯中可暫停或繼續。</sys:String>
+    <sys:String x:Key="S.Shell.RealtimeTranslate">即時翻譯</sys:String>
+
 </ResourceDictionary>

@@ -693,4 +693,13 @@
     <sys:String x:Key="S.OcrModel.ActualDevice">前回の実行デバイス：{0}</sys:String>
     <sys:String x:Key="S.OcrModel.NextRun">変更は次の認識から適用されます。</sys:String>
     <sys:String x:Key="S.OcrModel.DeviceUnavailable">選択した GPU は使用不可（CPU を選択可能）</sys:String>
+
+    <sys:String x:Key="S.Main.RealtimeRunningBody">ブロックの編集中はポップアップ翻訳を使用できません。</sys:String>
+    <sys:String x:Key="S.Main.RealtimeRunningTitle">リアルタイム翻訳の実行中</sys:String>
+    <sys:String x:Key="S.Realtime.SessionEndedTitle">リアルタイム翻訳を終了しました</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkey">リアルタイム翻訳</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">ショートカットで[[ブロックを選択して翻訳]]</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">停止中にショートカットを押すとブロック選択を開始し、選択中にもう一度押すと翻訳を開始します。翻訳中は一時停止／再開できます。</sys:String>
+    <sys:String x:Key="S.Shell.RealtimeTranslate">リアルタイム翻訳</sys:String>
+
 </ResourceDictionary>

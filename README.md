@@ -12,15 +12,23 @@
 
 - **文字翻译**：程序启动后的主页。
 - **截图翻译**：可从文字翻译页或快捷键进入，在屏幕上框选区域后识别并翻译。
+- **实时翻译**：框选屏幕区域后持续识别并翻译，也可用快捷键启动和暂停。
 - **泰语 OCR**：使用 PP-OCRv5 泰语识别模型，在本地运行。源语言需要明确选择“泰语 / TH”，`AUTO` 不会自动切换到泰语。
 - **保留原有语言**：英语、简体中文、繁体中文、日语、韩语的识别模型和路由不变。
 - **翻译服务**：沿用原项目的翻译服务，包括 OpenAI 兼容接口。需要密钥的服务由你在设置里自行填写。
 
-和原项目相比，界面只保留“文字翻译”和“设置”，移除了实时翻译入口、漫画模型下载和更新检查。
+和原项目相比，界面只保留“文字翻译”“实时翻译”和“设置”，移除了漫画模型下载和更新检查。
 
 ## 下载和运行
 
-目前没有提供安装包，需要从源码构建。环境要求：Windows x64、.NET 8 SDK。
+到 [Releases](https://github.com/Willardzsw/OverTranslateTH/releases/latest) 下载，需要 Windows 10/11 x64，不用另装 .NET：
+
+- **安装版** `OverTranslateTH-<版本>-win-x64-Setup.exe`：装到当前用户目录，不需要管理员权限。
+- **便携版** `OverTranslateTH-<版本>-win-x64-Portable.zip`：解压后运行 `OverTranslate.exe`。请解压到可写的文件夹，不要放进 `Program Files`。
+
+程序没有代码签名，Windows SmartScreen 可能提示“未知发布者”，可以选择“更多信息”“仍要运行”。程序不会自动更新，新版本需要手动下载；覆盖安装或替换程序文件时，请保留 `profile-thai` 文件夹。卸载时这个文件夹也会保留，其中含有你填写的 API 密钥，不再使用时请手动删除。
+
+从源码构建需要 .NET 8 SDK：
 
 ```powershell
 git clone https://github.com/Willardzsw/OverTranslateTH.git
@@ -29,7 +37,7 @@ dotnet build src\OverTranslate\OverTranslate.csproj -c Release
 .\Start-Thai.cmd
 ```
 
-配置、日志和资产都保存在程序旁边的 `profile-thai` 文件夹，不会读取已安装的 OverTranslate 的配置。
+配置、API 密钥、日志和资产都保存在程序旁边的 `profile-thai` 文件夹，不会读取已安装的 OverTranslate 的配置。不要把这个文件夹分享或上传给别人。
 
 如果同时运行原版，两者默认的全局快捷键相同，会发生冲突。
 

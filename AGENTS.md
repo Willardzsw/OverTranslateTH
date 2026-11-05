@@ -2,7 +2,7 @@
 
 - Work in E:\Claude\overtranslate; branch feature/thai-ocr, upstream base fddeb35b0e39264f135e3c9ab375ea61ff07fc93.
 - Preserve the installed OverTranslate application and its user profile. Never inspect, copy, print, or import API keys.
-- All development configuration/logs/assets use profile-thai beside each executable. Do not add automatic credential migration, installers, publishing, or upstream binary auto-update hooks.
+- All development configuration/logs/assets use profile-thai beside each executable. Do not add automatic credential migration or upstream binary auto-update hooks. Release packages are built only by `tools/release/build-release.ps1`, when the user asks, and must never contain `profile-thai`.
 - User-approved update policy: the app performs no official release checks or update notices at all. The user checks official versions themselves and asks before upstream source is merged, preserving Thai OCR and profile isolation. Never download/apply official packages.
 - User-approved branding: display name `OverTranslateTH` with the warm double-T icon from `tools/icons/generate_app_icon.py`. The executable stays `OverTranslate.exe`, and the startup entry and `profile-thai` stay unchanged. Keep the MIT LICENSE, THIRD-PARTY-NOTICES and the "based on OverTranslate" attribution in the About panel and build output.
 - Thai OCR must use the real thai/rec.onnx + matching dictionary. AUTO remains the existing CJK recognizer; select TH explicitly.
@@ -13,7 +13,7 @@
 - Generated public/synthetic image reports live under .test-artifacts and must be labeled as such. Do not claim a live API call or user-game screenshot was tested unless it actually was.
 
 - User-approved direction: a streamlined Thai office tool. The manga models, Velopack and installer/uninstall code are removed on purpose; do not restore them when merging upstream.
-- User-approved compact UI: expose only text translation and settings, with text translation as the startup/default home. Keep screenshot OCR on that page and via its shortcut. Do not restore realtime navigation, realtime start/pause hotkeys, or the manga-model download card.
+- User-approved UI: expose text translation, realtime translation and settings, with text translation as the startup home. Keep screenshot OCR on the text translation page and via its shortcut. Realtime navigation and its start/pause shortcut are back at the user's request. Do not restore the manga-model download card.
 - User-approved diagnostics policy: export only. Do not compile in an upload endpoint or send diagnostics to the upstream project's server.
 
 - OCR model selection belongs to OcrModels in the independent profile. Default preserves language routing. Explicit local selections must match supported source languages. The user rejected large local-service OCR models; Typhoon and its service configuration are removed. Do not add a large inference runtime or model without a new user request. Prefer lightweight in-process candidates and verify accuracy before offering a replacement.

@@ -693,4 +693,13 @@
     <sys:String x:Key="S.OcrModel.ActualDevice">최근 실행 장치: {0}</sys:String>
     <sys:String x:Key="S.OcrModel.NextRun">변경 사항은 다음 인식부터 적용됩니다.</sys:String>
     <sys:String x:Key="S.OcrModel.DeviceUnavailable">선택한 GPU 사용 불가 (CPU 선택 가능)</sys:String>
+
+    <sys:String x:Key="S.Main.RealtimeRunningBody">블록 편집 중에는 팝업 번역을 사용할 수 없습니다.</sys:String>
+    <sys:String x:Key="S.Main.RealtimeRunningTitle">실시간 번역 실행 중</sys:String>
+    <sys:String x:Key="S.Realtime.SessionEndedTitle">실시간 번역을 종료했습니다</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkey">실시간 번역</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">단축키를 눌러 [[블록을 선택하고 번역]]</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">중지 상태에서 단축키를 누르면 블록 선택을 시작하고, 선택 중에 다시 누르면 번역을 시작합니다. 번역 중에는 일시 정지·재개할 수 있습니다.</sys:String>
+    <sys:String x:Key="S.Shell.RealtimeTranslate">실시간 번역</sys:String>
+
 </ResourceDictionary>

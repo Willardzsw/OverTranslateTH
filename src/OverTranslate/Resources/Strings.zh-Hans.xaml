@@ -689,4 +689,13 @@
     <sys:String x:Key="S.OcrModel.ActualDevice">上次实际运行设备：{0}</sys:String>
     <sys:String x:Key="S.OcrModel.NextRun">设置将在下次识别时生效。</sys:String>
     <sys:String x:Key="S.OcrModel.DeviceUnavailable">所选显卡当前不可用（可改选 CPU）</sys:String>
+
+    <sys:String x:Key="S.Main.RealtimeRunningBody">编辑翻译区块时无法使用取词翻译。</sys:String>
+    <sys:String x:Key="S.Main.RealtimeRunningTitle">实时翻译进行中</sys:String>
+    <sys:String x:Key="S.Realtime.SessionEndedTitle">实时翻译已结束</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkey">实时翻译</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">按下快捷键开始[[框选翻译]]</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">未启动时按下快捷键开始框选，框选时再按一次开始翻译；翻译中可暂停或继续。</sys:String>
+    <sys:String x:Key="S.Shell.RealtimeTranslate">实时翻译</sys:String>
+
 </ResourceDictionary>

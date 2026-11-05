@@ -691,4 +691,13 @@ same settings, the same seed usually gives the same output.</sys:String>
     <sys:String x:Key="S.OcrModel.ActualDevice">Last execution device: {0}</sys:String>
     <sys:String x:Key="S.OcrModel.NextRun">Changes apply to the next recognition.</sys:String>
     <sys:String x:Key="S.OcrModel.DeviceUnavailable">Selected GPU unavailable (CPU can be selected)</sys:String>
+
+    <sys:String x:Key="S.Main.RealtimeRunningBody">Quick lookup isn't available while editing blocks.</sys:String>
+    <sys:String x:Key="S.Main.RealtimeRunningTitle">Realtime translation is running</sys:String>
+    <sys:String x:Key="S.Realtime.SessionEndedTitle">Realtime translation ended</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkey">Realtime translation</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">Press the shortcut to [[select blocks and translate]]</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">When it is not running, press the shortcut to select blocks, then press it again to start translating; while translating, it pauses and resumes.</sys:String>
+    <sys:String x:Key="S.Shell.RealtimeTranslate">Realtime</sys:String>
+
 </ResourceDictionary>

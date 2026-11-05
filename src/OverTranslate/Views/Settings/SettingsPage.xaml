@@ -1045,7 +1045,92 @@
                         <!-- Pausing a running session. The only realtime shortcut there is: block
                              framing had one above this until a session started by naming a window on
                              the page, which is not something a shortcut can answer. -->
+                        <Border Style="{StaticResource HotkeyRow}">
+                            <StackPanel>
+                                <Grid>
+                                    <!-- The shortcut box grows with the window rather than sitting
+                                         at a fixed width: while recording it holds a whole sentence
+                                         asking for a key, which no width that also suits a card
+                                         beside another card can show in full. MinWidth is on the
+                                         column, not the box — a star column will squeeze a child
+                                         past its own minimum and clip it, and the rows have to keep
+                                         ending at the same place.
 
+                                         The name and description column has no minimum of its own:
+                                         it is the one thing here that can give, and at the narrowest
+                                         window it has to, or the switch on the end is pushed out of
+                                         the card and the row loses a control instead of losing a
+                                         line of prose. -->
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="0.72*" MinWidth="140"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="HotkeyToggle"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0" Style="{StaticResource HotkeyRowIcon}">
+                                        <Path Style="{StaticResource DrawnMark}"
+                                              Data="{StaticResource RealtimeMarkGeometry}"
+                                              Stroke="{DynamicResource AppAccent}"/>
+                                    </Border>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
+                                        <TextBlock Text="{DynamicResource S.Settings.RealtimePauseHotkey}"
+                                                   Style="{StaticResource OptionTitle}"/>
+                                        <TextBlock controls:HighlightedText.Source="{DynamicResource S.Settings.RealtimePauseHotkeyHint}"
+                                                   Style="{StaticResource OptionDescription}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxHeight="34"/>
+                                    </StackPanel>
+
+                                    <TextBox Grid.Column="2" x:Name="RealtimePauseHotkeyBox"
+                                             Style="{StaticResource HotkeyBox}"
+                                             PreviewMouseLeftButtonDown="HotkeyBox_PreviewMouseLeftButtonDown"
+                                             PreviewKeyDown="HotkeyBox_PreviewKeyDown"
+                                             PreviewKeyUp="HotkeyBox_PreviewKeyUp"
+                                             GotFocus="HotkeyBox_GotFocus"
+                                             LostFocus="HotkeyBox_LostFocus"/>
+
+                                    <StackPanel Grid.Column="3"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Margin="12,0,0,0">
+                                        <CheckBox x:Name="RealtimePauseHotkeyEnabledCheckBox"
+                                                  Style="{StaticResource ToggleSwitch}"
+                                                  Checked="HotkeyEnabled_Toggled"
+                                                  Unchecked="HotkeyEnabled_Toggled"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- When this shortcut does nothing, inside the row it is about
+                                     rather than under the three of them: nothing here applies to
+                                     the other two. -->
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Path Grid.Column="0"
+                                          Data="{StaticResource InfoMarkGeometry}"
+                                          Stroke="{DynamicResource AppTextSecondary}"
+                                          StrokeThickness="1.1"
+                                          StrokeStartLineCap="Round"
+                                          StrokeEndLineCap="Round"
+                                          Stretch="None"
+                                          Width="12" Height="12"
+                                          VerticalAlignment="Top"
+                                          Margin="0,1.7,8,0"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="{DynamicResource S.Settings.RealtimePauseHotkeyNote}"
+                                               Style="{StaticResource FieldHint}"
+                                               Margin="0"
+                                               VerticalAlignment="Top"/>
+                                </Grid>
+
+                                <ContentControl x:Name="RealtimePauseElevatedNote" Style="{StaticResource HotkeyElevatedNote}"/>
+                            </StackPanel>
+                        </Border>
 
                     </StackPanel>
                 </Border>

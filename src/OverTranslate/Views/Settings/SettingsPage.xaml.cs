@@ -149,6 +149,17 @@ public partial class SettingsPage : UserControl
                 AdvertisedInShell: false,
                 WindowHotkeyEnabledCheckBox,
                 (s, on) => s.TranslationWindowHotkeyEnabled = on),
+            new HotkeyField(
+                HotkeyAction.RealtimePause,
+                "S.Settings.RealtimePauseHotkey",
+                RealtimePauseHotkeyBox,
+                RealtimePauseElevatedNote,
+                s => s.RealtimePauseHotkeyDisplay,
+                s => HotkeyBindings.TriggerFor(s, HotkeyAction.RealtimePause),
+                ApplyRealtimePauseTrigger,
+                AdvertisedInShell: false,
+                RealtimePauseHotkeyEnabledCheckBox,
+                (s, on) => s.RealtimePauseHotkeyEnabled = on),
         ];
 
         _hotkeyGamepadRecordTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(45) };
@@ -205,7 +216,7 @@ public partial class SettingsPage : UserControl
             // The ticks, then the "a shortcut above took this" lines the ticks can change. The
             // availability pass is explicit because the toggle handler ignores changes made while
             // loading, so nothing else would grey these rows out on the way in.
-            foreach (var binding in HotkeyBindings.Resolve(s, includeRealtime: false))
+            foreach (var binding in HotkeyBindings.Resolve(s))
                 if (FieldFor(binding.Action)?.EnabledBox is { } box)
                     box.IsChecked = binding.Enabled;
 
@@ -1402,7 +1413,21 @@ public partial class SettingsPage : UserControl
         }
     }
 
-
+    private static void ApplyRealtimePauseTrigger(AppSettings s, ShortcutTrigger trigger, string display)
+    {
+        s.RealtimePauseHotkeyInputKind = trigger.Kind;
+        s.RealtimePauseHotkeyDisplay = display;
+        if (trigger.Kind == ShortcutInputKind.Keyboard)
+        {
+            s.RealtimePauseHotkeyModifiers = trigger.Modifiers;
+            s.RealtimePauseHotkeyVirtualKey = trigger.VirtualKey;
+            s.RealtimePauseHotkeyGamepadButton = GamepadShortcutButton.None;
+        }
+        else if (trigger.Kind == ShortcutInputKind.Gamepad)
+        {
+            s.RealtimePauseHotkeyGamepadButton = trigger.GamepadButton;
+        }
+    }
 
     private static void ApplyQuickLookupTrigger(AppSettings s, ShortcutTrigger trigger, string display)
     {
