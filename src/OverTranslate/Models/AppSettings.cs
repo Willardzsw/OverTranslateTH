@@ -259,7 +259,7 @@ public class AppSettings
     /// Compared as a version rather than for equality, so it silences that release and nothing later:
     /// skipping 1.9.0 leaves 1.9.1 free to prompt again. It suppresses only the startup dialog — the
     /// nav rail still offers the update — because what the user declined was being interrupted, not
-    /// the update itself. See <see cref="Services.UpdateNotifier"/>.
+    /// the update itself. Kept so existing profiles stay readable; this build no longer checks for releases.
     /// </remarks>
     public string SkippedUpdateVersion { get; set; } = "";
 

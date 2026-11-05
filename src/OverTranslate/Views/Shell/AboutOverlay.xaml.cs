@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using NLog;
 using OverTranslate.Services;
 // UseWindowsForms puts System.Windows.Forms in the implicit usings, so these names collide
 using UserControl = System.Windows.Controls.UserControl;
@@ -18,13 +19,7 @@ namespace OverTranslate.Views.Shell;
 /// </summary>
 public partial class AboutOverlay : UserControl
 {
-    // The site reads the browser's language and redirects itself, so there is one URL for every
-    // interface language rather than a per-locale table like DocumentationLinks keeps.
-    private const string WebsiteUrl = "https://hon-lu.github.io/OverTranslate/";
-
-    private const string GitHubUrl = "https://github.com/Hon-Lu/OverTranslate";
-
-    private const string SponsorUrl = "https://buymeacoffee.com/hon.lu";
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     private static readonly Duration FadeDuration = new(TimeSpan.FromMilliseconds(140));
 
@@ -115,12 +110,20 @@ public partial class AboutOverlay : UserControl
         base.OnKeyDown(e);
     }
 
-    private void WebsiteBtn_Click(object sender, RoutedEventArgs e) => OpenInBrowser(WebsiteUrl);
+    private void LicenseBtn_Click(object sender, RoutedEventArgs e) => OpenShippedNotice("LICENSE.txt");
 
-    private void StarBtn_Click(object sender, RoutedEventArgs e) => OpenInBrowser(GitHubUrl);
+    private void ThirdPartyBtn_Click(object sender, RoutedEventArgs e) => OpenShippedNotice("THIRD-PARTY-NOTICES.txt");
 
-    private void SponsorBtn_Click(object sender, RoutedEventArgs e) => OpenInBrowser(SponsorUrl);
-
-    private static void OpenInBrowser(string url)
-        => Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+    private static void OpenShippedNotice(string fileName)
+    {
+        var path = System.IO.Path.Combine(AppContext.BaseDirectory, fileName);
+        try
+        {
+            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            Log.Warn(ex, "Could not open {0}", path);
+        }
+    }
 }

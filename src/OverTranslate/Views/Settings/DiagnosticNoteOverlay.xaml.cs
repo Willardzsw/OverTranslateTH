@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Navigation;
 using NLog;
 using OverTranslate.Services;
 // UseWindowsForms puts System.Windows.Forms in the implicit usings, so these names collide
@@ -285,18 +284,4 @@ public partial class DiagnosticNoteOverlay : UserControl
         NotePlaceholder.Visibility =
             NoteBox.Text.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
 
-    private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-    {
-        try
-        {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
-        }
-        catch (Exception ex)
-        {
-            // A browser that will not open is not a reason to lose the panel the user is standing in
-            Log.Warn(ex, "Could not open {0}", e.Uri.AbsoluteUri);
-        }
-
-        e.Handled = true;
-    }
 }

@@ -32,7 +32,6 @@
     <sys:String x:Key="S.Shell.ShowSidebar">展開側邊欄</sys:String>
     <sys:String x:Key="S.Shell.Pin">釘選後，視窗會常駐最上層</sys:String>
     <sys:String x:Key="S.Shell.Unpin">取消釘選</sys:String>
-    <sys:String x:Key="S.Shell.UpdateAvailable">可更新至 v{0}</sys:String>
 
     <!-- ── Tray menu ── -->
     <sys:String x:Key="S.Tray.OpenWindow">開啟翻譯視窗</sys:String>
@@ -41,10 +40,9 @@
     <sys:String x:Key="S.Tray.Exit">結束</sys:String>
 
     <!-- ── About ── -->
-    <sys:String x:Key="S.About.Website">前往官方網站</sys:String>
-    <sys:String x:Key="S.About.Star">GitHub 給顆 Star 支持</sys:String>
-    <sys:String x:Key="S.About.Sponsor">贊助</sys:String>
-    <sys:String x:Key="S.About.SponsorTip">透過 Buy Me a Coffee 贊助</sys:String>
+    <sys:String x:Key="S.About.BasedOn">基於 OverTranslate 修改 · © 2026 Hon-Lu · MIT 授權</sys:String>
+    <sys:String x:Key="S.About.License">開源授權</sys:String>
+    <sys:String x:Key="S.About.ThirdParty">第三方聲明</sys:String>
     <sys:String x:Key="S.About.Version">版本 {0}</sys:String>
     <sys:String x:Key="S.About.OpenSource">免費開源，可自由使用。</sys:String>
 
@@ -54,8 +52,6 @@
     <sys:String x:Key="S.Toast.CopyFailed">複製失敗，請稍後再試。</sys:String>
 
     <!-- ── Update ── -->
-    <sys:String x:Key="S.Update.Later">稍後再說</sys:String>
-    <sys:String x:Key="S.Update.Skip">跳過此版本，不要再提醒我</sys:String>
 
     <!-- ── Service errors ──
          These reach the user through an exception message shown in a balloon or status line, so
@@ -238,7 +234,7 @@
     <sys:String x:Key="S.Secret.Hide">隱藏內容</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslate 已最小化</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslateTH 已最小化</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">程式已縮小至系統匣，可使用 {0} 開始進行截圖翻譯。</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">已設定的快捷鍵</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">缺少 API Key</sys:String>
@@ -665,7 +661,6 @@
     <sys:String x:Key="S.Settings.NoteSending">上傳中…</sys:String>
     <sys:String x:Key="S.Settings.NoteUploadFailed">這次沒有上傳成功。檔案還在你的電腦上，可以再試一次。</sys:String>
     <sys:String x:Key="S.Settings.NoteAttachFailed">無法將訊息寫入診斷檔案，因此沒有送出任何資料，請再試一次。</sys:String>
-    <sys:String x:Key="S.Settings.NoteReportManually">改用 GitHub 回報</sys:String>
     <sys:String x:Key="S.Settings.HotkeyTaken">✗ {0} 已指派給「{1}」</sys:String>
 
     <!-- ── 語言名稱 ── -->
@@ -733,12 +728,6 @@
     <sys:String x:Key="S.Debug.ScopeHint" xml:space="preserve">僅原文：框線只顯示於原文畫面&#x0A;原文與譯文：原文、譯文畫面皆顯示框線</sys:String>
 
     <!-- Thai fork: notification only, with no official binary installer. -->
-    <sys:String x:Key="S.Update.NotifyHeading">官方有新版本</sys:String>
-    <sys:String x:Key="S.Update.NotifyExplanation">泰語版僅提示更新。請回到聊天中提供新版本號，合併官方原始碼並驗證泰語功能後再更新。</sys:String>
-    <sys:String x:Key="S.Update.OfficialBaseline">目前官方基準：v{0}</sys:String>
-    <sys:String x:Key="S.Update.OfficialLatest">官方最新版本：v{0}</sys:String>
-    <sys:String x:Key="S.Update.OpenOfficialNotes">查看官方更新說明</sys:String>
-    <sys:String x:Key="S.Update.OpenNotesFailed">無法開啟瀏覽器，請稍後重試。</sys:String>
 
     <!-- Installed local OCR model selection. -->
     <sys:String x:Key="S.OcrModel.Title">OCR 辨識模型</sys:String>

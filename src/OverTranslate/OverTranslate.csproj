@@ -29,6 +29,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>icons\app.ico</ApplicationIcon>
     <StartupObject>OverTranslate.App</StartupObject>
+    <Product>OverTranslateTH</Product>
+    <AssemblyTitle>OverTranslateTH</AssemblyTitle>
     <Version>2.10.0</Version>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <!-- WFAC010 tells WinForms apps to declare DPI awareness through Application.SetHighDpiMode.
@@ -82,6 +84,13 @@
          first place the loader looks. -->
     <None Include="vcruntime\*.dll">
       <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <!-- MIT and third-party notices must travel with every copy of the build; the About panel opens these. -->
+    <None Include="..\..\LICENSE" Link="LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\THIRD-PARTY-NOTICES.txt" Link="THIRD-PARTY-NOTICES.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <!-- Also as a file: the notification registration points Windows at it (NotificationIdentityService). -->

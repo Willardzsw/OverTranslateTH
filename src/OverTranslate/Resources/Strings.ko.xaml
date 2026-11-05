@@ -31,7 +31,6 @@
     <sys:String x:Key="S.Shell.ShowSidebar">사이드바 펼치기</sys:String>
     <sys:String x:Key="S.Shell.Pin">창을 항상 위에 표시합니다</sys:String>
     <sys:String x:Key="S.Shell.Unpin">고정 해제</sys:String>
-    <sys:String x:Key="S.Shell.UpdateAvailable">v{0}(으)로 업데이트</sys:String>
 
     <!-- ── Tray menu ── -->
     <sys:String x:Key="S.Tray.OpenWindow">번역 창 열기</sys:String>
@@ -40,10 +39,9 @@
     <sys:String x:Key="S.Tray.Exit">종료</sys:String>
 
     <!-- ── About ── -->
-    <sys:String x:Key="S.About.Website">공식 웹사이트 열기</sys:String>
-    <sys:String x:Key="S.About.Star">GitHub에서 Star로 응원하기</sys:String>
-    <sys:String x:Key="S.About.Sponsor">후원하기</sys:String>
-    <sys:String x:Key="S.About.SponsorTip">Buy Me a Coffee로 후원하기</sys:String>
+    <sys:String x:Key="S.About.BasedOn">OverTranslate 기반 수정본 · © 2026 Hon-Lu · MIT 라이선스</sys:String>
+    <sys:String x:Key="S.About.License">라이선스</sys:String>
+    <sys:String x:Key="S.About.ThirdParty">타사 고지</sys:String>
     <sys:String x:Key="S.About.Version">버전 {0}</sys:String>
     <sys:String x:Key="S.About.OpenSource">무료 오픈 소스로 자유롭게 사용할 수 있습니다.</sys:String>
 
@@ -53,8 +51,6 @@
     <sys:String x:Key="S.Toast.CopyFailed">복사하지 못했습니다. 잠시 후 다시 시도해 주세요.</sys:String>
 
     <!-- ── Update ── -->
-    <sys:String x:Key="S.Update.Later">나중에</sys:String>
-    <sys:String x:Key="S.Update.Skip">이 버전 건너뛰고 다시 알리지 않기</sys:String>
 
     <!-- ── Service errors ── -->
     <sys:String x:Key="S.Error.OpenAiHttp">OpenAI 호환 API가 {0}을(를) 반환했습니다: {1}</sys:String>
@@ -232,7 +228,7 @@
     <sys:String x:Key="S.Secret.Hide">숨기기</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslate가 실행 중입니다</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslateTH가 실행 중입니다</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">시스템 트레이로 최소화했습니다. {0} 키로 캡처 번역을 시작할 수 있습니다.</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">설정한 단축키</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">API 키가 없습니다</sys:String>
@@ -644,7 +640,6 @@
     <sys:String x:Key="S.Settings.NoteSending">업로드 중…</sys:String>
     <sys:String x:Key="S.Settings.NoteUploadFailed">이번에는 업로드하지 못했습니다. 파일은 내 PC에 남아 있으니 다시 시도할 수 있습니다.</sys:String>
     <sys:String x:Key="S.Settings.NoteAttachFailed">메시지를 진단 파일에 쓰지 못해 아무것도 전송하지 않았습니다. 다시 시도해 주세요.</sys:String>
-    <sys:String x:Key="S.Settings.NoteReportManually">GitHub로 신고하기</sys:String>
     <sys:String x:Key="S.Settings.HotkeyTaken">✗ {0}은(는) 이미 ‘{1}’에 지정되어 있습니다</sys:String>
 
     <!-- ── Language names ── -->
@@ -714,12 +709,6 @@
     <sys:String x:Key="S.Debug.ScopeHint" xml:space="preserve">원문만: 테두리를 원문 화면에만 표시합니다.&#x0A;원문과 번역: 원문과 번역 화면 모두에 테두리를 표시합니다</sys:String>
 
     <!-- Thai fork: notification only, with no official binary installer. -->
-    <sys:String x:Key="S.Update.NotifyHeading">공식 새 버전 안내</sys:String>
-    <sys:String x:Key="S.Update.NotifyExplanation">이 태국어 버전은 업데이트를 알리기만 합니다. 채팅에서 새 버전을 알려 공식 소스 병합과 태국어 기능 검증 후 업데이트하세요.</sys:String>
-    <sys:String x:Key="S.Update.OfficialBaseline">현재 공식 기반 버전: v{0}</sys:String>
-    <sys:String x:Key="S.Update.OfficialLatest">최신 공식 버전: v{0}</sys:String>
-    <sys:String x:Key="S.Update.OpenOfficialNotes">공식 변경 사항 보기</sys:String>
-    <sys:String x:Key="S.Update.OpenNotesFailed">브라우저를 열 수 없습니다. 나중에 다시 시도하세요.</sys:String>
 
     <!-- Installed local OCR model selection. -->
     <sys:String x:Key="S.OcrModel.Title">OCR 인식 모델</sys:String>

@@ -107,7 +107,7 @@ public partial class MainWindow : Window
         _notifyIcon = new NotifyIcon
         {
             Icon = AppIconService.CreateTrayIcon(),
-            Text = "OverTranslate",
+            Text = "OverTranslateTH",
             Visible = true
         };
 

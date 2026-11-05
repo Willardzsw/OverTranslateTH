@@ -109,20 +109,9 @@ public partial class App
         MainWindow = mainWindow;
         mainWindow.InitializeApp();
 
-        // Notification only: one public release check at startup; no polling or installer.
-        _ = PromptForUpdateAsync();
-
         // A manga model download the app was closed in the middle of is not kept. Here, past the
         // single-instance check, rather than when the store is built: a second launch must not clear
         // the folder the running instance is downloading into.
-    }
-
-    /// <summary>Show a notification for an official release; merging remains a manual task.</summary>
-    private static async Task PromptForUpdateAsync()
-    {
-        var info = await UpdateNotifier.CheckAsync();
-        if (info is null || UpdateNotifier.IsSkipped(info)) return;
-        Current.Dispatcher.Invoke(() => UpdateWindow.ShowOrActivate(info));
     }
 
     private void MonitorActivationRequests()

@@ -87,22 +87,9 @@ dotnet run --project tools/OcrHarness -c Release -- --ocr-performance .test-arti
 
 ## 更新方式
 
-- 启动时仅检查一次官方仓库的最新正式 Release；不定时检查，不检查每一次源码提交。
-- 检查只请求公开版本信息，不需要密钥，不下载或安装官方更新包。
-- 发现比当前官方基线更高的版本时，显示版本提示；可以查看官方更新说明、稍后处理或跳过此版本。稍后仍可点击主窗口的新版提示查看。
-- 用户将新版本号发到聊天后，再合并官方源码，保留泰语 OCR 与独立配置，并完成构建、回归和实际画面验收。提示本身不会执行合并。
-- 无网络、请求超时或 GitHub 限流时，本次检查静默结束，不影响 OCR/翻译；下次启动再检查。
-- 更新保留原位置的 `profile-thai/`，不读取或迁移密钥。当前官方基线来自项目的版本号，合并新基线时一并更新。
-
-更新提示专项验证（不读取用户配置或密钥）：
-
-```powershell
-dotnet test src\OverTranslate.Tests\OverTranslate.Tests.csproj -c Release --no-restore --filter "FullyQualifiedName~UpstreamReleaseServiceTests|FullyQualifiedName~ThaiOcrTests|FullyQualifiedName~StringsParityTests"
-dotnet run --project tools\LayoutProbe --no-restore --no-launch-profile -- update-notice .test-artifacts\update-notice
-dotnet run --project tools\LayoutProbe --no-restore --no-launch-profile -- official-release-check
-```
-
-`update-notice` 使用虚构版本 `99.0.0` 渲染界面，不会联网、显示窗口或触发下载；`official-release-check` 只请求官方公开版本接口。验证结果见 `THAI-VALIDATION.md` 文末。
+- 程序不检查官方版本，启动和运行时都不会请求官方 Release 接口，也不提示更新。
+- 需要跟进官方版本时，用户自己在项目里查看，再要求合并官方源码；合并时保留泰语 OCR 与独立配置，并完成构建、回归和实际画面验收。
+- 更新保留原位置的 `profile-thai/`，不读取或迁移密钥。
 
 ## 构建和验证
 

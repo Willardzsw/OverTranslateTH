@@ -33,7 +33,6 @@
     <sys:String x:Key="S.Shell.ShowSidebar">Показать боковую панель</sys:String>
     <sys:String x:Key="S.Shell.Pin">Закрепить окно поверх остальных</sys:String>
     <sys:String x:Key="S.Shell.Unpin">Открепить</sys:String>
-    <sys:String x:Key="S.Shell.UpdateAvailable">Обновить до v{0}</sys:String>
 
     <!-- ── Tray menu ── -->
     <sys:String x:Key="S.Tray.OpenWindow">Открыть окно перевода</sys:String>
@@ -42,10 +41,9 @@
     <sys:String x:Key="S.Tray.Exit">Выход</sys:String>
 
     <!-- ── About ── -->
-    <sys:String x:Key="S.About.Website">Открыть сайт</sys:String>
-    <sys:String x:Key="S.About.Star">Звезда на GitHub</sys:String>
-    <sys:String x:Key="S.About.Sponsor">Поддержать</sys:String>
-    <sys:String x:Key="S.About.SponsorTip">Поддержать через Buy Me a Coffee</sys:String>
+    <sys:String x:Key="S.About.BasedOn">На основе OverTranslate · © 2026 Hon-Lu · MIT</sys:String>
+    <sys:String x:Key="S.About.License">Лицензия</sys:String>
+    <sys:String x:Key="S.About.ThirdParty">Компоненты</sys:String>
     <sys:String x:Key="S.About.Version">Версия {0}</sys:String>
     <sys:String x:Key="S.About.OpenSource">Бесплатно и с открытым исходным кодом.</sys:String>
 
@@ -55,8 +53,6 @@
     <sys:String x:Key="S.Toast.CopyFailed">Не удалось скопировать. Повторите попытку позже.</sys:String>
 
     <!-- ── Update ── -->
-    <sys:String x:Key="S.Update.Later">Позже</sys:String>
-    <sys:String x:Key="S.Update.Skip">Пропустить эту версию и больше не напоминать</sys:String>
 
     <!-- ── Service errors ── -->
     <sys:String x:Key="S.Error.OpenAiHttp">API, совместимый с OpenAI, вернул {0}: {1}</sys:String>
@@ -225,7 +221,7 @@
     <sys:String x:Key="S.Secret.Hide">Скрыть</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslate продолжает работать</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslateTH продолжает работать</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">Программа свернута в область уведомлений. Нажмите {0}, чтобы начать перевод снимка экрана.</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">сочетание клавиш</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">Нет ключа API</sys:String>
@@ -636,7 +632,6 @@
     <sys:String x:Key="S.Settings.NoteSending">Отправка…</sys:String>
     <sys:String x:Key="S.Settings.NoteUploadFailed">Отправить не удалось. Файл остался на вашем устройстве, можно попробовать еще раз.</sys:String>
     <sys:String x:Key="S.Settings.NoteAttachFailed">Не удалось записать ваше сообщение в файл, поэтому ничего не отправлено. Повторите попытку.</sys:String>
-    <sys:String x:Key="S.Settings.NoteReportManually">Сообщить на GitHub</sys:String>
     <sys:String x:Key="S.Settings.HotkeyTaken">✗ {0} уже назначено для «{1}»</sys:String>
 
     <!-- ── Language names ── -->
@@ -703,12 +698,6 @@
     <sys:String x:Key="S.Debug.ScopeHint" xml:space="preserve">Только оригинал: рамки рисуются только в окне оригинала.&#x0A;Оригинал и перевод: рамки рисуются и в окне оригинала, и в окне перевода</sys:String>
 
     <!-- Thai fork: notification only, with no official binary installer. -->
-    <sys:String x:Key="S.Update.NotifyHeading">Новая официальная версия</sys:String>
-    <sys:String x:Key="S.Update.NotifyExplanation">Эта тайская сборка только уведомляет об обновлениях. Сообщите новую версию в чате для объединения официального кода и проверки поддержки тайского языка перед обновлением.</sys:String>
-    <sys:String x:Key="S.Update.OfficialBaseline">Текущая официальная база: v{0}</sys:String>
-    <sys:String x:Key="S.Update.OfficialLatest">Последняя официальная версия: v{0}</sys:String>
-    <sys:String x:Key="S.Update.OpenOfficialNotes">Открыть описание выпуска</sys:String>
-    <sys:String x:Key="S.Update.OpenNotesFailed">Не удалось открыть браузер. Повторите попытку позже.</sys:String>
 
     <!-- Installed local OCR model selection. -->
     <sys:String x:Key="S.OcrModel.Title">Модель распознавания OCR</sys:String>

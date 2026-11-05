@@ -30,7 +30,6 @@
     <sys:String x:Key="S.Shell.ShowSidebar">Show sidebar</sys:String>
     <sys:String x:Key="S.Shell.Pin">Pin the window on top of other windows</sys:String>
     <sys:String x:Key="S.Shell.Unpin">Unpin</sys:String>
-    <sys:String x:Key="S.Shell.UpdateAvailable">Update to v{0}</sys:String>
 
     <!-- ── Tray menu ── -->
     <sys:String x:Key="S.Tray.OpenWindow">Open translation window</sys:String>
@@ -39,10 +38,9 @@
     <sys:String x:Key="S.Tray.Exit">Exit</sys:String>
 
     <!-- ── About ── -->
-    <sys:String x:Key="S.About.Website">Visit the website</sys:String>
-    <sys:String x:Key="S.About.Star">Star on GitHub</sys:String>
-    <sys:String x:Key="S.About.Sponsor">Support</sys:String>
-    <sys:String x:Key="S.About.SponsorTip">Support via Buy Me a Coffee</sys:String>
+    <sys:String x:Key="S.About.BasedOn">Based on OverTranslate · © 2026 Hon-Lu · MIT License</sys:String>
+    <sys:String x:Key="S.About.License">License</sys:String>
+    <sys:String x:Key="S.About.ThirdParty">Third-party notices</sys:String>
     <sys:String x:Key="S.About.Version">Version {0}</sys:String>
     <sys:String x:Key="S.About.OpenSource">Free and open source.</sys:String>
 
@@ -52,8 +50,6 @@
     <sys:String x:Key="S.Toast.CopyFailed">Copy failed. Please try again later.</sys:String>
 
     <!-- ── Update ── -->
-    <sys:String x:Key="S.Update.Later">Later</sys:String>
-    <sys:String x:Key="S.Update.Skip">Skip this version and stop reminding me</sys:String>
 
     <!-- ── Service errors ── -->
     <sys:String x:Key="S.Error.OpenAiHttp">The OpenAI-compatible API returned {0}: {1}</sys:String>
@@ -228,7 +224,7 @@ Actually used this time: {2}</sys:String>
     <sys:String x:Key="S.Secret.Hide">Hide</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslate is still running</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslateTH is still running</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">Minimised to the system tray. Press {0} to start a screen capture translation.</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">your shortcut</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">No API key</sys:String>
@@ -642,7 +638,6 @@ same settings, the same seed usually gives the same output.</sys:String>
     <sys:String x:Key="S.Settings.NoteSending">Uploading…</sys:String>
     <sys:String x:Key="S.Settings.NoteUploadFailed">The upload did not go through. The file is still on your device, so you can try again.</sys:String>
     <sys:String x:Key="S.Settings.NoteAttachFailed">Your message could not be written into the file, so nothing was sent. Please try again.</sys:String>
-    <sys:String x:Key="S.Settings.NoteReportManually">Report it on GitHub instead</sys:String>
     <sys:String x:Key="S.Settings.HotkeyTaken">✗ {0} is already assigned to "{1}"</sys:String>
 
     <!-- ── Language names ── -->
@@ -712,12 +707,6 @@ same settings, the same seed usually gives the same output.</sys:String>
     <sys:String x:Key="S.Debug.ScopeHint" xml:space="preserve">Source only: outlines are drawn on the source view only.&#x0A;Source and translation: outlines are drawn on both the source view and the translation view</sys:String>
 
     <!-- Thai fork: notification only, with no official binary installer. -->
-    <sys:String x:Key="S.Update.NotifyHeading">New official release</sys:String>
-    <sys:String x:Key="S.Update.NotifyExplanation">This Thai build only notifies you. Share the new version in your chat to request merging the official source and validating Thai support before updating.</sys:String>
-    <sys:String x:Key="S.Update.OfficialBaseline">Current official baseline: v{0}</sys:String>
-    <sys:String x:Key="S.Update.OfficialLatest">Latest official release: v{0}</sys:String>
-    <sys:String x:Key="S.Update.OpenOfficialNotes">View official release notes</sys:String>
-    <sys:String x:Key="S.Update.OpenNotesFailed">Could not open the browser. Please try again later.</sys:String>
 
     <!-- Installed local OCR model selection. -->
     <sys:String x:Key="S.OcrModel.Title">OCR recognition model</sys:String>

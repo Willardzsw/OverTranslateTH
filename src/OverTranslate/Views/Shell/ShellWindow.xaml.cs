@@ -148,12 +148,7 @@ public partial class ShellWindow : Window
         // the button would stay greyed out for as long as the shell stayed open.
         RefreshQuickToolAvailability();
 
-        // Same reasoning, and one more: the periodic check runs whether or not this window exists,
-        // so the rail has to be able to gain the row while the user is sitting in front of it.
-        UpdateNotifier.AvailabilityChanged += OnUpdateAvailabilityChanged;
-        RefreshUpdateAvailability();
-
-        // The rail's composed strings — the update row's version and the 快速工具 rows'
+        // The rail's composed strings — the 快速工具 rows'
         // blocked-by-realtime tooltips — are set from code, so DynamicResource does not reach them
         // and they would keep the language they were built in. The settings page that changes the
         // language lives inside this window, so they are always on screen when it happens.
@@ -200,7 +195,6 @@ public partial class ShellWindow : Window
     private void OnLanguageChanged(object? sender, EventArgs e)
     {
         RefreshQuickToolAvailability();
-        RefreshUpdateAvailability();
         RefreshSidebarToggle();
         RefreshPinButton();
     }
@@ -259,41 +253,6 @@ public partial class ShellWindow : Window
 
 
     public void RefreshQuickToolAvailability() { }
-
-    private void OnUpdateAvailabilityChanged(object? sender, EventArgs e) =>
-        Dispatcher.BeginInvoke(RefreshUpdateAvailability);
-
-    /// <summary>
-    /// Shows or hides the rail's update badge to match what <see cref="UpdateNotifier"/> has found.
-    /// </summary>
-    /// <remarks>
-    /// Unaffected by 跳過此版本 by design — that choice silences the startup dialog, and taking the
-    /// badge away with it would leave a user who skipped a release with no way back to it short of
-    /// reinstalling.
-    /// </remarks>
-    private void RefreshUpdateAvailability()
-    {
-        var update = UpdateNotifier.Available;
-        if (update is null)
-        {
-            UpdateBtn.Visibility = Visibility.Collapsed;
-            return;
-        }
-
-        // The version is on the badge itself rather than behind a hover: it is the one piece of
-        // information that tells the user whether this is the release they already decided about.
-        // 「至」carries the relationship to the version directly above — this is where that number
-        // goes, not merely that a number exists. "v" matches that label's own formatting.
-        UpdateBtnText.Text = LocalizationService.Format("S.Shell.UpdateAvailable", update.LatestVersion);
-        UpdateBtn.Visibility = Visibility.Visible;
-    }
-
-    private void UpdateBtn_Click(object sender, RoutedEventArgs e)
-    {
-        var update = UpdateNotifier.Available;
-        if (update is null) return;
-        UpdateWindow.ShowOrActivate(update);
-    }
 
     private void MinimizeBtn_Click(object sender, RoutedEventArgs e) =>
         WindowState = WindowState.Minimized;
@@ -659,9 +618,6 @@ public partial class ShellWindow : Window
         _translationPage.Teardown();
         // Only detaches the page from the session controller: a realtime session already running is
         // on the screen, not in this window, and closing the shell is not a request to end it.
-        // UpdateNotifier is static and outlives every window, so a handler left attached would keep
-        // this closed window alive for as long as the application runs.
-        UpdateNotifier.AvailabilityChanged -= OnUpdateAvailabilityChanged;
         _instance = null;
         base.OnClosed(e);
     }

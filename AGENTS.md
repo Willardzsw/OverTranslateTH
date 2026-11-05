@@ -3,7 +3,8 @@
 - Work in E:\Claude\overtranslate; branch feature/thai-ocr, upstream base fddeb35b0e39264f135e3c9ab375ea61ff07fc93.
 - Preserve the installed OverTranslate application and its user profile. Never inspect, copy, print, or import API keys.
 - All development configuration/logs/assets use profile-thai beside each executable. Do not add automatic credential migration, installers, publishing, or upstream binary auto-update hooks.
-- User-approved update policy: check public official stable release metadata once at startup only, with no periodic polling. Show a notification and release notes link; never download/apply official packages. Merge upstream source only after the user asks, preserving Thai OCR and profile isolation.
+- User-approved update policy: the app performs no official release checks or update notices at all. The user checks official versions themselves and asks before upstream source is merged, preserving Thai OCR and profile isolation. Never download/apply official packages.
+- User-approved branding: display name `OverTranslateTH` with the warm double-T icon from `tools/icons/generate_app_icon.py`. The executable stays `OverTranslate.exe`, and the startup entry and `profile-thai` stay unchanged. Keep the MIT LICENSE, THIRD-PARTY-NOTICES and the "based on OverTranslate" attribution in the About panel and build output.
 - Thai OCR must use the real thai/rec.onnx + matching dictionary. AUTO remains the existing CJK recognizer; select TH explicitly.
 - Keep original EN/ZH/ZH-HANT/JA/KO models and behavior. Retain OCR source coordinates for translation and overlays.
 - Model provenance and hashes are in src/OverTranslate/ocrmodels/onnx/thai/provenance.json; preserve Apache-2.0 notices.

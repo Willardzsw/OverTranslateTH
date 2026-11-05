@@ -150,7 +150,7 @@ public sealed class DeltaAwareUpdateManager(IUpdateSource source, UpdateOptions?
     private string BasePackagePath(string fileName) => Path.Combine(Locator.PackagesDir!, fileName);
 }
 
-/// <summary>The Thai fork exposes notifications only; legacy installer entry points stay disabled.</summary>
+/// <summary>This build never checks for or applies releases; legacy installer entry points stay disabled.</summary>
 public static class UpdateService
 {
     public static Task<UpdateInfo?> CheckAsync() => Task.FromResult<UpdateInfo?>(null);
@@ -159,5 +159,5 @@ public static class UpdateService
         UpdateInfo info, Action<int>? onProgress = null, Action? onFellBackToFull = null,
         Func<Task>? onApplying = null, CancellationToken cancelToken = default) =>
         Task.FromException(new NotSupportedException(
-            "This Thai build only notifies about official releases. Merge and validate the source before updating."));
+            "This build does not apply updates. Merge and validate the source manually."));
 }

@@ -56,8 +56,6 @@ internal static class Program
             return args.Length == 0 ? 1 : 0;
         }
 
-        if (args[0] == "official-release-check") return UpdateNoticeLayout.CheckOfficialRelease();
-
         if (args[0] == "ocr-local-model-check")
             return CompactOcrLayout.CheckLocalModels(args.Length > 1 ? args[1] : ".test-artifacts/compact-ocr").GetAwaiter().GetResult();
 
@@ -80,11 +78,11 @@ internal static class Program
         {
             switch (args[0])
             {
+                case "about":
+                    AboutLayout.Report(args.Length > 1 ? args[1] : ".test-artifacts/about");
+                    break;
                 case "compact-ocr":
                     CompactOcrLayout.Report(args.Length > 1 ? args[1] : ".test-artifacts/compact-ocr");
-                    break;
-                case "update-notice":
-                    UpdateNoticeLayout.Report(args.Length > 1 ? args[1] : ".test-artifacts/update-notice");
                     break;
                 case "thai-overlay":
                     ThaiOverlayLayout.Report(args.Length > 1 ? args[1] : ".test-artifacts/thai-ocr");

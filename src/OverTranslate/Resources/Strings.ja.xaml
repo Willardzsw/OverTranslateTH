@@ -31,7 +31,6 @@
     <sys:String x:Key="S.Shell.ShowSidebar">サイドバーを開く</sys:String>
     <sys:String x:Key="S.Shell.Pin">ウィンドウを常に手前に表示します</sys:String>
     <sys:String x:Key="S.Shell.Unpin">ピン留めを解除</sys:String>
-    <sys:String x:Key="S.Shell.UpdateAvailable">v{0} にアップデート</sys:String>
 
     <!-- ── Tray menu ── -->
     <sys:String x:Key="S.Tray.OpenWindow">翻訳ウィンドウを開く</sys:String>
@@ -40,10 +39,9 @@
     <sys:String x:Key="S.Tray.Exit">終了</sys:String>
 
     <!-- ── About ── -->
-    <sys:String x:Key="S.About.Website">公式サイトを開く</sys:String>
-    <sys:String x:Key="S.About.Star">GitHub で Star をつけて応援</sys:String>
-    <sys:String x:Key="S.About.Sponsor">支援する</sys:String>
-    <sys:String x:Key="S.About.SponsorTip">Buy Me a Coffee で支援する</sys:String>
+    <sys:String x:Key="S.About.BasedOn">OverTranslate ベース · © 2026 Hon-Lu · MIT</sys:String>
+    <sys:String x:Key="S.About.License">ライセンス</sys:String>
+    <sys:String x:Key="S.About.ThirdParty">第三者通知</sys:String>
     <sys:String x:Key="S.About.Version">バージョン {0}</sys:String>
     <sys:String x:Key="S.About.OpenSource">無料・オープンソースで自由に使えます。</sys:String>
 
@@ -53,8 +51,6 @@
     <sys:String x:Key="S.Toast.CopyFailed">コピーできませんでした。しばらくしてからもう一度お試しください。</sys:String>
 
     <!-- ── Update ── -->
-    <sys:String x:Key="S.Update.Later">あとで</sys:String>
-    <sys:String x:Key="S.Update.Skip">このバージョンをスキップして通知しない</sys:String>
 
     <!-- ── Service errors ── -->
     <sys:String x:Key="S.Error.OpenAiHttp">OpenAI 互換 API が {0} を返しました：{1}</sys:String>
@@ -232,7 +228,7 @@
     <sys:String x:Key="S.Secret.Hide">非表示</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslate は動作中です</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslateTH は動作中です</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">タスクトレイに最小化しました。{0} でキャプチャ翻訳を開始できます。</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">設定したショートカットキー</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">API キーがありません</sys:String>
@@ -644,7 +640,6 @@
     <sys:String x:Key="S.Settings.NoteSending">アップロード中…</sys:String>
     <sys:String x:Key="S.Settings.NoteUploadFailed">今回はアップロードできませんでした。ファイルはお使いの PC に残っているので、もう一度お試しいただけます。</sys:String>
     <sys:String x:Key="S.Settings.NoteAttachFailed">メッセージをファイルに書き込めなかったため、何も送信していません。もう一度お試しください。</sys:String>
-    <sys:String x:Key="S.Settings.NoteReportManually">GitHub で報告する</sys:String>
     <sys:String x:Key="S.Settings.HotkeyTaken">✗ {0} は「{1}」に割り当て済みです</sys:String>
 
     <!-- ── Language names ── -->
@@ -714,12 +709,6 @@
     <sys:String x:Key="S.Debug.ScopeHint" xml:space="preserve">原文のみ：枠線は原文の画面にのみ表示します。&#x0A;原文と訳文：原文・訳文どちらの画面にも枠線を表示します</sys:String>
 
     <!-- Thai fork: notification only, with no official binary installer. -->
-    <sys:String x:Key="S.Update.NotifyHeading">公式の新しいバージョン</sys:String>
-    <sys:String x:Key="S.Update.NotifyExplanation">このタイ語版は更新を通知するだけです。新しいバージョンをチャットで伝え、公式ソースの統合とタイ語機能の検証後に更新してください。</sys:String>
-    <sys:String x:Key="S.Update.OfficialBaseline">現在の公式ベース：v{0}</sys:String>
-    <sys:String x:Key="S.Update.OfficialLatest">公式の最新バージョン：v{0}</sys:String>
-    <sys:String x:Key="S.Update.OpenOfficialNotes">公式の更新内容を表示</sys:String>
-    <sys:String x:Key="S.Update.OpenNotesFailed">ブラウザーを開けませんでした。後でもう一度お試しください。</sys:String>
 
     <!-- Installed local OCR model selection. -->
     <sys:String x:Key="S.OcrModel.Title">OCR 認識モデル</sys:String>
