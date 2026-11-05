@@ -160,8 +160,8 @@
     <!-- ═══════════════════════════════════════════ -->
     <!--  TRANSLATION SERVICE MARKS                  -->
     <!--                                             -->
-    <!--  Transcribed from the vendors' own SVGs in  -->
-    <!--  docs/assets/service-icons — WPF has no     -->
+    <!--  Transcribed from the vendors' own SVGs:    -->
+    <!--  WPF has no                                 -->
     <!--  SVG loader, and the path data is the whole -->
     <!--  of these files. Re-transcribe rather than  -->
     <!--  redraw if a vendor ships a new mark.       -->
@@ -199,7 +199,7 @@
          guidelines rule out altering the G or combining it with other elements, so both Google
          options show the same G and are told apart by name.
 
-         Google, Microsoft and Bing are transcribed from the files in docs/assets/service-icons —
+         Google, Microsoft and Bing are transcribed from the vendors' published SVGs —
          except Microsoft's four colours, which are the brand palette as it is usually published
          (#F25022 #7FBA00 #00A4EF #FFB900) rather than that file's very slightly different values.
          Youdao and TranSmart publish no SVG; theirs are traced from the PNGs their own sites serve

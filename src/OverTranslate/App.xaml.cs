@@ -4,7 +4,6 @@ using NLog;
 using OverTranslate.Services;
 using OverTranslate.Models;
 using System.Threading.Tasks;
-using Velopack;
 using OverTranslate.Views;
 using OverTranslate.Views.Shell;
 using OverTranslate.Views.Translation;

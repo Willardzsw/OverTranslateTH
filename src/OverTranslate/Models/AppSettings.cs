@@ -252,17 +252,6 @@ public class AppSettings
     /// <summary>Off by default: Debug records the recognised text, i.e. the user's screen contents.</summary>
     public bool VerboseLogging { get; set; } = false;
 
-    /// <summary>
-    /// The newest version the user has told us to stop interrupting them about, or empty for none.
-    /// </summary>
-    /// <remarks>
-    /// Compared as a version rather than for equality, so it silences that release and nothing later:
-    /// skipping 1.9.0 leaves 1.9.1 free to prompt again. It suppresses only the startup dialog — the
-    /// nav rail still offers the update — because what the user declined was being interrupted, not
-    /// the update itself. Kept so existing profiles stay readable; this build no longer checks for releases.
-    /// </remarks>
-    public string SkippedUpdateVersion { get; set; } = "";
-
     /// <summary>What 截圖翻譯 keeps between capture sessions, grouped.</summary>
     /// <remarks>
     /// The first grouped section in declaration order because 截圖翻譯 appears before 即時翻譯 in the

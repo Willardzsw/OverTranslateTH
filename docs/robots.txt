@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://hon-lu.github.io/OverTranslate/sitemap.xml

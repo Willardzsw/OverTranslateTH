@@ -730,7 +730,7 @@ public class SettingsParsingTests
         // without noticing, and the reader of appsettings.json is who pays.
         var json = System.Text.Json.JsonSerializer.Serialize(new AppSettings());
 
-        var lastFlatKey = json.IndexOf("\"SkippedUpdateVersion\"", StringComparison.Ordinal);
+        var lastFlatKey = json.IndexOf("\"VerboseLogging\"", StringComparison.Ordinal);
         var captureGroup = json.IndexOf("\"Capture\":", StringComparison.Ordinal);
         var quickLookupGroup = json.IndexOf("\"QuickLookup\":", StringComparison.Ordinal);
         var realtimeGroup = json.IndexOf("\"Realtime\":", StringComparison.Ordinal);
