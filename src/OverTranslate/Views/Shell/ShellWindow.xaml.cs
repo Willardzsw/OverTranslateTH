@@ -6,7 +6,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using OverTranslate.Services;
-using OverTranslate.Views.Realtime;
 using OverTranslate.Views.Settings;
 using OverTranslate.Views.Translation;
 // UseWindowsForms puts System.Windows.Forms in the implicit usings, so these names collide
@@ -18,7 +17,6 @@ namespace OverTranslate.Views.Shell;
 public enum ShellPage
 {
     Translation,
-    Realtime,
     Settings
 }
 
@@ -78,7 +76,6 @@ public partial class ShellWindow : Window
     /// rather than always on 文字翻譯.
     /// </summary>
     /// <inheritdoc cref="_lastSize"/>
-    private static ShellPage _lastPage = ShellPage.Translation;
 
     private static readonly Duration IndicatorDuration = new(TimeSpan.FromMilliseconds(180));
     private static readonly Duration ContentDuration   = new(TimeSpan.FromMilliseconds(120));
@@ -87,7 +84,6 @@ public partial class ShellWindow : Window
     private object? _contentTransition;
 
     private readonly TranslationPage _translationPage = new();
-    private readonly RealtimePage    _realtimePage    = new();
     private readonly SettingsPage    _settingsPage    = new();
 
     private ShellPage? _current;
@@ -107,7 +103,7 @@ public partial class ShellWindow : Window
     {
         // Read before the window is built: constructing one mounts a page, which writes _lastPage,
         // so asking for it after would only ever get back the page the constructor chose.
-        var target = page ?? _lastPage;
+        var target = page ?? ShellPage.Translation;
 
         if (_instance == null)
         {
@@ -150,7 +146,6 @@ public partial class ShellWindow : Window
         // Subscribed rather than refreshed on show: a session ending brings this window back with
         // Show(), not through ShowOrActivate, so nothing else would clear the disabled state and
         // the button would stay greyed out for as long as the shell stayed open.
-        Realtime.RealtimeSessionController.Instance.StateChanged += OnRealtimeStateChanged;
         RefreshQuickToolAvailability();
 
         // Same reasoning, and one more: the periodic check runs whether or not this window exists,
@@ -241,26 +236,9 @@ public partial class ShellWindow : Window
     /// for the next navigation would leave the wrong shortcut on screen next to the button.
     /// </summary>
     /// <summary>Puts the 即時翻譯 shortcut's refusal on the realtime page — see MainWindow.</summary>
-    public void ShowRealtimeShortcutRefusal(string key) => _realtimePage.ShowShortcutRefusal(key);
 
-    public void RefreshHotkeyHints()
-    {
-        var settings = SettingsService.Instance.Current;
 
-        // Blank rather than a "未設定" placeholder: the label already says what the button does,
-        // and a slot that only ever holds a shortcut should be empty when there is none.
-        CaptureHotkeyText.Text = string.IsNullOrWhiteSpace(settings.HotkeyDisplay)
-            ? ""
-            : settings.HotkeyDisplay;
-
-        // Also blank when the shortcut is switched off in 設定: this row is not registered then, so
-        // printing the combination would advertise a key press that does nothing. The button
-        // itself stays — it is a way in of its own, not a reminder of the shortcut.
-        QuickLookupHotkeyText.Text =
-            settings.QuickLookupHotkeyEnabled && !string.IsNullOrWhiteSpace(settings.QuickLookupHotkeyDisplay)
-                ? settings.QuickLookupHotkeyDisplay
-                : "";
-    }
+    public void RefreshHotkeyHints() { }
 
     /// <summary>
     /// Greys out the rail's 快速工具 rows a realtime session is in the way of, and says why.
@@ -278,28 +256,9 @@ public partial class ShellWindow : Window
     /// framing state is a backstop rather than something met — the edit layer is topmost and covers
     /// the screen, so the rail is behind it while blocks are being drawn.
     /// </remarks>
-    private void OnRealtimeStateChanged(object? sender, EventArgs e) =>
-        Dispatcher.BeginInvoke(RefreshQuickToolAvailability);
 
-    public void RefreshQuickToolAvailability()
-    {
-        var controller = Realtime.RealtimeSessionController.Instance;
-        var running = controller.IsActive;
-        var framing = running && !controller.IsTranslating;
 
-        CaptureBtn.IsEnabled = !framing;
-        CaptureBtn.ToolTip = framing
-            ? LocalizationService.Get("S.Shell.CaptureBlockedByRealtimeFraming")
-            : null;
-
-        // 取詞翻譯 is not merely refused during a session — a session already dismisses the popup
-        // when it starts (MainWindow.OnRealtimeStateChanged), so a row that still looked available
-        // would open a window that closes itself.
-        QuickLookupBtn.IsEnabled = !running;
-        QuickLookupBtn.ToolTip = running
-            ? LocalizationService.Get("S.Shell.QuickLookupBlockedByRealtime")
-            : null;
-    }
+    public void RefreshQuickToolAvailability() { }
 
     private void OnUpdateAvailabilityChanged(object? sender, EventArgs e) =>
         Dispatcher.BeginInvoke(RefreshUpdateAvailability);
@@ -518,21 +477,9 @@ public partial class ShellWindow : Window
             ForegroundProperty, _pinned ? "AppAccent" : "AppTextSecondary");
     }
 
-    private void CaptureBtn_Click(object sender, RoutedEventArgs e)
-    {
-        // MainWindow owns the whole capture session (hotkey, screenshot, overlay, teardown), so
-        // the shell only asks for one and hands itself over to be hidden and brought back.
-        if (System.Windows.Application.Current.MainWindow is MainWindow main)
-            main.StartCaptureFromShell(this);
-    }
 
-    private void QuickLookupBtn_Click(object sender, RoutedEventArgs e)
-    {
-        // MainWindow owns 取詞翻譯's guards the same way it owns the capture session's, so the shell
-        // asks for the popup rather than summoning one behind them.
-        if (System.Windows.Application.Current.MainWindow is MainWindow main)
-            main.StartQuickLookupFromShell();
-    }
+
+
 
     public void Navigate(ShellPage page)
     {
@@ -550,7 +497,6 @@ public partial class ShellWindow : Window
     {
         var page =
             ReferenceEquals(sender, SettingsNav) ? ShellPage.Settings :
-            ReferenceEquals(sender, RealtimeNav) ? ShellPage.Realtime :
             ShellPage.Translation;
         if (_current == page) return;
         ShowPage(page);
@@ -559,18 +505,15 @@ public partial class ShellWindow : Window
     private void ShowPage(ShellPage page)
     {
         _current = page;
-        _lastPage = page;
 
         // These pages read state that can change while the user is elsewhere: shared translation
         // preferences, the settings file, and attached monitors plus realtime session state.
         if (page == ShellPage.Translation) _translationPage.Reload();
         if (page == ShellPage.Settings) _settingsPage.Reload();
-        if (page == ShellPage.Realtime) _realtimePage.Reload();
 
         ContentHost.Child = page switch
         {
             ShellPage.Settings => _settingsPage,
-            ShellPage.Realtime => _realtimePage,
             _                  => (UIElement)_translationPage
         };
 
@@ -581,7 +524,6 @@ public partial class ShellWindow : Window
     private System.Windows.Controls.RadioButton NavItemFor(ShellPage page) => page switch
     {
         ShellPage.Settings => SettingsNav,
-        ShellPage.Realtime => RealtimeNav,
         _                  => TranslationNav
     };
 
@@ -717,8 +659,6 @@ public partial class ShellWindow : Window
         _translationPage.Teardown();
         // Only detaches the page from the session controller: a realtime session already running is
         // on the screen, not in this window, and closing the shell is not a request to end it.
-        _realtimePage.Teardown();
-        Realtime.RealtimeSessionController.Instance.StateChanged -= OnRealtimeStateChanged;
         // UpdateNotifier is static and outlives every window, so a handler left attached would keep
         // this closed window alive for as long as the application runs.
         UpdateNotifier.AvailabilityChanged -= OnUpdateAvailabilityChanged;

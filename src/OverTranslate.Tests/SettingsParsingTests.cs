@@ -13,6 +13,51 @@ namespace OverTranslate.Tests;
 // and hotkey. These tests pin the rule that only the unreadable field pays.
 public class SettingsParsingTests
 {
+    [Theory]
+    [InlineData("1e9999")]
+    [InlineData("-1e9999")]
+    public void OverflowingNumbers_KeepFieldDefaultsAndRemainSerializable(string number)
+    {
+        var settings = SettingsService.Parse("""
+            {"Theme":"Light","OpenAi":{"SelectedProfileId":"a","Profiles":[
+              {"Id":"a","Model":"test-model","Temperature":NUMBER,"TopP":NUMBER}]},
+             "Capture":{"Annotation":{"PenThickness":NUMBER,"HighlighterOpacity":NUMBER,
+               "ShapeThickness":0.75,"TextBold":true}}}
+            """.Replace("NUMBER", number, StringComparison.Ordinal));
+
+        var profile = Assert.IsType<OpenAiModelProfile>(settings.OpenAi.SelectedProfile());
+        Assert.Equal(OpenAiModelProfile.DefaultTemperature, profile.Temperature);
+        Assert.Equal(OpenAiModelProfile.DefaultTopP, profile.TopP);
+        Assert.Equal(0.5, settings.Capture.Annotation.PenThickness);
+        Assert.Equal(0.5, settings.Capture.Annotation.HighlighterOpacity);
+        Assert.Equal(0.75, settings.Capture.Annotation.ShapeThickness);
+        Assert.True(settings.Capture.Annotation.TextBold);
+
+        var roundTrip = SettingsService.Parse(SettingsService.Serialize(settings));
+        Assert.Equal("Light", roundTrip.Theme);
+        Assert.Equal("test-model", roundTrip.OpenAi.SelectedProfile()!.Model);
+        Assert.Equal(0.75, roundTrip.Capture.Annotation.ShapeThickness);
+    }
+
+    [Fact]
+    public void ProfileLists_SkipInvalidMembersAndPreserveOtherFields()
+    {
+        var settings = SettingsService.Parse("""
+            {"Theme":"Light","OpenAi":{"SelectedProfileId":"a","Profiles":[
+              null,42,{"Id":"a","Name":null,"Model":"test-model","Template":null,"Temperature":"invalid"},
+              {"Id":"b","Name":"second","Model":"second-model"}]}}
+            """);
+
+        Assert.Equal(2, settings.OpenAi.Profiles.Count);
+        var selected = Assert.IsType<OpenAiModelProfile>(settings.OpenAi.SelectedProfile());
+        Assert.Equal("test-model", selected.Model);
+        Assert.Equal("", selected.Name);
+        Assert.Equal("", selected.Template);
+        Assert.Equal(OpenAiModelProfile.DefaultTemperature, selected.Temperature);
+        Assert.Equal("second-model", settings.OpenAi.Profiles[1].Model);
+        Assert.Equal("Light", settings.Theme);
+    }
+
     // 「Google 翻譯 (RPC)」 is no longer an option of its own; whoever picked it gets 「(標準)」, the
     // option it became part of — the same translations, not the default engine.
     [Fact]

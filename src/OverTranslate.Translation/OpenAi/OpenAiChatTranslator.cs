@@ -704,7 +704,7 @@ public sealed class OpenAiChatTranslator(HttpClient http)
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync(timeout.Token);
-                throw new OpenAiChatException(OpenAiChatFailure.Rejected, response.StatusCode, ReadError(error));
+                throw new OpenAiChatException(OpenAiChatFailure.Rejected, response.StatusCode, ReadError(error, request));
             }
 
             var content = ReadCompletion(await response.Content.ReadAsStringAsync(timeout.Token));
@@ -781,21 +781,54 @@ public sealed class OpenAiChatTranslator(HttpClient http)
     }
 
     /// <summary>What the server said was wrong — see <see cref="OpenAiChatException.ServerMessage"/>.</summary>
-    internal static string? ReadError(string json)
+    internal static string? ReadError(string json, OpenAiChatRequest? request = null)
     {
         try
         {
             using var document = JsonDocument.Parse(json);
-            if (document.RootElement.TryGetProperty("error", out var error) &&
-                error.TryGetProperty("message", out var message))
-                return message.GetString();
+            if (document.RootElement.ValueKind == JsonValueKind.Object
+                && document.RootElement.TryGetProperty("error", out var error)
+                && error.ValueKind == JsonValueKind.Object
+                && error.TryGetProperty("message", out var message)
+                && message.ValueKind is JsonValueKind.String or JsonValueKind.Null)
+                return LimitError(RedactRequestSecrets(message.GetString(), request));
         }
         catch (JsonException)
         {
             // Non-JSON proxies and local servers are common; return a bounded response below.
         }
 
-        var compact = json.Trim();
-        return compact.Length <= 300 ? compact : compact[..300] + "…";
+        return LimitError(RedactRequestSecrets(json.Trim(), request));
     }
+
+    // Servers can echo rejected credentials. These messages become UI exceptions and diagnostic
+    // logs, so remove the known request secrets before truncation can leave a secret's prefix.
+    private static string? RedactRequestSecrets(string? text, OpenAiChatRequest? request)
+    {
+        if (text is null || request is null) return text;
+        var secrets = new List<string> { request.ApiKey.Trim() };
+        var endpoint = request.Endpoint;
+        if (endpoint.UserInfo.Length > 0)
+        {
+            secrets.Add(endpoint.UserInfo);
+            var separator = endpoint.UserInfo.IndexOf(':');
+            if (separator >= 0) secrets.Add(endpoint.UserInfo[(separator + 1)..]);
+        }
+        foreach (var field in endpoint.Query.TrimStart('?').Split('&'))
+        {
+            var separator = field.IndexOf('=');
+            if (separator >= 0) secrets.Add(field[(separator + 1)..]);
+        }
+        if (endpoint.Fragment.Length > 1) secrets.Add(endpoint.Fragment[1..]);
+        var variants = secrets.Where(value => value.Length > 0)
+            .SelectMany(value => new[] { value, Uri.UnescapeDataString(value) })
+            .SelectMany(value => new[] { value, Uri.EscapeDataString(value), JsonSerializer.Serialize(value)[1..^1] })
+            .Distinct(StringComparer.Ordinal).OrderByDescending(value => value.Length);
+        foreach (var secret in variants)
+            text = text.Replace(secret, "<redacted>", StringComparison.Ordinal);
+        return text;
+    }
+
+    private static string? LimitError(string? text) =>
+        text is { Length: > 300 } ? text[..300] + "…" : text;
 }

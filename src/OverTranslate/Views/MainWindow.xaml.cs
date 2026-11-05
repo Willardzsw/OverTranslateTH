@@ -10,7 +10,6 @@ using OverTranslate.Services;
 using OverTranslate.Services.Ocr;
 using OverTranslate.Views.Capture;
 using OverTranslate.Views.Overlay;
-using OverTranslate.Views.Realtime;
 using OverTranslate.Views.Settings;
 using OverTranslate.Views.Shell;
 using OverTranslate.Views.Translation;
@@ -25,7 +24,6 @@ public partial class MainWindow : Window
     private TrayMenuWindow? _trayMenu;
     private GlobalHotkey? _hotkey;
     private GlobalHotkey? _windowHotkey;
-    private GlobalHotkey? _realtimePauseHotkey;
     private GlobalHotkey? _quickLookupHotkey;
     private GlobalHotkey? _quickTranslateHotkey;
     private GlobalAuxiliaryHotkeys? _auxiliaryHotkeys;
@@ -101,29 +99,8 @@ public partial class MainWindow : Window
         RegisterHotkey();
         ShowStartupBalloon();
 
-        // The one thing about a realtime session that has to reach the user outside this
-        // application: the window they were watching closed, so the session is over and they are
-        // looking at whatever was behind it.
-        RealtimeSessionController.Instance.SessionEnded += OnRealtimeSessionEnded;
-
-        // A session composes the monitor without this application's overlays and cannot be told
-        // about a window created after it started, so a popup left up would be read back into the
-        // subtitles — see OnQuickLookupHotkeyPressed, which is the half that keeps a new one out.
-        RealtimeSessionController.Instance.StateChanged += OnRealtimeStateChanged;
+        OpenShell();
     }
-
-    private void OnRealtimeStateChanged(object? sender, EventArgs e) =>
-        Dispatcher.BeginInvoke(new Action(() =>
-        {
-            if (!RealtimeSessionController.Instance.IsActive) return;
-
-            QuickLookup.QuickLookupWindow.Dismiss();
-            QuickTranslate.QuickTranslateHintWindow.Dismiss();
-        }));
-
-    private void OnRealtimeSessionEnded(object? sender, string message) =>
-        Dispatcher.Invoke(() => ShowTrayNotification(
-            LocalizationService.Get("S.Realtime.SessionEndedTitle"), message));
 
     private void InitNotifyIcon()
     {
@@ -176,8 +153,6 @@ public partial class MainWindow : Window
         _windowHotkey = new GlobalHotkey(GlobalHotkey.TranslationWindowId);
         _windowHotkey.HotkeyPressed += OnTranslationWindowHotkeyPressed;
 
-        _realtimePauseHotkey = new GlobalHotkey(GlobalHotkey.RealtimePauseId);
-        _realtimePauseHotkey.HotkeyPressed += OnRealtimePauseHotkeyPressed;
 
         _quickLookupHotkey = new GlobalHotkey(GlobalHotkey.QuickLookupId);
         _quickLookupHotkey.HotkeyPressed += OnQuickLookupHotkeyPressed;
@@ -189,12 +164,11 @@ public partial class MainWindow : Window
         {
             [HotkeyAction.Capture] = _hotkey,
             [HotkeyAction.TranslationWindow] = _windowHotkey,
-            [HotkeyAction.RealtimePause] = _realtimePauseHotkey,
             [HotkeyAction.QuickLookup] = _quickLookupHotkey,
             [HotkeyAction.QuickTranslate] = _quickTranslateHotkey,
         };
 
-        var resolved = HotkeyBindings.Resolve(settings);
+        var resolved = HotkeyBindings.Resolve(settings, includeRealtime: false);
         foreach (var binding in resolved)
         {
             if (binding.ShadowedBy is { } holder)
@@ -250,9 +224,6 @@ public partial class MainWindow : Window
             case HotkeyAction.TranslationWindow:
                 OnTranslationWindowHotkeyPressed(this, EventArgs.Empty);
                 break;
-            case HotkeyAction.RealtimePause:
-                OnRealtimePauseHotkeyPressed(this, EventArgs.Empty);
-                break;
             case HotkeyAction.QuickLookup:
                 StartQuickLookup(pinned: false, copiedSince);
                 break;
@@ -306,7 +277,6 @@ public partial class MainWindow : Window
     {
         _hotkey?.Unregister();
         _windowHotkey?.Unregister();
-        _realtimePauseHotkey?.Unregister();
         _quickLookupHotkey?.Unregister();
         _quickTranslateHotkey?.Unregister();
         _auxiliaryHotkeys?.Dispose();
@@ -354,23 +324,7 @@ public partial class MainWindow : Window
     /// rail's button has the same pair around it but hides the shell as well, which is why it keeps
     /// its own path.
     /// </remarks>
-    private async Task RunCaptureYieldingRealtimeAsync(string origin)
-    {
-        if (!RealtimeSessionController.Instance.TryYieldToCapture()) return;
-
-        try
-        {
-            await RunCaptureSessionAsync(origin);
-        }
-        finally
-        {
-            // A session left on screen keeps the realtime layers away until it is torn down, and
-            // CloseAll is where they come back. Nothing here means the user cancelled during
-            // selection — the session they interrupted must not be left stood down for it.
-            if (!HasActiveSession)
-                RealtimeSessionController.Instance.ResumeAfterCapture();
-        }
-    }
+    private Task RunCaptureYieldingRealtimeAsync(string origin) => RunCaptureSessionAsync(origin);
 
     /// <summary>
     /// The 即時翻譯 shortcut: each press is the next step from wherever a session is (#324).
@@ -393,33 +347,8 @@ public partial class MainWindow : Window
     /// on that page anyway. Silent only while a capture is up, which is the one rule every other
     /// shortcut here keeps too.</para>
     /// </remarks>
-    private void OnRealtimePauseHotkeyPressed(object? sender, EventArgs e) =>
-        Dispatcher.Invoke(OnRealtimeShortcut);
 
-    private void OnRealtimeShortcut()
-    {
-        var controller = Views.Realtime.RealtimeSessionController.Instance;
-        if (controller.IsActive)
-        {
-            if (controller.IsTranslating) controller.TogglePause();
-            else controller.StartTranslatingFromShortcut();
-            return;
-        }
 
-        if (IsCapturing) return;
-
-        var quickStart = Views.Realtime.RealtimeQuickStart.From(SettingsService.Instance.Current);
-        if (quickStart.Request is not { } request)
-        {
-            Log.Info("Realtime shortcut did not start a session: {Reason}", quickStart.RefusalKey);
-            ShellWindow.ShowOrActivate(ShellPage.Realtime).ShowRealtimeShortcutRefusal(quickStart.RefusalKey!);
-            return;
-        }
-
-        // Null when the shell is closed to the tray, which is the common case for a shortcut and
-        // means there is nothing to put away.
-        controller.Start(request, ShellWindow.Current);
-    }
 
     /// <summary>
     /// Brings 取詞翻譯's popup up over whatever the user is reading, unpinned.
@@ -453,7 +382,6 @@ public partial class MainWindow : Window
         Dispatcher.Invoke(async () =>
         {
             if (HasActiveSession) return;
-            if (RealtimeSessionController.Instance is { IsActive: true, IsTranslating: false }) return;
 
             await Views.QuickTranslate.QuickTranslateFlow.RunAsync(copiedSince);
         });
@@ -564,16 +492,7 @@ public partial class MainWindow : Window
     /// Told rather than ignored, because the shortcut is otherwise available everywhere and silence
     /// would read as breakage — see <see cref="StartQuickLookup"/>, which is the only way in here.
     /// </remarks>
-    private bool RefuseWhileFramingBlocks()
-    {
-        if (Views.Realtime.RealtimeSessionController.Instance is not { IsActive: true, IsTranslating: false })
-            return false;
-
-        ShowTrayNotification(
-            LocalizationService.Get("S.Main.RealtimeRunningTitle"),
-            LocalizationService.Get("S.Main.RealtimeRunningBody"));
-        return true;
-    }
+    private bool RefuseWhileFramingBlocks() => false;
 
     /// <summary>
     /// Starts a capture from the shell window's nav rail. The shell has to leave the screen first:
@@ -588,7 +507,6 @@ public partial class MainWindow : Window
         // that shortcut refuses in. The rail's button is disabled while blocks are being framed, so
         // this is the guard rather than the notice — but it is the one that actually enforces the
         // rule, and a disabled button is a presentation detail a future layout change could drop.
-        if (!RealtimeSessionController.Instance.TryYieldToCapture()) return;
 
         if (HasActiveSession)
         {
@@ -630,7 +548,6 @@ public partial class MainWindow : Window
             if (!HasActiveSession)
             {
                 RestoreShellAfterCapture();
-                RealtimeSessionController.Instance.ResumeAfterCapture();
             }
         }
     }
@@ -1214,7 +1131,8 @@ public partial class MainWindow : Window
     {
         var layoutMode = CaptureLayoutPolicy.ForApplication(requestedLayout);
         var region     = captureWindow.Selection;
-        if (_ocrReuse.TryGet(captureWindow, region, sourceLang, verticalText, layoutMode, out var reused))
+        var modelIdentity = AppServices.Ocr.ModelIdentity;
+        if (_ocrReuse.TryGet(captureWindow, region, sourceLang, verticalText, layoutMode, out var reused, modelIdentity))
         {
             Log.Debug("Re-using the last recognition of this crop ({Count} blocks)", reused.Count);
             return (reused, true);
@@ -1231,7 +1149,8 @@ public partial class MainWindow : Window
             workBitmap, sourceLang, cancellationToken, verticalText, layoutMode);
         if (!stillCurrent()) return null;
 
-        _ocrReuse.Remember(captureWindow, region, sourceLang, verticalText, layoutMode, recognized);
+        if (modelIdentity == AppServices.Ocr.ModelIdentity)
+            _ocrReuse.Remember(captureWindow, region, sourceLang, verticalText, layoutMode, recognized, modelIdentity);
         return (recognized, false);
     }
 
@@ -1577,7 +1496,6 @@ public partial class MainWindow : Window
         // And the realtime layers after that, for the same reason twice over: they are topmost, so
         // they would come back over a capture still being torn down. Unconditional — it does nothing
         // unless this capture is the one that stood a session down.
-        RealtimeSessionController.Instance.ResumeAfterCapture();
     }
 
     /// <summary>
@@ -1819,7 +1737,6 @@ public partial class MainWindow : Window
         if (_trayMenu != null) return;
         _trayMenu = new TrayMenuWindow();
         _trayMenu.OpenTranslationRequested += (_, _) => OnTrayLeftClick();
-        _trayMenu.SetRealtimeRunning(Views.Realtime.RealtimeSessionController.Instance.IsActive);
         _trayMenu.OpenSettingsRequested    += (_, _) => OpenSettings();
         _trayMenu.ExitRequested            += (_, _) => ExitApp();
         _trayMenu.Closed                   += (_, _) => _trayMenu = null;
@@ -1837,16 +1754,7 @@ public partial class MainWindow : Window
     /// covered. Without it the only way out of that would be killing the application from the
     /// tray, which takes the block layout with it.
     /// </remarks>
-    private static void OnTrayLeftClick()
-    {
-        if (Views.Realtime.RealtimeSessionController.Instance.IsActive)
-        {
-            Views.Realtime.RealtimeSessionController.Instance.BringToFront();
-            return;
-        }
-
-        OpenShell();
-    }
+    private static void OnTrayLeftClick() => OpenShell();
 
     /// <remarks>
     /// No page named: both ways in here — this shortcut and the tray's left click — mean "show me
@@ -1858,11 +1766,9 @@ public partial class MainWindow : Window
     {
         // Its overlays are Topmost and click-through; left behind by a shutdown they would be
         // painted onto the desktop with no process left to close them.
-        RealtimeSessionController.Instance.Stop();
         DisposeSessionHooks();
         _hotkey?.Dispose();
         _windowHotkey?.Dispose();
-        _realtimePauseHotkey?.Dispose();
         _quickLookupHotkey?.Dispose();
         _quickTranslateHotkey?.Dispose();
         _auxiliaryHotkeys?.Dispose();

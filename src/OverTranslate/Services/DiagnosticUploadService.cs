@@ -164,8 +164,9 @@ public static class DiagnosticUploadService
         {
             // The expected failure, not the exceptional one: the people most likely to press this
             // button are behind a network that is part of what they are reporting.
-            Log.Warn(ex, "Diagnostic upload could not reach {0}", endpoint);
-            throw new DiagnosticUploadException(DiagnosticUploadFailure.Unreachable, ex.Message);
+            Log.Warn("Diagnostic upload could not reach {0} ({1})",
+                DiagnosticBundleService.RedactUrlCredentials(endpoint), ex.GetType().Name);
+            throw new DiagnosticUploadException(DiagnosticUploadFailure.Unreachable, "Upload request failed");
         }
 
         using (response)
@@ -174,7 +175,7 @@ public static class DiagnosticUploadService
 
             if (!response.IsSuccessStatusCode)
             {
-                Log.Warn("Diagnostic upload refused with {0}: {1}", (int)response.StatusCode, body);
+                Log.Warn("Diagnostic upload refused with {0}", (int)response.StatusCode);
                 throw new DiagnosticUploadException(
                     Classify(response.StatusCode), $"HTTP {(int)response.StatusCode}");
             }
@@ -182,7 +183,7 @@ public static class DiagnosticUploadService
             var code = ParseCode(body);
             if (code is null)
             {
-                Log.Warn("Diagnostic upload returned no usable code: {0}", body);
+                Log.Warn("Diagnostic upload returned no usable code");
                 throw new DiagnosticUploadException(DiagnosticUploadFailure.Rejected, "No code in response");
             }
 

@@ -289,78 +289,6 @@
                                 Margin="16,0,16,10"
                                 Background="{DynamicResource AppSeparator}"/>
 
-                        <!-- 快速工具 — the two shortcut-driven actions, above the nav list rather
-                             than inside it because they perform an action instead of choosing a
-                             destination, and on the shell rather than on a page so they stay
-                             reachable from 設定 too. Since the tray menu no longer offers either,
-                             this is the only place other than the shortcuts themselves.
-
-                             A heading here and a rule below: two cards with no caption read as a
-                             list whose first two rows are inexplicably taller than the rest, and
-                             naming the group is what says these do something rather than go
-                             somewhere. -->
-                        <TextBlock DockPanel.Dock="Top"
-                                   Text="{DynamicResource S.Shell.QuickTools}"
-                                   Style="{StaticResource SectionHeader}"
-                                   Margin="20,16,16,8"/>
-
-                        <Button x:Name="CaptureBtn"
-                                DockPanel.Dock="Top"
-                                Style="{StaticResource RailQuickTool}"
-                                ToolTipService.ShowOnDisabled="True"
-                                Click="CaptureBtn_Click">
-                            <DockPanel>
-                                <Border DockPanel.Dock="Left" Style="{StaticResource RailQuickToolIcon}">
-                                    <Path Style="{StaticResource DrawnMark}"
-                                          Data="{StaticResource CaptureMarkGeometry}"
-                                          Stroke="{DynamicResource AppAccent}"/>
-                                </Border>
-
-                                <!-- Filled in on every ShowOrActivate so a shortcut changed in 設定
-                                     is never stale. Docked before the label so the label is the
-                                     part that gives way when the two do not both fit — a
-                                     half-written shortcut is worse than none. -->
-                                <TextBlock x:Name="CaptureHotkeyText"
-                                           DockPanel.Dock="Right"
-                                           Style="{StaticResource RailQuickToolHotkey}"/>
-
-                                <TextBlock Text="{DynamicResource S.Shell.CaptureTranslate}"
-                                           FontWeight="SemiBold"
-                                           VerticalAlignment="Center"
-                                           TextTrimming="CharacterEllipsis"/>
-                            </DockPanel>
-                        </Button>
-
-                        <!-- Same glyph 設定 gives this shortcut, so the row and the row that
-                             configures it are recognisably the same feature. -->
-                        <Button x:Name="QuickLookupBtn"
-                                DockPanel.Dock="Top"
-                                Style="{StaticResource RailQuickTool}"
-                                ToolTipService.ShowOnDisabled="True"
-                                Click="QuickLookupBtn_Click">
-                            <DockPanel>
-                                <Border DockPanel.Dock="Left" Style="{StaticResource RailQuickToolIcon}">
-                                    <Path Style="{StaticResource DrawnMark}"
-                                          Data="{StaticResource QuickLookupMarkGeometry}"
-                                          Stroke="{DynamicResource AppAccent}"/>
-                                </Border>
-
-                                <TextBlock x:Name="QuickLookupHotkeyText"
-                                           DockPanel.Dock="Right"
-                                           Style="{StaticResource RailQuickToolHotkey}"/>
-
-                                <TextBlock Text="{DynamicResource S.Shell.QuickLookup}"
-                                           FontWeight="SemiBold"
-                                           VerticalAlignment="Center"
-                                           TextTrimming="CharacterEllipsis"/>
-                            </DockPanel>
-                        </Button>
-
-                        <Border DockPanel.Dock="Top"
-                                Height="1"
-                                Margin="16,14,16,10"
-                                Background="{DynamicResource AppSeparator}"/>
-
                         <!-- Nav list + sliding selection indicator -->
                         <Grid VerticalAlignment="Top">
                             <Border x:Name="NavIndicator"
@@ -385,21 +313,6 @@
                                               Data="{StaticResource TextTranslateMarkGeometry}"
                                               Width="24"/>
                                         <TextBlock Text="{DynamicResource S.Shell.TextTranslate}" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </RadioButton>
-
-                                <!-- Its own destination rather than a mode of 文字翻譯: nothing on
-                                     that page applies here, and a session started from it keeps
-                                     running long after the user has navigated away. -->
-                                <RadioButton x:Name="RealtimeNav"
-                                             Style="{StaticResource NavItem}"
-                                             GroupName="ShellNav"
-                                             Checked="Nav_Checked">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Path Style="{StaticResource DrawnMark}"
-                                              Data="{StaticResource RealtimeMarkGeometry}"
-                                              Width="24"/>
-                                        <TextBlock Text="{DynamicResource S.Shell.RealtimeTranslate}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </RadioButton>
 

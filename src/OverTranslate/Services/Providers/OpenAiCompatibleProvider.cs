@@ -205,7 +205,8 @@ public sealed class OpenAiCompatibleProvider : ITranslationProvider
         // answer came from — with a local server the model is the variable that explains the output.
         var prompt = BuildPrompt(sourceLang, targetLang, options.Template, options.Batch);
         Log.Info("OpenAI 相容翻譯：{Count} 個區塊，模型 \"{Model:l}\"，端點 {Endpoint}，{Mode:l}，{Way:l}",
-            blocks.Count, model, endpoint, prompt.IsDefault ? "預設模板" : prompt.HasContext ? "自訂模板" : "自訂模板（無上下文）",
+            blocks.Count, model, DiagnosticBundleService.RedactUrlCredentials(endpoint.AbsoluteUri),
+            prompt.IsDefault ? "預設模板" : prompt.HasContext ? "自訂模板" : "自訂模板（無上下文）",
             options.Batch ? "批次" : "逐段");
 
         // The user's own words only at Debug, beside the text: what they wrote can quote what was on

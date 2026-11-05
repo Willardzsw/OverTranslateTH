@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using NLog;
+using OverTranslate.Models;
 using RapidOcrNet;
 using SkiaSharp;
 
@@ -87,6 +88,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
     private readonly object _sync = new();
     // Admits a bounded number of concurrent inferences; see RecognizeAsync for why it is bounded.
     private readonly SemaphoreSlim _inferenceGate = new(InferenceSlots, InferenceSlots);
+    private readonly CancellationTokenSource _shutdown = new();
     private readonly System.Threading.Timer _idleReleaseTimer;
     private RapidOcrRuntime? _current;
     // Written under _sync; volatile so the UI thread can ask what is loaded without waiting out a
@@ -100,12 +102,22 @@ internal sealed class OnnxOcrEngine : IOcrEngine
     // in-use check is what makes a stale idle callback that fires during a new capture benign.
     // Guarded by _sync.
     private int _inUse;
-    private bool _disposed;
+    private volatile bool _disposed;
     // Suspends the idle release. Guarded by _sync.
     private bool _keepWarm;
 
-    public OnnxOcrEngine() =>
+    private readonly Func<string, string> _modelSelector;
+    private readonly Func<OcrModelSettings> _performanceSettings;
+    internal string? ExecutionDevice => _current?.Device;
+
+    public OnnxOcrEngine() : this(null) { }
+
+    public OnnxOcrEngine(Func<string, string>? modelSelector, Func<OcrModelSettings>? performanceSettings = null)
+    {
+        _modelSelector = modelSelector ?? GetModelKeyForLanguage;
+        _performanceSettings = performanceSettings ?? (() => new OcrModelSettings());
         _idleReleaseTimer = new System.Threading.Timer(_ => ReleaseIdleRuntime());
+    }
 
     /// <summary>
     /// Holds the loaded model in memory regardless of how long it sits unused.
@@ -160,7 +172,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
     }
 
     /// <summary>Whether the model for the language is in memory; does not wait for a load under way.</summary>
-    internal bool IsLoaded(string sourceLanguage) => _currentModelKey == GetModelKeyForLanguage(sourceLanguage);
+    internal bool IsLoaded(string sourceLanguage) => _currentModelKey == RuntimeIdentity(_modelSelector(sourceLanguage), _performanceSettings());
 
     /// <summary>Whether a model is being loaded right now.</summary>
     internal bool IsLoading => _loading;
@@ -201,7 +213,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
             // slot count concurrent passes only split the same cores between themselves: overlapping
             // captures (frame it wrong, Esc, frame again) used to pile up that way and starve the
             // one the user was actually waiting for.
-            await _inferenceGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+            await WaitForInferenceSlotAsync(cancellationToken).ConfigureAwait(false);
             try
             {
                 // Checked after the gate, not before: by the time an abandoned request reaches the
@@ -233,7 +245,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
         {
             // Inside the lambda, not before it: Task.Run with an already-cancelled token never runs
             // the body, so a slot taken out here would never be given back.
-            if (!_inferenceGate.Wait(0, cancellationToken))
+            if (!TryEnterInferenceSlot(cancellationToken))
                 return null;
 
             try
@@ -248,12 +260,43 @@ internal sealed class OnnxOcrEngine : IOcrEngine
         }, cancellationToken);
     }
 
-    public IOcrSlot? TryTakeSlot() => _inferenceGate.Wait(0) ? new Slot(this) : null;
+    public IOcrSlot? TryTakeSlot() => TryEnterInferenceSlot() ? new Slot(this) : null;
 
     public async Task<IOcrSlot> TakeSlotAsync(CancellationToken cancellationToken)
     {
-        await _inferenceGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        await WaitForInferenceSlotAsync(cancellationToken).ConfigureAwait(false);
         return new Slot(this);
+    }
+
+    private bool TryEnterInferenceSlot(CancellationToken cancellationToken = default)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        if (!_inferenceGate.Wait(0, cancellationToken)) return false;
+        if (_disposed)
+        {
+            _inferenceGate.Release();
+            throw new ObjectDisposedException(nameof(OnnxOcrEngine));
+        }
+        return true;
+    }
+
+    private async Task WaitForInferenceSlotAsync(CancellationToken cancellationToken)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _shutdown.Token);
+        try
+        {
+            await _inferenceGate.WaitAsync(stop.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (_disposed && !cancellationToken.IsCancellationRequested)
+        {
+            throw new ObjectDisposedException(nameof(OnnxOcrEngine));
+        }
+        if (_disposed)
+        {
+            _inferenceGate.Release();
+            throw new ObjectDisposedException(nameof(OnnxOcrEngine));
+        }
     }
 
     /// <summary>One of <see cref="_inferenceGate"/>'s slots, given back once, when disposed.</summary>
@@ -357,10 +400,19 @@ internal sealed class OnnxOcrEngine : IOcrEngine
         }
     }
 
+    internal static void ClampToImage(SKPointI[] points, int width, int height)
+    {
+        for (var index = 0; index < points.Length; index++)
+            points[index] = new SKPointI(Math.Clamp(points[index].X, 0, width), Math.Clamp(points[index].Y, 0, height));
+    }
+
     internal static string GetModelKeyForLanguage(string language) =>
         OcrLanguageRouter.Normalize(language) switch
         {
             "KO" => "korean",
+            // Thai is absent from the shared v6 dictionary. Keep its v5 recognizer separate;
+            // the detector still supplies the original image coordinates for the overlay.
+            "TH" => "thai",
             // Everything else uses the general ("cjk") model — PP-OCRv6_small_rec, one model
             // covering 50 languages: Simplified and Traditional Chinese, English, Japanese, and 46
             // Latin-script ones. English UI captures very often contain embedded Chinese (chrome,
@@ -397,7 +449,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
         try
         {
             using var skBitmap = ConvertToSkBitmap(bitmap);
-            using var frame = CreateDetectorFrame(skBitmap, maxDetectSize);
+            using var frame = CreateDetectorFrame(skBitmap, maxDetectSize, runtime.Thresholds);
 
             return runtime.Engine.DetectBoxes(frame.Bitmap, frame.Options)
                 .Select(box => (frame.ToSourceBounds(box.BoxPoints), box.Score))
@@ -441,7 +493,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
 
         return Task.Run<IReadOnlyList<System.Windows.Rect>?>(() =>
         {
-            if (!_inferenceGate.Wait(0, cancellationToken))
+            if (!TryEnterInferenceSlot(cancellationToken))
                 return null;
 
             try
@@ -566,6 +618,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
         // False when the caller acquired the runtime itself and releases it in its own finally.
         private readonly bool _releasesRuntime;
         private readonly bool _verticalText;
+        private int _disposed;
 
         internal DetectionSession(
             OnnxOcrEngine owner,
@@ -584,7 +637,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
             _engine = runtime.Engine;
             _language = normalizedLanguage;
             _skBitmap = ConvertToSkBitmap(bitmap);
-            _frame = CreateDetectorFrame(_skBitmap, maxDetectSize);
+            _frame = CreateDetectorFrame(_skBitmap, maxDetectSize, runtime.Thresholds);
             _options = _frame.Options;
 
             _detectorInput = PrepareDetectorInputMethod.Invoke(null, new object[] { _frame.Bitmap, _options })!;
@@ -643,9 +696,20 @@ internal sealed class OnnxOcrEngine : IOcrEngine
                     {
                         var points = (SKPointI[])box.BoxPoints.Clone();
                         MapToOriginalMethod.Invoke(_detectorInput, new object[] { points });
-                        return (Bounds: _frame.ToSourceBounds(points), box.Score);
+                        MapPointsToSource(points);
+                        var bounds = new System.Windows.Rect(points.Min(p => p.X), points.Min(p => p.Y),
+                            points.Max(p => p.X) - points.Min(p => p.X), points.Max(p => p.Y) - points.Min(p => p.Y));
+                        return (Bounds: bounds, box.Score);
                     })
                     .ToList();
+        }
+
+        private void MapPointsToSource(SKPointI[] points)
+        {
+            _frame.MapToSource(points);
+            // The aligned detector input can extend past the original image by up to 31px.
+            // Thai crops touching the frame edge must not place overlay boxes in that padding.
+            if (_language == "TH") ClampToImage(points, _skBitmap.Width, _skBitmap.Height);
         }
 
         /// <summary>Every box the detector found, in the handed-in bitmap's own coordinates.</summary>
@@ -663,7 +727,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
             {
                 var points = (SKPointI[])box.BoxPoints.Clone();
                 MapToOriginalMethod.Invoke(_detectorInput, new object[] { points });
-                _frame.MapToSource(points);
+                MapPointsToSource(points);
                 return points;
             }),
         ];
@@ -682,6 +746,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
         internal IReadOnlyList<OcrTextBlock> Recognize(
             IReadOnlyList<int> boxIndices, out TextBlock[] recognised)
         {
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
             recognised = Array.Empty<TextBlock>();
             if (boxIndices.Count == 0) return Array.Empty<OcrTextBlock>();
 
@@ -714,7 +779,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
 
                     var points = (SKPointI[])chosen[i].BoxPoints.Clone();
                     MapToOriginalMethod.Invoke(_detectorInput, new object[] { points });
-                    _frame.MapToSource(points);
+                    MapPointsToSource(points);
 
                     textBlocks.Add(new TextBlock
                     {
@@ -746,6 +811,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
 
         public void Dispose()
         {
+            if (Interlocked.Exchange(ref _disposed, 1) != 0) return;
             ((IDisposable)_detectorInput).Dispose();
             _frame.Dispose();
             _skBitmap.Dispose();
@@ -927,36 +993,26 @@ internal sealed class OnnxOcrEngine : IOcrEngine
     // reference under _sync. Every successful call MUST be paired with a ReleaseRuntime().
     private RapidOcrRuntime AcquireRuntime(string language)
     {
-        var modelKey = GetModelKeyForLanguage(language);
+        var settings = _performanceSettings().Copy();
+        var modelName = _modelSelector(language);
+        var modelKey = RuntimeIdentity(modelName, settings);
         lock (_sync)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
 
-            if (_current is not null && _currentModelKey == modelKey)
-            {
-                _inUse++;
-                return _current;
-            }
-
-            // A different model is requested, and swapping is only safe once no Detect is running
-            // against the current runtime. With concurrent inference this is genuinely reachable —
-            // a realtime session watching English while a screenshot is translated from Korean — so
-            // wait the others out rather than failing the pass. The timeout is a backstop: it means
-            // an inference has been running far longer than any real one does, and hanging here
-            // would take the caller's whole session with it.
-            while (_inUse > 0)
+            // DirectML forbids overlapping Run calls on one session. Keep its runtime exclusively
+            // leased across detection, repair and recognition; CPU retains its existing concurrency.
+            while (_inUse > 0 && (_currentModelKey != modelKey || _current?.UsesGpu == true))
             {
                 if (!Monitor.Wait(_sync, ModelSwapDrainTimeout))
                     throw new InvalidOperationException(LocalizationService.Get("S.Error.OcrSwapTimeout"));
-
                 ObjectDisposedException.ThrowIf(_disposed, this);
-
-                // Whoever we were waiting for may have loaded the model we wanted in the meantime.
-                if (_current is not null && _currentModelKey == modelKey)
-                {
-                    _inUse++;
-                    return _current;
-                }
+            }
+            if (_current is not null && _currentModelKey == modelKey)
+            {
+                _inUse++;
+                OcrExecution.Report(OcrModelCatalog.Identity(settings), _current.Device);
+                return _current;
             }
 
             // Release the previous model's sessions/arenas before loading the next one.
@@ -969,7 +1025,8 @@ internal sealed class OnnxOcrEngine : IOcrEngine
             _loading = true;
             try
             {
-                runtime = CreateRuntime(modelKey);
+                runtime = CreateRuntime(modelName, settings);
+                OcrExecution.Report(OcrModelCatalog.Identity(settings), runtime.Device);
             }
             finally
             {
@@ -997,7 +1054,12 @@ internal sealed class OnnxOcrEngine : IOcrEngine
             if (_inUse == 0)
                 Monitor.PulseAll(_sync);
 
-            if (_disposed || _keepWarm)
+            if (_disposed)
+            {
+                if (_inUse == 0) DisposeCurrentRuntime();
+                return;
+            }
+            if (_keepWarm)
                 return;
 
             if (_inUse == 0)
@@ -1125,7 +1187,10 @@ internal sealed class OnnxOcrEngine : IOcrEngine
     /// the two models answer different questions — whether text was found at all, and whether it
     /// was read correctly — and moving both at once makes neither answer attributable.
     /// </remarks>
-    private static RapidOcrRuntime CreateRuntime(string modelName)
+    private static string RuntimeIdentity(string modelName, OcrModelSettings settings) =>
+        $"{modelName}|{OcrModelCatalog.DetectorSize(settings)}|{OcrModelCatalog.RecognizerSize(settings)}|{OcrModelCatalog.Device(settings)}";
+
+    private static RapidOcrRuntime CreateRuntime(string modelName, OcrModelSettings settings)
     {
         var sharedPath = Path.Combine(ModelRoot, "shared");
         var modelPath = Path.Combine(ModelRoot, modelName);
@@ -1140,7 +1205,15 @@ internal sealed class OnnxOcrEngine : IOcrEngine
         EnsureModelFile(recPath);
         EnsureModelFile(dictPath);
 
-        var detector = DetectorOverride ?? ShippedDetector(detPath);
+        if (OcrModelCatalog.DetectorSize(settings) != "tiny")
+            detPath = OcrModelAssets.ModelPath("det-" + OcrModelCatalog.DetectorSize(settings));
+        if (modelName == "cjk" && OcrModelCatalog.RecognizerSize(settings) == "medium")
+        {
+            recPath = OcrModelAssets.ModelPath("rec-medium");
+            dictPath = OcrModelAssets.ModelPath("dict-medium");
+        }
+        var detector = DetectorOverride ?? (OcrModelCatalog.DetectorSize(settings) == "tiny"
+            ? ShippedDetector(detPath) : new DetectorModel(detPath, ImageNetNormalization, ImageNetNormalizationStd));
         if (DetectorOverride is not null)
         {
             EnsureModelFile(detector.Path);
@@ -1157,8 +1230,10 @@ internal sealed class OnnxOcrEngine : IOcrEngine
         // same family as the library's default. Verified equivalent before the swap: loaded this
         // way with the old detector and the ImageNet statistics, a sweep of two frames across all
         // fifteen sizes reproduced the four-path result line for line.
-        engine.InitModels(
-            new RapidOcrModelSet
+        try
+        {
+            using var options = OcrExecution.Options(settings, ThreadCount, out var device);
+            OcrExecution.Initialize(engine, new RapidOcrModelSet
             {
                 DetModelPath = detector.Path,
                 ClsModelPath = clsPath,
@@ -1166,10 +1241,23 @@ internal sealed class OnnxOcrEngine : IOcrEngine
                 KeysPath = dictPath,
                 DetMean = detector.Mean,
                 DetStd = detector.Std,
-            },
-            ThreadCount);
-
-        return new RapidOcrRuntime(modelName, engine);
+            }, options);
+            Log.Info("OCR detector={Detector}, recognizer={Recognizer}, device={Device}",
+                OcrModelCatalog.DetectorSize(settings), modelName == "cjk" ? OcrModelCatalog.RecognizerSize(settings) : modelName, device);
+            return new RapidOcrRuntime(modelName, engine, device,
+                OcrModelCatalog.DetectorSize(settings) == "tiny" ? null : new DetectorThresholds(0.2f, 0.45f, 1.4f));
+        }
+        catch
+        {
+            // RapidOcr.Dispose assumes all three sessions were initialized. A provider/model load
+            // can fail earlier; release each initialized component without hiding the original error.
+            foreach (var field in typeof(RapidOcr).GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+            {
+                try { (field.GetValue(engine) as IDisposable)?.Dispose(); }
+                catch (Exception cleanup) { Log.Debug(cleanup, "Partial OCR session cleanup"); }
+            }
+            throw;
+        }
     }
 
     // Default ImgResize (1024) downscales wide UI screenshots and destroys small-text detail,
@@ -1318,7 +1406,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
     /// mode that rebuilt these itself would be measuring its own copy, and the copy is exactly the
     /// thing that drifts.
     /// </remarks>
-    internal static RapidOcrOptions CreateOptions(int? maxDetectSize)
+    internal static RapidOcrOptions CreateOptions(int? maxDetectSize, DetectorThresholds? modelThresholds = null)
     {
         var options = RapidOcrOptions.Default with
         {
@@ -1327,7 +1415,7 @@ internal sealed class OnnxOcrEngine : IOcrEngine
             Padding = DetectorPaddingOverride ?? DetectorPadding,
         };
 
-        var thresholds = DetectorThresholdOverride ?? ExportedThresholds;
+        var thresholds = DetectorThresholdOverride ?? modelThresholds ?? ExportedThresholds;
         return options with
         {
             BoxThresh = thresholds.BoxThresh,
@@ -2055,9 +2143,9 @@ internal sealed class OnnxOcrEngine : IOcrEngine
     /// <see cref="CreateOptions"/>. It is honoured exactly here, which is the point: it used to be
     /// a request the library rounded down twice, by a different amount on each axis.
     /// </param>
-    internal static DetectorFrame CreateDetectorFrame(SKBitmap source, int? maxDetectSize)
+    internal static DetectorFrame CreateDetectorFrame(SKBitmap source, int? maxDetectSize, DetectorThresholds? modelThresholds = null)
     {
-        var requested = CreateOptions(maxDetectSize);
+        var requested = CreateOptions(maxDetectSize, modelThresholds);
         var longest = Math.Max(source.Width, source.Height);
 
         // ImgResize only ever downscales, so a request at or above the input is no request at all.
@@ -2194,19 +2282,24 @@ internal sealed class OnnxOcrEngine : IOcrEngine
     {
         lock (_sync)
         {
+            if (_disposed) return;
             _disposed = true;
             _idleReleaseTimer.Dispose();
-            _current?.Dispose();
-            _current = null;
-            _currentModelKey = null;
+            // An active pass owns native sessions until its final ReleaseRuntime. Freeing them
+            // here can crash inside ONNX rather than producing a managed cancellation exception.
+            if (_inUse == 0) DisposeCurrentRuntime();
+            Monitor.PulseAll(_sync);
         }
 
-        // Outside _sync: a waiter released by disposal must not need the lock we are holding.
-        _inferenceGate.Dispose();
+        // Wake queued requests, but leave the managed gate alive for leases and in-flight finally
+        // blocks to return their slots. SemaphoreSlim.Dispose is not safe concurrently with them.
+        // Neither this gate nor the shutdown source creates a native wait handle here.
+        _shutdown.Cancel();
     }
 
-    internal sealed record RapidOcrRuntime(string ModelName, RapidOcr Engine) : IDisposable
+    internal sealed record RapidOcrRuntime(string ModelName, RapidOcr Engine, string Device = "CPU", DetectorThresholds? Thresholds = null) : IDisposable
     {
+        internal bool UsesGpu => Device.StartsWith("DirectML", StringComparison.Ordinal);
         public void Dispose() => Engine.Dispose();
     }
 }

@@ -32,8 +32,37 @@ public class TtsService : IDisposable
 
     private MediaPlayer? _player;
     private string? _currentFile;
-    private CancellationTokenSource? _cts;
+    private readonly LatestRequest _request = new();
+    private readonly Func<string, string, CancellationToken, Task<byte[]>> _synthesize;
+    private readonly Action<Action> _invoke;
+    private readonly Action<string> _play;
+    private readonly Action _close;
+    private readonly Func<string, byte[], CancellationToken, Task> _writeFile;
+    private readonly string _tempDirectory;
+    private bool _disposed;
     private bool _active;
+
+    public TtsService() : this(
+        async (text, language, token) => (await Synthesizer.SynthesizeAsync(text, language, token)).Audio,
+        action => System.Windows.Application.Current.Dispatcher.Invoke(action),
+        null, null, Path.Combine(AppDataPaths.Root, "cache", "tts")) { }
+
+    internal TtsService(Func<string, string, CancellationToken, Task<byte[]>> synthesize,
+        Action<Action> invoke, Action<string>? play, Action? close, string tempDirectory,
+        Func<string, byte[], CancellationToken, Task>? writeFile = null)
+    {
+        _synthesize = synthesize;
+        _invoke = invoke;
+        _play = play ?? (file =>
+        {
+            var player = EnsurePlayer();
+            player.Open(new Uri(file));
+            player.Play();
+        });
+        _close = close ?? ClosePlayer;
+        _tempDirectory = tempDirectory;
+        _writeFile = writeFile ?? File.WriteAllBytesAsync;
+    }
 
     /// <summary>True while fetching audio or playing. Lets the UI toggle a play/stop button.</summary>
     public bool IsActive => _active;
@@ -64,6 +93,7 @@ public class TtsService : IDisposable
         };
         player.MediaFailed += (_, e) =>
         {
+            if (!ReferenceEquals(_player, player)) return;
             Log.Warn(e.ErrorException, "TTS playback failed, discarding player");
             player.Close();
             if (ReferenceEquals(_player, player))
@@ -81,11 +111,19 @@ public class TtsService : IDisposable
     /// <summary>Stops playback and releases the file the player was holding. UI thread only.</summary>
     private void ClosePlayer()
     {
-        if (_player != null)
+        var player = _player;
+        _player = null;
+        if (player != null)
         {
-            _player.Stop();
-            _player.Close();
+            // A queued event from the old playback must not reset the next request's state.
+            player.Stop();
+            player.Close();
         }
+    }
+
+    private void ClosePlayback()
+    {
+        _close();
         DeleteCurrentFile();
     }
 
@@ -103,25 +141,30 @@ public class TtsService : IDisposable
     /// Every playback gets its own file: the player keeps the previous one open, and re-opening the
     /// same path also runs into the media stack caching that URI.
     /// </summary>
-    private static string NewTempFile() =>
-        Path.Combine(Path.GetTempPath(), $"{TempPrefix}{Guid.NewGuid():N}.mp3");
+    private string NewTempFile() =>
+        Path.Combine(_tempDirectory, $"{TempPrefix}{Guid.NewGuid():N}.mp3");
 
     private void DeleteCurrentFile()
     {
         var file = Interlocked.Exchange(ref _currentFile, null);
+        DeleteFile(file);
+    }
+
+    private static void DeleteFile(string? file)
+    {
         if (file == null) return;
         try { File.Delete(file); }
         catch (Exception ex) { Log.Debug(ex, "Could not delete TTS temp file {File}", file); }
     }
 
     /// <summary>Removes files an earlier crash left behind. Old enough that no live player holds them.</summary>
-    private static void SweepStaleFilesOnce()
+    private void SweepStaleFilesOnce()
     {
         if (Interlocked.Exchange(ref _staleFilesSwept, 1) != 0) return;
         try
         {
             var cutoff = DateTime.UtcNow - TimeSpan.FromHours(1);
-            foreach (var file in Directory.EnumerateFiles(Path.GetTempPath(), TempPrefix + "*.mp3"))
+            foreach (var file in Directory.EnumerateFiles(_tempDirectory, TempPrefix + "*.mp3"))
             {
                 try
                 {
@@ -136,24 +179,25 @@ public class TtsService : IDisposable
     /// <summary>Stops any in-flight fetch and playback.</summary>
     public void Stop()
     {
-        _cts?.Cancel();
-        System.Windows.Application.Current.Dispatcher.Invoke(ClosePlayer);
-        SetActive(false);
+        _request.Supersede();
+        _invoke(() =>
+        {
+            ClosePlayback();
+            SetActive(false);
+        });
     }
 
     public async Task SpeakAsync(string text, string langCode)
     {
+        ObjectDisposedException.ThrowIf(_disposed, this);
         if (string.IsNullOrWhiteSpace(text)) return;
 
-        _cts?.Cancel();
-        _cts?.Dispose();
-        _cts = new CancellationTokenSource();
-        var token = _cts.Token;
-
-        System.Windows.Application.Current.Dispatcher.Invoke(ClosePlayer);
-        SetActive(true);
-
-        SweepStaleFilesOnce();
+        var (seq, token) = _request.Start();
+        _invoke(() =>
+        {
+            ClosePlayback();
+            SetActive(true);
+        });
 
         // The same codes translation speaks, so every language the pickers offer has its voice —
         // the old table knew fifteen and read the rest in English. 自動 is no language to read in;
@@ -162,26 +206,32 @@ public class TtsService : IDisposable
         if (language is null)
         {
             Log.Debug("TTS skipped: no language to read {Lang} in", langCode);
-            SetActive(false);
+            _invoke(() => SetActive(false));
             return;
         }
 
+        string? pendingFile = null;
         try
         {
             // The token reaches the request itself, so 停止 aborts the download rather than only
             // discarding it when it arrives.
-            var (audio, _) = await Synthesizer.SynthesizeAsync(text, language, token);
+            var audio = await _synthesize(text, language, token);
+            token.ThrowIfCancellationRequested();
 
-            var file = NewTempFile();
-            await File.WriteAllBytesAsync(file, audio, token);
+            Directory.CreateDirectory(_tempDirectory);
+            SweepStaleFilesOnce();
+            pendingFile = NewTempFile();
+            await _writeFile(pendingFile, audio, token);
 
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            _invoke(() =>
             {
-                DeleteCurrentFile();
-                _currentFile = file;
-                var player = EnsurePlayer();
-                player.Open(new Uri(file));
-                player.Play();
+                // Cancellation can arrive after the write completes, or while this callback waits
+                // for the UI. A stopped/replaced request must never start playing at that point.
+                if (token.IsCancellationRequested || !_request.IsCurrent(seq)) return;
+                ClosePlayback();
+                _currentFile = pendingFile;
+                _play(pendingFile);
+                pendingFile = null; // playback now owns the file
             });
         }
         catch (Exception) when (token.IsCancellationRequested)
@@ -191,15 +241,25 @@ public class TtsService : IDisposable
         catch
         {
             // Every engine failed — clear state so the button resets, and let the caller say so.
-            SetActive(false);
+            _invoke(() =>
+            {
+                if (!_request.IsCurrent(seq)) return;
+                ClosePlayback();
+                SetActive(false);
+            });
             throw;
+        }
+        finally
+        {
+            // Includes a cancelled/failed partial write and a stale result waiting for the UI.
+            DeleteFile(pendingFile);
         }
     }
 
     public void Dispose()
     {
-        _cts?.Cancel();
-        _cts?.Dispose();
-        System.Windows.Application.Current.Dispatcher.Invoke(ClosePlayer);
+        if (_disposed) return;
+        _disposed = true;
+        Stop();
     }
 }

@@ -24,18 +24,13 @@
 
     <!-- ── Shell window ── -->
     <sys:String x:Key="S.Shell.About">このアプリについて</sys:String>
-    <sys:String x:Key="S.Shell.QuickTools">クイックツール</sys:String>
     <sys:String x:Key="S.Shell.CaptureTranslate">キャプチャ翻訳</sys:String>
-    <sys:String x:Key="S.Shell.QuickLookup">ポップアップ翻訳</sys:String>
     <sys:String x:Key="S.Shell.TextTranslate">テキスト翻訳</sys:String>
-    <sys:String x:Key="S.Shell.RealtimeTranslate">リアルタイム翻訳</sys:String>
     <sys:String x:Key="S.Shell.Settings">設定</sys:String>
     <sys:String x:Key="S.Shell.HideSidebar">サイドバーを閉じる</sys:String>
     <sys:String x:Key="S.Shell.ShowSidebar">サイドバーを開く</sys:String>
     <sys:String x:Key="S.Shell.Pin">ウィンドウを常に手前に表示します</sys:String>
     <sys:String x:Key="S.Shell.Unpin">ピン留めを解除</sys:String>
-    <sys:String x:Key="S.Shell.CaptureBlockedByRealtimeFraming">ブロックを選択中です。「開始」を押してからキャプチャ翻訳をご利用ください</sys:String>
-    <sys:String x:Key="S.Shell.QuickLookupBlockedByRealtime">リアルタイム翻訳の実行中です。終了してからポップアップ翻訳をご利用ください</sys:String>
     <sys:String x:Key="S.Shell.UpdateAvailable">v{0} にアップデート</sys:String>
 
     <!-- ── Tray menu ── -->
@@ -58,27 +53,8 @@
     <sys:String x:Key="S.Toast.CopyFailed">コピーできませんでした。しばらくしてからもう一度お試しください。</sys:String>
 
     <!-- ── Update ── -->
-    <sys:String x:Key="S.Update.WindowTitle">新しいバージョンがあります</sys:String>
-    <sys:String x:Key="S.Update.Heading">新しいバージョンがあります</sys:String>
-    <sys:String x:Key="S.Update.Explanation">「今すぐ更新」を押すとダウンロードして適用し、完了後に自動で再起動します。</sys:String>
-    <sys:String x:Key="S.Update.NotesBefore" xml:space="preserve">変更内容が気になりますか？</sys:String>
-    <sys:String x:Key="S.Update.NotesLink">リリースノートを見る</sys:String>
     <sys:String x:Key="S.Update.Later">あとで</sys:String>
-    <sys:String x:Key="S.Update.Now">今すぐ更新</sys:String>
     <sys:String x:Key="S.Update.Skip">このバージョンをスキップして通知しない</sys:String>
-    <sys:String x:Key="S.Update.DownloadingDelta">更新ファイルをダウンロード中 {0} · {1}</sys:String>
-    <sys:String x:Key="S.Update.DownloadingFull">完全パッケージをダウンロード中 {0} · {1}</sys:String>
-    <sys:String x:Key="S.Update.Patching">更新を適用中…</sys:String>
-    <sys:String x:Key="S.Update.Preparing">インストールの準備中…</sys:String>
-    <sys:String x:Key="S.Update.Applying">インストール中…</sys:String>
-    <sys:String x:Key="S.Update.FellBackToFull">更新ファイルを適用できず、完全更新に切り替えました</sys:String>
-    <sys:String x:Key="S.Update.SlowBefore" xml:space="preserve">ダウンロードが遅い？</sys:String>
-    <sys:String x:Key="S.Update.SlowLink">GitHub から手動で入手</sys:String>
-    <sys:String x:Key="S.Update.Cancel">更新をキャンセル</sys:String>
-    <sys:String x:Key="S.Update.Cancelling">キャンセル中…</sys:String>
-    <sys:String x:Key="S.Update.Retry">再試行</sys:String>
-    <sys:String x:Key="S.Update.Failed">アップデートをダウンロードできませんでした：{0}</sys:String>
-    <sys:String x:Key="S.Update.CloseBlocked">アップデート中です。完了すると自動で再起動します</sys:String>
 
     <!-- ── Service errors ── -->
     <sys:String x:Key="S.Error.OpenAiHttp">OpenAI 互換 API が {0} を返しました：{1}</sys:String>
@@ -89,7 +65,7 @@
     <sys:String x:Key="S.Error.OpenAiNoModel">モデル名が設定されていません。翻訳サービス設定で使用するモデルを入力してください。</sys:String>
     <sys:String x:Key="S.Error.UnknownError">不明なエラー</sys:String>
     <sys:String x:Key="S.Error.NoErrorContent">エラーの詳細はありません</sys:String>
-    <sys:String x:Key="S.Error.OcrUnsupportedLanguage">OCR が対応しているのは AUTO、EN、ZH、ZH-HANT、JA、KO のみです。「{0}」はまだ対応していません。</sys:String>
+    <sys:String x:Key="S.Error.OcrUnsupportedLanguage">OCR が対応しているのは AUTO、EN、ZH、ZH-HANT、JA、KO、TH のみです。「{0}」はまだ対応していません。</sys:String>
     <sys:String x:Key="S.Error.OcrSwapTimeout">OCR モデルの切り替えのため他の認識の完了を待ちましたが、タイムアウトしました。</sys:String>
     <sys:String x:Key="S.Error.OcrImageConvert">画像を ONNX OCR が読める形式に変換できませんでした。</sys:String>
     <sys:String x:Key="S.Error.OcrModelMissing">OCR モデルファイルが見つかりません：{0}</sys:String>
@@ -259,8 +235,6 @@
     <sys:String x:Key="S.Main.MinimizedTitle">OverTranslate は動作中です</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">タスクトレイに最小化しました。{0} でキャプチャ翻訳を開始できます。</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">設定したショートカットキー</sys:String>
-    <sys:String x:Key="S.Main.RealtimeRunningTitle">リアルタイム翻訳の実行中</sys:String>
-    <sys:String x:Key="S.Main.RealtimeRunningBody">ブロックの編集中はポップアップ翻訳を使用できません。</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">API キーがありません</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyBody">設定で API キーを入力してください。</sys:String>
     <sys:String x:Key="S.Main.RecogniseFailedTitle">認識に失敗しました</sys:String>
@@ -408,7 +382,6 @@
     <sys:String x:Key="S.Realtime.WindowCaptureFailed">このウィンドウは取り込めません。「ボーダーレスウィンドウ」または「ウィンドウモード」に切り替えてもう一度お試しください。</sys:String>
     <sys:String x:Key="S.Realtime.WindowCaptureFullscreen">現在の表示モードでは取り込めません。「ボーダーレスウィンドウ」または「ウィンドウモード」に切り替えてもう一度お試しください。</sys:String>
     <sys:String x:Key="S.Realtime.WindowCaptureNoFrame">ウィンドウの映像を取得できませんでした。「ボーダーレスウィンドウ」または「ウィンドウモード」に切り替えてもう一度お試しください。</sys:String>
-    <sys:String x:Key="S.Realtime.SessionEndedTitle">リアルタイム翻訳を終了しました</sys:String>
     <sys:String x:Key="S.Realtime.RemoveBlock">このブロックを削除</sys:String>
 
     <!-- Block mode picker -->
@@ -470,9 +443,6 @@
     <sys:String x:Key="S.Settings.HotkeyGuideSharedExample">例：サイドボタンでブラウザーが前のページに戻ることがあります</sys:String>
     <sys:String x:Key="S.Settings.HotkeyGuideSharedDouble">2 回押しは上の 2 つのみ。元の機能が重ねて動くのを防ぐためです</sys:String>
     <sys:String x:Key="S.Settings.HotkeyElevatedNote">管理者として実行中のアプリでは、このショートカットが使えないことがあります</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkey">リアルタイム翻訳</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">ショートカットで[[ブロックを選択して翻訳]]</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">停止中にショートカットを押すとブロック選択を開始し、選択中にもう一度押すと翻訳を開始します。翻訳中は一時停止／再開できます。</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkey">ポップアップ翻訳</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkeyHint">ショートカットキーで[[ポップアップ翻訳]]を開く</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkeyNote">テキストを選択していると、ウィンドウを開いたときに自動で読み込んで翻訳します。</sys:String>
@@ -686,6 +656,7 @@
     <sys:String x:Key="S.Lang.English">英語</sys:String>
     <sys:String x:Key="S.Lang.Japanese">日本語</sys:String>
     <sys:String x:Key="S.Lang.Korean">韓国語</sys:String>
+    <sys:String x:Key="S.Lang.Thai">タイ語</sys:String>
     <sys:String x:Key="S.Lang.TraditionalChinese">繁体字中国語</sys:String>
     <sys:String x:Key="S.Lang.SimplifiedChinese">簡体字中国語</sys:String>
     <sys:String x:Key="S.Lang.Bulgarian">ブルガリア語</sys:String>
@@ -741,4 +712,37 @@
     <!-- Two lines, one per half of the switch. xml:space is what keeps the break: without it XAML
          collapses the &#x0A; away and the two sentences run together. -->
     <sys:String x:Key="S.Debug.ScopeHint" xml:space="preserve">原文のみ：枠線は原文の画面にのみ表示します。&#x0A;原文と訳文：原文・訳文どちらの画面にも枠線を表示します</sys:String>
+
+    <!-- Thai fork: notification only, with no official binary installer. -->
+    <sys:String x:Key="S.Update.NotifyHeading">公式の新しいバージョン</sys:String>
+    <sys:String x:Key="S.Update.NotifyExplanation">このタイ語版は更新を通知するだけです。新しいバージョンをチャットで伝え、公式ソースの統合とタイ語機能の検証後に更新してください。</sys:String>
+    <sys:String x:Key="S.Update.OfficialBaseline">現在の公式ベース：v{0}</sys:String>
+    <sys:String x:Key="S.Update.OfficialLatest">公式の最新バージョン：v{0}</sys:String>
+    <sys:String x:Key="S.Update.OpenOfficialNotes">公式の更新内容を表示</sys:String>
+    <sys:String x:Key="S.Update.OpenNotesFailed">ブラウザーを開けませんでした。後でもう一度お試しください。</sys:String>
+
+    <!-- Installed local OCR model selection. -->
+    <sys:String x:Key="S.OcrModel.Title">OCR 認識モデル</sys:String>
+    <sys:String x:Key="S.OcrModel.ByLanguage">入力言語に合わせる（既定）</sys:String>
+    <sys:String x:Key="S.OcrModel.General">PP-OCRv6 · 中英日（ローカル）</sys:String>
+    <sys:String x:Key="S.OcrModel.Thai">PP-OCRv5 · タイ語/英語（ローカル）</sys:String>
+    <sys:String x:Key="S.OcrModel.Korean">韓国語専用モデル（ローカル）</sys:String>
+    <sys:String x:Key="S.OcrModel.Hint">画面キャプチャの OCR に使用します。入力言語に合うモデルを選ぶと、次の認識から適用されます。</sys:String>
+    <sys:String x:Key="S.OcrModel.Incompatible">この OCR モデルは入力言語に対応していません。汎用：中英日、タイ語：タイ語/英語、韓国語：韓国語。</sys:String>
+    <sys:String x:Key="S.OcrModel.DetectorSize">文字検出サイズ（全言語）</sys:String>
+    <sys:String x:Key="S.OcrModel.RecognizerSize">汎用認識サイズ（中国語・英語・日本語）</sys:String>
+    <sys:String x:Key="S.OcrModel.ScaleHint">大きいモデルは通常、時間とメモリを多く使います。同じ画像で比較してください。タイ語と韓国語は専用認識モデルを維持します。</sys:String>
+    <sys:String x:Key="S.OcrModel.Device">実行デバイス</sys:String>
+    <sys:String x:Key="S.OcrModel.DeviceHint">GPU は DirectML を使用し、CUDA は不要です。初回は遅くなる場合があります。GPU が使えない場合は CPU を選択してください。</sys:String>
+    <sys:String x:Key="S.OcrModel.Tiny">Tiny · 高速</sys:String>
+    <sys:String x:Key="S.OcrModel.Small">Small · バランス</sys:String>
+    <sys:String x:Key="S.OcrModel.Medium">Medium · 大型</sys:String>
+    <sys:String x:Key="S.OcrModel.Prepare">選択したモデルと GPU コンポーネントを準備</sys:String>
+    <sys:String x:Key="S.OcrModel.Preparing">準備中：{0}</sys:String>
+    <sys:String x:Key="S.OcrModel.Ready">選択したコンポーネントは準備済みです。</sys:String>
+    <sys:String x:Key="S.OcrModel.PrepareNeeded">コンポーネントがありません。準備ボタンを押してください。</sys:String>
+    <sys:String x:Key="S.OcrModel.PrepareFailed">準備失敗：</sys:String>
+    <sys:String x:Key="S.OcrModel.ActualDevice">前回の実行デバイス：{0}</sys:String>
+    <sys:String x:Key="S.OcrModel.NextRun">変更は次の認識から適用されます。</sys:String>
+    <sys:String x:Key="S.OcrModel.DeviceUnavailable">選択した GPU は使用不可（CPU を選択可能）</sys:String>
 </ResourceDictionary>

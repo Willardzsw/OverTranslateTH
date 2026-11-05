@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 using Xunit;
 
 namespace OverTranslate.Tests;
@@ -23,30 +23,13 @@ public class ShellWindowMarkupTests
     /// are then the only place that reason exists — the rail has no room for a note beside them.
     /// WPF withholds tooltips from disabled controls unless asked.
     /// </summary>
-    [Theory]
-    [InlineData("CaptureBtn")]
-    [InlineData("QuickLookupBtn")]
-    public void A_quick_tool_still_explains_itself_while_disabled(string name)
-    {
-        Assert.Equal("True", (string?)Row(name).Attribute("ToolTipService.ShowOnDisabled"));
-    }
+
 
     /// <summary>
     /// The shortcut is docked before the label, so the label is what trims when a row's two halves
     /// do not both fit. A shortcut trimmed to "Ctrl+Al..." names no key the user can press.
     /// </summary>
-    [Theory]
-    [InlineData("CaptureBtn", "CaptureHotkeyText")]
-    [InlineData("QuickLookupBtn", "QuickLookupHotkeyText")]
-    public void A_quick_tool_trims_its_name_rather_than_its_shortcut(string row, string hotkey)
-    {
-        var children = Row(row).Elements().Single().Elements().ToList();
 
-        var shortcutAt = children.FindIndex(e => (string?)e.Attribute(X + "Name") == hotkey);
-        var labelAt = children.FindIndex(e => (string?)e.Attribute("TextTrimming") is not null);
-
-        Assert.True(shortcutAt >= 0 && labelAt > shortcutAt);
-    }
 
     /// <summary>
     /// The drag area and the strip the user sees have to be the same strip: WindowChrome's caption

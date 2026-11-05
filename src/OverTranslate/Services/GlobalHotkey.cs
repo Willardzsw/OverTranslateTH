@@ -18,6 +18,8 @@ public class GlobalHotkey : IDisposable
     /// distinct — see the constants below for the ones in use.
     /// </remarks>
     private readonly int _id;
+    private readonly Func<IntPtr, int, uint, uint, bool> _register;
+    private readonly Func<IntPtr, int, bool> _unregister;
 
     /// <summary>The screenshot capture shortcut, the application's original and main one.</summary>
     public const int CaptureId = 9001;
@@ -34,7 +36,15 @@ public class GlobalHotkey : IDisposable
     /// <summary>The shortcut that replaces the selection with its translation.</summary>
     public const int QuickTranslateId = 9006;
 
-    public GlobalHotkey(int id) => _id = id;
+    public GlobalHotkey(int id) : this(id, RegisterHotKey, UnregisterHotKey) { }
+
+    internal GlobalHotkey(int id, Func<IntPtr, int, uint, uint, bool> register,
+        Func<IntPtr, int, bool> unregister)
+    {
+        _id = id;
+        _register = register;
+        _unregister = unregister;
+    }
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
@@ -50,28 +60,32 @@ public class GlobalHotkey : IDisposable
 
     public void Register(IntPtr hwnd, uint modifiers, uint virtualKey)
     {
-        _hwnd = hwnd;
         Unregister();
-
-        _source = HwndSource.FromHwnd(hwnd);
-        _source?.AddHook(WndProc);
+        _hwnd = hwnd;
 
         // MOD_NOREPEAT added here rather than stored: it is how the shortcut is registered, not part
         // of what the user chose, and settings.json should go on saying only what they picked.
         // Without it Windows repeats WM_HOTKEY at the keyboard's repeat rate while the key is held,
         // and every one of these shortcuts is a toggle or a session start — held for half a second,
         // a single key would switch the one-shot view back and forth a dozen times.
-        _registered = RegisterHotKey(hwnd, _id, modifiers | MOD_NOREPEAT, virtualKey);
+        _registered = _register(hwnd, _id, modifiers | MOD_NOREPEAT, virtualKey);
+        if (_registered)
+        {
+            _source = HwndSource.FromHwnd(hwnd);
+            _source?.AddHook(WndProc);
+        }
     }
 
     public void Unregister()
     {
         if (_registered)
         {
-            UnregisterHotKey(_hwnd, _id);
+            _unregister(_hwnd, _id);
             _registered = false;
         }
         _source?.RemoveHook(WndProc);
+        _source = null;
+        _hwnd = IntPtr.Zero;
     }
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

@@ -130,11 +130,11 @@ public sealed class UninstallCleanupTests : IDisposable
     }
 
     [Fact]
-    public void TheDefaultAssetsFolder_IsItsOwnFolderInLocalAppData_NotLocalAppDataNorTheInstallRoot()
+    public void TheDefaultAssetsFolder_IsInsideTheIndependentThaiProfile()
     {
         var local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-        Assert.Equal(Path.Combine(local, "OverTranslate-assets"), AppDataPaths.DefaultAssetsRoot);
+        Assert.Equal(Path.Combine(AppContext.BaseDirectory, "profile-thai", "assets"), AppDataPaths.DefaultAssetsRoot);
         Assert.Equal(-1, UninstallCleanup.RemoveAssets(local));
         Assert.Equal(-1, UninstallCleanup.RemoveAssets(Path.Combine(local, "OverTranslate")));
         // Settings and logs are not under it, so uninstalling leaves them.

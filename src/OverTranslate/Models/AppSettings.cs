@@ -244,6 +244,9 @@ public class AppSettings
     /// </remarks>
     public bool UseMangaModels { get; set; } = true;
 
+    /// <summary>The recognition model choice, shared by screenshot and realtime OCR.</summary>
+    public OcrModelSettings OcrModels { get; set; } = new();
+
     /// <summary>Empty means "use ScreenshotSaveService.DefaultDirectory" (圖片\OverTranslate).</summary>
     public string ScreenshotSavePath { get; set; } = "";
     /// <summary>Off by default: Debug records the recognised text, i.e. the user's screen contents.</summary>

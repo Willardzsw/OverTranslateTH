@@ -20,22 +20,40 @@ public static class ScreenshotSaveService
 
     /// <summary>
     /// Writes <paramref name="image"/> as a PNG into <paramref name="directory"/>, creating the
-    /// folder when missing. The file name carries a millisecond timestamp so rapid captures
-    /// never overwrite each other. Returns the full path of the written file.
+    /// folder when missing. Colliding timestamps get a suffix and never overwrite an older capture.
+    /// Returns the full path of the written file.
     /// </summary>
     public static string Save(BitmapSource image, string? directory = null)
+        => Save(image, directory, DateTime.Now);
+
+    internal static string Save(BitmapSource image, string? directory, DateTime timestamp)
     {
         var dir = ResolveDirectory(directory);
         Directory.CreateDirectory(dir);
 
-        var path = Path.Combine(dir, $"OverTranslate_{DateTime.Now:yyyyMMdd_HHmmssfff}.png");
-
         var encoder = new PngBitmapEncoder();
         encoder.Frames.Add(BitmapFrame.Create(image));
-        using var stream = File.Create(path);
-        encoder.Save(stream);
+        var stem = $"OverTranslate_{timestamp:yyyyMMdd_HHmmssfff}";
+        for (var suffix = 0; ; suffix++)
+        {
+            var name = suffix == 0 ? stem : $"{stem}_{suffix}";
+            var path = Path.Combine(dir, name + ".png");
+            FileStream stream;
+            try { stream = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None); }
+            catch (IOException) when (File.Exists(path)) { continue; }
 
-        return path;
+            try
+            {
+                using (stream) encoder.Save(stream);
+                return path;
+            }
+            catch
+            {
+                // Only this call created this file. Do not leave a partial image after a failed save.
+                try { File.Delete(path); } catch (IOException) { } catch (UnauthorizedAccessException) { }
+                throw;
+            }
+        }
     }
 
     /// <summary>Opens the folder in File Explorer, creating it first so the window isn't empty-handed.</summary>

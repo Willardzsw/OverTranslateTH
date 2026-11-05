@@ -26,18 +26,13 @@
 
     <!-- ── Shell window ── -->
     <sys:String x:Key="S.Shell.About">О программе</sys:String>
-    <sys:String x:Key="S.Shell.QuickTools">Быстрые инструменты</sys:String>
     <sys:String x:Key="S.Shell.CaptureTranslate">Снимок</sys:String>
-    <sys:String x:Key="S.Shell.QuickLookup">Всплывающий</sys:String>
     <sys:String x:Key="S.Shell.TextTranslate">Текст</sys:String>
-    <sys:String x:Key="S.Shell.RealtimeTranslate">Реальное время</sys:String>
     <sys:String x:Key="S.Shell.Settings">Настройки</sys:String>
     <sys:String x:Key="S.Shell.HideSidebar">Скрыть боковую панель</sys:String>
     <sys:String x:Key="S.Shell.ShowSidebar">Показать боковую панель</sys:String>
     <sys:String x:Key="S.Shell.Pin">Закрепить окно поверх остальных</sys:String>
     <sys:String x:Key="S.Shell.Unpin">Открепить</sys:String>
-    <sys:String x:Key="S.Shell.CaptureBlockedByRealtimeFraming">Идет выбор областей для перевода в реальном времени — нажмите «Запустить», прежде чем делать снимок экрана</sys:String>
-    <sys:String x:Key="S.Shell.QuickLookupBlockedByRealtime">Идет перевод в реальном времени — остановите его, чтобы воспользоваться всплывающим переводом</sys:String>
     <sys:String x:Key="S.Shell.UpdateAvailable">Обновить до v{0}</sys:String>
 
     <!-- ── Tray menu ── -->
@@ -60,27 +55,8 @@
     <sys:String x:Key="S.Toast.CopyFailed">Не удалось скопировать. Повторите попытку позже.</sys:String>
 
     <!-- ── Update ── -->
-    <sys:String x:Key="S.Update.WindowTitle">Доступно обновление</sys:String>
-    <sys:String x:Key="S.Update.Heading">Доступно обновление</sys:String>
-    <sys:String x:Key="S.Update.Explanation">«Обновить сейчас» скачает и установит обновление, после чего программа перезапустится.</sys:String>
-    <sys:String x:Key="S.Update.NotesBefore" xml:space="preserve">Что нового? </sys:String>
-    <sys:String x:Key="S.Update.NotesLink">Посмотреть список изменений</sys:String>
     <sys:String x:Key="S.Update.Later">Позже</sys:String>
-    <sys:String x:Key="S.Update.Now">Обновить сейчас</sys:String>
     <sys:String x:Key="S.Update.Skip">Пропустить эту версию и больше не напоминать</sys:String>
-    <sys:String x:Key="S.Update.DownloadingDelta">Загрузка обновления {0} · {1}</sys:String>
-    <sys:String x:Key="S.Update.DownloadingFull">Загрузка полного установщика {0} · {1}</sys:String>
-    <sys:String x:Key="S.Update.Patching">Применение обновления...</sys:String>
-    <sys:String x:Key="S.Update.Preparing">Подготовка к установке...</sys:String>
-    <sys:String x:Key="S.Update.Applying">Установка...</sys:String>
-    <sys:String x:Key="S.Update.FellBackToFull">Не удалось применить файл обновления — выполняется полное обновление</sys:String>
-    <sys:String x:Key="S.Update.SlowBefore" xml:space="preserve">Загрузка идет медленно? </sys:String>
-    <sys:String x:Key="S.Update.SlowLink">Скачайте вручную с GitHub</sys:String>
-    <sys:String x:Key="S.Update.Cancel">Отменить обновление</sys:String>
-    <sys:String x:Key="S.Update.Cancelling">Отмена...</sys:String>
-    <sys:String x:Key="S.Update.Retry">Повторить</sys:String>
-    <sys:String x:Key="S.Update.Failed">Не удалось скачать обновление: {0}</sys:String>
-    <sys:String x:Key="S.Update.CloseBlocked">Идет обновление — по завершении программа перезапустится сама</sys:String>
 
     <!-- ── Service errors ── -->
     <sys:String x:Key="S.Error.OpenAiHttp">API, совместимый с OpenAI, вернул {0}: {1}</sys:String>
@@ -91,7 +67,7 @@
     <sys:String x:Key="S.Error.OpenAiNoModel">Не указано имя модели. Введите модель в настройках службы перевода.</sys:String>
     <sys:String x:Key="S.Error.UnknownError">Неизвестная ошибка</sys:String>
     <sys:String x:Key="S.Error.NoErrorContent">Подробности ошибки отсутствуют</sys:String>
-    <sys:String x:Key="S.Error.OcrUnsupportedLanguage">Распознавание текста сейчас поддерживает только AUTO, EN, ZH, ZH-HANT, JA и KO; «{0}» пока не поддерживается.</sys:String>
+    <sys:String x:Key="S.Error.OcrUnsupportedLanguage">Распознавание текста сейчас поддерживает только AUTO, EN, ZH, ZH-HANT, JA, KO и TH; «{0}» пока не поддерживается.</sys:String>
     <sys:String x:Key="S.Error.OcrSwapTimeout">Истекло время ожидания завершения другого распознавания перед сменой модели OCR.</sys:String>
     <sys:String x:Key="S.Error.OcrImageConvert">Не удалось преобразовать изображение в формат, понятный ONNX OCR.</sys:String>
     <sys:String x:Key="S.Error.OcrModelMissing">Файл модели OCR не найден: {0}</sys:String>
@@ -252,8 +228,6 @@
     <sys:String x:Key="S.Main.MinimizedTitle">OverTranslate продолжает работать</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">Программа свернута в область уведомлений. Нажмите {0}, чтобы начать перевод снимка экрана.</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">сочетание клавиш</sys:String>
-    <sys:String x:Key="S.Main.RealtimeRunningTitle">Идет перевод в реальном времени</sys:String>
-    <sys:String x:Key="S.Main.RealtimeRunningBody">Всплывающий перевод недоступен во время редактирования областей.</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">Нет ключа API</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyBody">Введите ключ API в настройках.</sys:String>
     <sys:String x:Key="S.Main.RecogniseFailedTitle">Ошибка распознавания</sys:String>
@@ -401,7 +375,6 @@
     <sys:String x:Key="S.Realtime.WindowCaptureFailed">Это окно не удается захватить. Переключите его в режим «окно без рамки» или «в окне» и повторите попытку.</sys:String>
     <sys:String x:Key="S.Realtime.WindowCaptureFullscreen">Этот режим отображения нельзя захватить. Переключитесь в режим «окно без рамки» или «в окне» и повторите попытку.</sys:String>
     <sys:String x:Key="S.Realtime.WindowCaptureNoFrame">Не удалось получить изображение из этого окна. Переключите его в режим «окно без рамки» или «в окне» и повторите попытку.</sys:String>
-    <sys:String x:Key="S.Realtime.SessionEndedTitle">Перевод в реальном времени завершен</sys:String>
     <sys:String x:Key="S.Realtime.RemoveBlock">Удалить эту область</sys:String>
 
     <!-- Block mode picker -->
@@ -461,9 +434,6 @@
     <sys:String x:Key="S.Settings.HotkeyGuideSharedExample">Например, боковая кнопка может вернуть браузер на предыдущую страницу</sys:String>
     <sys:String x:Key="S.Settings.HotkeyGuideSharedDouble">Двойное нажатие — только два сочетания выше, чтобы ничего не срабатывало дважды</sys:String>
     <sys:String x:Key="S.Settings.HotkeyElevatedNote">Может не работать в программах, запущенных от имени администратора</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkey">Перевод в реальном времени</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">Нажмите сочетание, чтобы [[выбрать области и перевести]]</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">Если перевод не запущен, первое нажатие выбирает области, второе запускает перевод; во время перевода — пауза и продолжение.</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkey">Всплывающий перевод</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkeyHint">Нажмите сочетание, чтобы открыть [[всплывающий перевод]]</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkeyNote">Если выделен текст, он сразу подставляется и переводится при открытии окна.</sys:String>
@@ -675,6 +645,7 @@
     <sys:String x:Key="S.Lang.English">Английский</sys:String>
     <sys:String x:Key="S.Lang.Japanese">Японский</sys:String>
     <sys:String x:Key="S.Lang.Korean">Корейский</sys:String>
+    <sys:String x:Key="S.Lang.Thai">Тайский</sys:String>
     <sys:String x:Key="S.Lang.TraditionalChinese">Китайский (трад.)</sys:String>
     <sys:String x:Key="S.Lang.SimplifiedChinese">Китайский (упрощ.)</sys:String>
     <sys:String x:Key="S.Lang.Bulgarian">Болгарский</sys:String>
@@ -730,4 +701,37 @@
     <!-- Two lines, one per half of the switch. xml:space is what keeps the break: without it XAML
          collapses the &#x0A; away and the two sentences run together. -->
     <sys:String x:Key="S.Debug.ScopeHint" xml:space="preserve">Только оригинал: рамки рисуются только в окне оригинала.&#x0A;Оригинал и перевод: рамки рисуются и в окне оригинала, и в окне перевода</sys:String>
+
+    <!-- Thai fork: notification only, with no official binary installer. -->
+    <sys:String x:Key="S.Update.NotifyHeading">Новая официальная версия</sys:String>
+    <sys:String x:Key="S.Update.NotifyExplanation">Эта тайская сборка только уведомляет об обновлениях. Сообщите новую версию в чате для объединения официального кода и проверки поддержки тайского языка перед обновлением.</sys:String>
+    <sys:String x:Key="S.Update.OfficialBaseline">Текущая официальная база: v{0}</sys:String>
+    <sys:String x:Key="S.Update.OfficialLatest">Последняя официальная версия: v{0}</sys:String>
+    <sys:String x:Key="S.Update.OpenOfficialNotes">Открыть описание выпуска</sys:String>
+    <sys:String x:Key="S.Update.OpenNotesFailed">Не удалось открыть браузер. Повторите попытку позже.</sys:String>
+
+    <!-- Installed local OCR model selection. -->
+    <sys:String x:Key="S.OcrModel.Title">Модель распознавания OCR</sys:String>
+    <sys:String x:Key="S.OcrModel.ByLanguage">По исходному языку (по умолчанию)</sys:String>
+    <sys:String x:Key="S.OcrModel.General">PP-OCRv6 · китайский/английский/японский (локально)</sys:String>
+    <sys:String x:Key="S.OcrModel.Thai">PP-OCRv5 · тайский/английский (локально)</sys:String>
+    <sys:String x:Key="S.OcrModel.Korean">Корейская модель (локально)</sys:String>
+    <sys:String x:Key="S.OcrModel.Hint">Для OCR снимков экрана. Выбирайте модель под исходный язык. Изменения действуют со следующего распознавания.</sys:String>
+    <sys:String x:Key="S.OcrModel.Incompatible">Эта модель OCR не поддерживает исходный язык. Общая: китайский/английский/японский; тайская: тайский/английский; корейская: корейский.</sys:String>
+    <sys:String x:Key="S.OcrModel.DetectorSize">Размер детектора (все языки)</sys:String>
+    <sys:String x:Key="S.OcrModel.RecognizerSize">Размер общего распознавателя (китайский/английский/японский)</sys:String>
+    <sys:String x:Key="S.OcrModel.ScaleHint">Большие модели обычно требуют больше времени и памяти. Сравнивайте на одних изображениях. Для тайского и корейского остаются отдельные модели.</sys:String>
+    <sys:String x:Key="S.OcrModel.Device">Устройство выполнения</sys:String>
+    <sys:String x:Key="S.OcrModel.DeviceHint">GPU использует DirectML; CUDA не требуется. Первый запуск может быть медленнее. При ошибке GPU выберите CPU.</sys:String>
+    <sys:String x:Key="S.OcrModel.Tiny">Tiny · Быстро</sys:String>
+    <sys:String x:Key="S.OcrModel.Small">Small · Баланс</sys:String>
+    <sys:String x:Key="S.OcrModel.Medium">Medium · Крупная</sys:String>
+    <sys:String x:Key="S.OcrModel.Prepare">Подготовить модели и компоненты GPU</sys:String>
+    <sys:String x:Key="S.OcrModel.Preparing">Подготовка: {0}</sys:String>
+    <sys:String x:Key="S.OcrModel.Ready">Выбранные компоненты готовы.</sys:String>
+    <sys:String x:Key="S.OcrModel.PrepareNeeded">Компоненты отсутствуют. Нажмите кнопку подготовки.</sys:String>
+    <sys:String x:Key="S.OcrModel.PrepareFailed">Ошибка подготовки:</sys:String>
+    <sys:String x:Key="S.OcrModel.ActualDevice">Последнее устройство выполнения: {0}</sys:String>
+    <sys:String x:Key="S.OcrModel.NextRun">Изменения применятся при следующем распознавании.</sys:String>
+    <sys:String x:Key="S.OcrModel.DeviceUnavailable">Выбранный GPU недоступен (можно выбрать CPU)</sys:String>
 </ResourceDictionary>

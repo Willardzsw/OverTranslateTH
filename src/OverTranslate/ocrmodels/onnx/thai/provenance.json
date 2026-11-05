@@ -1,0 +1,24 @@
+{
+  "name": "th_PP-OCRv5_rec_mobile",
+  "upstream": "https://github.com/PaddlePaddle/PaddleOCR",
+  "model_card": "https://huggingface.co/PaddlePaddle/th_PP-OCRv5_mobile_rec",
+  "onnx_exporter": "RapidAI/RapidOCR",
+  "release": "v3.10.0",
+  "license": "Apache-2.0",
+  "official_catalog": "https://github.com/RapidAI/RapidOCR/blob/main/python/rapidocr/default_models.yaml",
+  "files": [
+    {
+      "path": "rec.onnx",
+      "url": "https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.10.0/onnx/PP-OCRv5/rec/th_PP-OCRv5_rec_mobile.onnx",
+      "sha256": "de541dd83161c241ff426f7ecfd602a0ba77d686cf3ab9a6c255ea82fd08006e"
+    },
+    {
+      "path": "dict.txt",
+      "url": "https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.10.0/paddle/PP-OCRv5/rec/th_PP-OCRv5_rec_mobile/ppocrv5_th_dict.txt",
+      "sha256": "57f5406f94bb6688fb7077f7be65f08bbd71cecf48c01ea26c522cb5c4836b7a"
+    }
+  ],
+  "dictionary_entries": 524,
+  "output_classes": 526,
+  "note": "524 UTF-8 dictionary entries plus CTC blank and appended space. Metadata character list has a trailing newline; compare after removing only CR/LF. Keep character order unchanged."
+}

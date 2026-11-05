@@ -56,6 +56,11 @@ internal static class Program
             return args.Length == 0 ? 1 : 0;
         }
 
+        if (args[0] == "official-release-check") return UpdateNoticeLayout.CheckOfficialRelease();
+
+        if (args[0] == "ocr-local-model-check")
+            return CompactOcrLayout.CheckLocalModels(args.Length > 1 ? args[1] : ".test-artifacts/compact-ocr").GetAwaiter().GetResult();
+
         var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
 
         // What App.xaml merges at startup. Without them every StaticResource in the two windows
@@ -75,6 +80,15 @@ internal static class Program
         {
             switch (args[0])
             {
+                case "compact-ocr":
+                    CompactOcrLayout.Report(args.Length > 1 ? args[1] : ".test-artifacts/compact-ocr");
+                    break;
+                case "update-notice":
+                    UpdateNoticeLayout.Report(args.Length > 1 ? args[1] : ".test-artifacts/update-notice");
+                    break;
+                case "thai-overlay":
+                    ThaiOverlayLayout.Report(args.Length > 1 ? args[1] : ".test-artifacts/thai-ocr");
+                    break;
                 case "overlay":
                     OverlayLayout.Report();
                     break;

@@ -13,11 +13,15 @@
         </Grid.RowDefinitions>
 
         <!-- ── Page header ── -->
-        <StackPanel Grid.Row="0">
-            <TextBlock Text="{DynamicResource S.Translation.Title}" Style="{StaticResource PageTitle}"/>
-            <TextBlock Text="{DynamicResource S.Translation.Subtitle}"
-                       Style="{StaticResource PageSubtitle}"/>
-        </StackPanel>
+        <DockPanel Grid.Row="0">
+            <Button x:Name="CaptureOcrBtn" DockPanel.Dock="Right" Content="{DynamicResource S.Shell.CaptureTranslate}"
+                    Style="{StaticResource FlatButton}" Padding="14,0" Height="34" VerticalAlignment="Center"
+                    Click="CaptureOcrBtn_Click"/>
+            <StackPanel>
+                <TextBlock Text="{DynamicResource S.Translation.Title}" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="{DynamicResource S.Translation.Subtitle}" Style="{StaticResource PageSubtitle}"/>
+            </StackPanel>
+        </DockPanel>
 
         <!-- ── Language / provider selectors ── -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,18,0,12">

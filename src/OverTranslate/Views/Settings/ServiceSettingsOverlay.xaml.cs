@@ -41,6 +41,7 @@ public partial class ServiceSettingsOverlay : UserControl
 
     private readonly DispatcherTimer _apiKeyDebounce;
     private readonly DispatcherTimer _openAiSettingsDebounce;
+    private readonly OverlayLanguageSubscription _languageSubscription;
 
     /// <summary>True while the controls are being populated, so initialization never writes back.</summary>
     private bool _loading;
@@ -54,6 +55,7 @@ public partial class ServiceSettingsOverlay : UserControl
     public ServiceSettingsOverlay()
     {
         InitializeComponent();
+        _languageSubscription = new(this, OnLanguageChanged);
 
         _apiKeyDebounce = new DispatcherTimer { Interval = EditDebounce };
         _apiKeyDebounce.Tick += (_, _) =>
@@ -80,6 +82,7 @@ public partial class ServiceSettingsOverlay : UserControl
 
         // Focus comes back so Escape closes this panel again: it was on the card, which has gone.
         PromptEditor.Closed += (_, _) => Focus();
+        Unloaded += (_, _) => FlushPendingEdits();
     }
 
     // ── Open / close ─────────────────────────────────────────────────────────
@@ -93,7 +96,7 @@ public partial class ServiceSettingsOverlay : UserControl
 
         // The panel is only listening while it is on screen, and the settings page behind it
         // re-reads the same strings on its own.
-        LocalizationService.LanguageChanged += OnLanguageChanged;
+        _languageSubscription.Subscribe();
 
         // WPF switches text off pixel snapping as soon as it detects the text is being animated,
         // then ramps snapping back on over roughly a second once the motion stops — see
@@ -124,7 +127,7 @@ public partial class ServiceSettingsOverlay : UserControl
         // to it until the timer happened to fire.
         FlushPendingEdits();
 
-        LocalizationService.LanguageChanged -= OnLanguageChanged;
+        _languageSubscription.Dispose();
 
         var fade = new DoubleAnimation { From = 1, To = 0, Duration = FadeDuration };
         fade.Completed += (_, _) =>
@@ -213,7 +216,11 @@ public partial class ServiceSettingsOverlay : UserControl
     /// Re-renders the text this panel composes in code: the title,
     /// the built-in row's name and the label on the add row.
     /// </summary>
-    private void OnLanguageChanged(object? sender, EventArgs e) => LoadSettings();
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        FlushPendingEdits();
+        LoadSettings();
+    }
 
     // ── Persistence ──────────────────────────────────────────────────────────
 

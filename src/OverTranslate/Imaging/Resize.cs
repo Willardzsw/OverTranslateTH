@@ -158,7 +158,9 @@ internal static unsafe class Resize
             for (int x = 0; x < dw; x++)
             {
                 int i = (x / cn) * sx * cn + x % cn;
-                int sum = 0;
+                // A large capture reduced to one pixel can exceed Int32 even though its source
+                // allocation is valid (e.g. 3072 x 3072 white bytes).
+                long sum = 0;
                 for (int r = 0; r < sy; r++)
                 for (int c = 0; c < sx; c++) sum += a[r * sstep + i + c * cn];
                 d[x] = Saturate.ToByte(sum * scale);
@@ -184,7 +186,10 @@ internal static unsafe class Resize
                     d[x] = ((a[2 * x] + a[2 * x + 1]) + (b[2 * x] + b[2 * x + 1])) * .25f;
                 return;
             }
-            float* v = stackalloc float[area];
+            // The footprint comes from image dimensions. A 1024 x 1024 reduction needs 4 MB,
+            // which must not be allocated on a worker's stack (StackOverflow is uncatchable).
+            using var samples = new Scratch<float>(area);
+            float* v = samples.Pointer;
             for (int x = 0; x < dw; x++)
             {
                 int i = (x / cn) * sx * cn + x % cn;

@@ -15,7 +15,7 @@ public partial class App
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    private const string ActivateEventName = "OverTranslate_Activate_9F3C7B2E";
+    private const string ActivateEventName = "OverTranslate_Thai_Dev_Activate_9F3C7B2E";
 
     private EventWaitHandle? _activateEvent;
 
@@ -24,10 +24,7 @@ public partial class App
     {
         // Uninstalling takes everything the app wrote with it — settings, logs, models — and the
         // sign-in entry. Runs in a process of its own that exits straight after; see UninstallCleanup.
-        VelopackApp.Build()
-            .SetAutoApplyOnStartup(false)
-            .OnBeforeUninstallFastCallback(_ => UninstallCleanup.Run())
-            .Run();
+        // Independent development build: no installed-app updater or uninstall callbacks.
 
         var app = new App();
         app.InitializeComponent();
@@ -104,34 +101,23 @@ public partial class App
 
         // Past the single-instance check for the reason given below, and before any window: the
         // card and the hints read the switch this puts in step.
-        MangaModelOptions.Attach();
 
         // Before the tray icon exists, so its first notification already carries the name.
-        NotificationIdentityService.Register();
+        // Do not replace the installed application's Windows notification registration.
 
         var mainWindow = new MainWindow();
         MainWindow = mainWindow;
         mainWindow.InitializeApp();
 
-        UpdateNotifier.StartPolling();
+        // Notification only: one public release check at startup; no polling or installer.
         _ = PromptForUpdateAsync();
 
         // A manga model download the app was closed in the middle of is not kept. Here, past the
         // single-instance check, rather than when the store is built: a second launch must not clear
         // the folder the running instance is downloading into.
-        _ = Task.Run(AppServices.MangaModels.DiscardIncomplete);
     }
 
-    /// <summary>
-    /// The one update check allowed to put a window on the screen.
-    /// </summary>
-    /// <remarks>
-    /// Every later check — see <see cref="UpdateNotifier.StartPolling"/> — only lights up the nav
-    /// rail. This used to be the only check there was, which meant the dialog was the sole way an
-    /// update could ever be announced, which in turn meant it had to reappear on every single launch
-    /// until the user gave in. It no longer has to carry that alone: 跳過此版本 turns it off for a
-    /// release without taking the rail's entry with it.
-    /// </remarks>
+    /// <summary>Show a notification for an official release; merging remains a manual task.</summary>
     private static async Task PromptForUpdateAsync()
     {
         var info = await UpdateNotifier.CheckAsync();

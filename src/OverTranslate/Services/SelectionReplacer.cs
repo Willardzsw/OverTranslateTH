@@ -57,9 +57,16 @@ internal static class SelectionReplacer
     /// box — while the translation was being fetched, it is not sent at all: overwriting a selection
     /// they made somewhere else is not something they could have asked for.
     /// </param>
-    public static async Task<PasteOutcome> ReplaceSelectionAsync(string text, IntPtr expectedForeground)
+    public static Task<PasteOutcome> ReplaceSelectionAsync(string text, IntPtr expectedForeground) =>
+        ReplaceSelectionAsync(text, expectedForeground, GetForegroundWindow, ClipboardBackup.Capture,
+            TryPut, StillOwnsClipboard, () => KeyboardInput.SendControlChordAsync(KeyboardInput.VK_V),
+            () => Task.Delay(PasteSettle), ClipboardBackup.Restore);
+
+    internal static async Task<PasteOutcome> ReplaceSelectionAsync(string text, IntPtr expectedForeground,
+        Func<IntPtr> foreground, Func<object?> capture, Func<string, object?> put, Func<object, bool> isCurrent,
+        Func<Task> paste, Func<Task> settle, Action<object?> restore)
     {
-        if (expectedForeground != IntPtr.Zero && GetForegroundWindow() != expectedForeground)
+        if (expectedForeground == IntPtr.Zero || foreground() != expectedForeground)
         {
             Log.Info("替換翻譯 did not paste: the foreground moved to another window while translating");
             return PasteOutcome.FocusMoved;
@@ -69,7 +76,7 @@ internal static class SelectionReplacer
 
         try
         {
-            snapshot = ClipboardBackup.Capture();
+            snapshot = capture();
         }
         catch (Exception ex)
         {
@@ -79,12 +86,18 @@ internal static class SelectionReplacer
             return PasteOutcome.ClipboardUnavailable;
         }
 
+        object? borrowed = null;
         try
         {
-            if (!TryPut(text)) return PasteOutcome.ClipboardUnavailable;
+            // Reading/publishing clipboard formats may block on another process. Focus must be
+            // checked again immediately before injecting the destructive paste, not just on entry.
+            if (foreground() != expectedForeground) return PasteOutcome.FocusMoved;
+            borrowed = put(text);
+            if (borrowed is null) return PasteOutcome.ClipboardUnavailable;
+            if (foreground() != expectedForeground) return PasteOutcome.FocusMoved;
 
-            await KeyboardInput.SendControlChordAsync(KeyboardInput.VK_V);
-            await Task.Delay(PasteSettle);
+            await paste();
+            await settle();
             return PasteOutcome.Pasted;
         }
         catch (Exception ex)
@@ -94,7 +107,9 @@ internal static class SelectionReplacer
         }
         finally
         {
-            ClipboardBackup.Restore(snapshot);
+            // A user copy during the settle interval belongs to them. Do not overwrite it with
+            // the old snapshot, or restore anything when this call never borrowed the clipboard.
+            if (borrowed is not null && isCurrent(borrowed)) restore(snapshot);
         }
     }
 
@@ -108,20 +123,38 @@ internal static class SelectionReplacer
     /// flush reopens the clipboard straight after the copy shortcut and the snapshot, and on
     /// Windows 11 a clipboard listener still holding it makes that fail with CLIPBRD_E_CANT_OPEN.
     /// </remarks>
-    private static bool TryPut(string text)
+    private static object? TryPut(string text)
     {
         try
         {
-            Clipboard.SetDataObject(text, copy: false);
-            return true;
+            var data = new System.Windows.DataObject();
+            data.SetText(text);
+            Clipboard.SetDataObject(data, copy: false);
+            return data;
         }
         catch (Exception ex)
         {
             Log.Warn(ex, "替換翻譯 could not put the translation on the clipboard");
+            return null;
+        }
+    }
+
+    private static bool StillOwnsClipboard(object data)
+    {
+        try
+        {
+            // A delayed render can advance the clipboard sequence without changing ownership.
+            // IsCurrent identifies our exact DataObject even after the paste has requested text.
+            return Clipboard.IsCurrent((System.Windows.IDataObject)data);
+        }
+        catch (Exception ex)
+        {
+            Log.Debug(ex, "Could not check ownership of the borrowed clipboard");
             return false;
         }
     }
 
     [DllImport("user32.dll")]
     private static extern IntPtr GetForegroundWindow();
+
 }

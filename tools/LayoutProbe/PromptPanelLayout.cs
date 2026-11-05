@@ -72,7 +72,7 @@ internal static class PromptPanelLayout
     private static void SaveEditor(string theme, string outputDirectory)
     {
         var editor = new PromptEditOverlay();
-        editor.Open(automatic: true, profile: null, suggestedName: "我的設定 1");
+        editor.Open(profile: null, suggestedName: "我的設定 1");
 
         var card = (FrameworkElement)editor.FindName("Card");
         Render(card, 720, double.PositiveInfinity, Path.Combine(outputDirectory, $"prompt-editor-{theme}.png"));

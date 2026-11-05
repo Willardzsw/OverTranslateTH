@@ -742,6 +742,57 @@ public class OpenAiChatProtocolTests
         Assert.Equal(expected, error.ServerMessage);
     }
 
+    [Theory]
+    [InlineData("null")]
+    [InlineData("[]")]
+    [InlineData("{\"error\":\"gateway unavailable\"}")]
+    [InlineData("{\"error\":{\"message\":42}}")]
+    public async Task Refusal_WithAnUnexpectedJsonShapeRetainsHttpFailure(string body)
+    {
+        using var http = new HttpClient(new StaticResponseHandler(HttpStatusCode.BadGateway, body));
+
+        var error = await Assert.ThrowsAsync<OpenAiChatException>(() =>
+            new OpenAiChatTranslator(http).TranslateAsync(["hello"], Request()));
+
+        Assert.Equal(OpenAiChatFailure.Rejected, error.Failure);
+        Assert.Equal(HttpStatusCode.BadGateway, error.StatusCode);
+        Assert.Equal(body, error.ServerMessage);
+    }
+
+    [Fact]
+    public async Task Refusal_BoundsTheStructuredErrorMessageToo()
+    {
+        var body = JsonSerializer.Serialize(new { error = new { message = new string('x', 500) } });
+        using var http = new HttpClient(new StaticResponseHandler(HttpStatusCode.BadGateway, body));
+
+        var error = await Assert.ThrowsAsync<OpenAiChatException>(() =>
+            new OpenAiChatTranslator(http).TranslateAsync(["hello"], Request()));
+
+        Assert.Equal(new string('x', 300) + "…", error.ServerMessage);
+    }
+
+    [Fact]
+    public async Task Refusal_RedactsEchoedCredentialsBeforeClippingTheMessage()
+    {
+        var request = Request(apiKey: "synthetic-api-secret") with
+        {
+            Endpoint = new Uri("https://user:synthetic-password@example.test/v1?token=synthetic-query")
+        };
+        var body = JsonSerializer.Serialize(new { error = new
+        {
+            message = "Rejected " + request.Endpoint + " " + new string('x', 170) + " " + request.ApiKey
+        }});
+        using var http = new HttpClient(new StaticResponseHandler(HttpStatusCode.Unauthorized, body));
+
+        var error = await Assert.ThrowsAsync<OpenAiChatException>(() =>
+            new OpenAiChatTranslator(http).TranslateAsync(["hello"], request));
+
+        Assert.Equal(OpenAiChatFailure.Rejected, error.Failure);
+        Assert.DoesNotContain("synthetic-", error.ServerMessage!);
+        Assert.Contains("example.test", error.ServerMessage!);
+        Assert.Contains("<redacted>", error.ServerMessage!);
+    }
+
     [Fact]
     public async Task Refusal_CutsALongBodyAtThreeHundredCharacters()
     {

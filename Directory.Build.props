@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- Project-local cache keeps build references valid if the project folder moves. -->
+    <RestorePackagesPath>$(MSBuildThisFileDirectory).packages</RestorePackagesPath>
+  </PropertyGroup>
+</Project>

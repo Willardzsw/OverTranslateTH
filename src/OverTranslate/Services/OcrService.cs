@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Windows;
 using OverTranslate.Services.Ocr;
+using OverTranslate.Models;
 using OverTranslate.Services.Ocr.Manga;
 
 namespace OverTranslate.Services;
@@ -99,21 +100,40 @@ public class OcrService : IDisposable
 {
     private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-    private readonly OnnxOcrEngine _engine = new();
+    private readonly OnnxOcrEngine _engine;
     private readonly MangaOcrEngine? _manga;
+    private readonly Func<OcrModelSettings> _modelSettings;
 
-    public OcrService()
+    public OcrService() : this(static () => new OcrModelSettings()) { }
+
+    internal OcrService(Func<OcrModelSettings> modelSettings)
     {
+        _modelSettings = modelSettings;
+        _engine = new OnnxOcrEngine(language => OcrModelCatalog.LocalModelKey(language, modelSettings()), modelSettings);
+    }
+
+    public string ModelIdentity => OcrModelCatalog.Identity(_modelSettings());
+
+    internal string? ExecutionDevice => _engine.ExecutionDevice;
+
+    private IOcrEngine SelectedEngine(string language, bool vertical)
+    {
+        var settings = _modelSettings().Copy();
+        OcrModelCatalog.Validate(settings, language, vertical);
+        return _engine;
     }
 
     /// <param name="mangaModels">
     /// Where the downloadable manga models are. With them, Japanese vertical text is read by those
     /// models on the GPU whenever they can be used — see <see cref="RecognizeVerticalAsync"/>.
     /// </param>
-    internal OcrService(MangaModelStore mangaModels) => _manga = new MangaOcrEngine(mangaModels);
+    internal OcrService(MangaModelStore mangaModels) : this() => _manga = new MangaOcrEngine(mangaModels);
+
+    internal OcrService(MangaModelStore mangaModels, Func<OcrModelSettings> modelSettings) : this(modelSettings)
+        => _manga = new MangaOcrEngine(mangaModels);
 
     /// <summary>For tests, which hand in a manga engine whose adapter and loads they control.</summary>
-    internal OcrService(MangaOcrEngine manga) => _manga = manga;
+    internal OcrService(MangaOcrEngine manga) : this() => _manga = manga;
 
     /// <summary>The manga models' engine, or null in a build that was not given them.</summary>
     internal MangaOcrEngine? Manga => _manga;
@@ -134,12 +154,13 @@ public class OcrService : IDisposable
             throw new NotSupportedException(OcrLanguageRouter.GetUnsupportedLanguageMessage(sourceLanguage));
 
         var language = OcrLanguageRouter.Normalize(sourceLanguage);
+        var engine = SelectedEngine(language, verticalText);
 
         // The mode picks the thresholds for horizontal text only. Vertical has its own profile and
         // does not take a parameter for one — see RecognizeVerticalAsync.
         return LevelCrowdedTilts(verticalText
-            ? RecognizeVerticalAsync(_engine, bitmap, language, cancellationToken, _manga)
-            : RecognizeAndGroupAsync(_engine, bitmap, language, GroupingProfile.For(layoutMode), cancellationToken));
+            ? RecognizeVerticalAsync(engine, bitmap, language, cancellationToken, _manga)
+            : RecognizeAndGroupAsync(engine, bitmap, language, GroupingProfile.For(layoutMode), cancellationToken));
     }
 
     // Here, where every path's groups are final — columns and the lines across a vertical page
@@ -171,15 +192,16 @@ public class OcrService : IDisposable
         if (!OcrLanguageRouter.IsSupported(sourceLanguage))
             throw new NotSupportedException(OcrLanguageRouter.GetUnsupportedLanguageMessage(sourceLanguage));
 
+        var engine = SelectedEngine(sourceLanguage, orientation == Realtime.RealtimeTextOrientation.Vertical);
         if (orientation == Realtime.RealtimeTextOrientation.Vertical)
         {
             var columns = await TryRecognizeVerticalAsync(
-                _engine, bitmap, OcrLanguageRouter.Normalize(sourceLanguage), maxDetectSize, cancellationToken,
+                engine, bitmap, OcrLanguageRouter.Normalize(sourceLanguage), maxDetectSize, cancellationToken,
                 _manga);
             return columns is null ? null : TiltedOverlap.Level(columns);
         }
 
-        var blocks = await _engine.TryRecognizeAsync(
+        var blocks = await engine.TryRecognizeAsync(
             bitmap, OcrLanguageRouter.Normalize(sourceLanguage), maxDetectSize, cancellationToken);
 
         if (blocks is null)
@@ -370,6 +392,7 @@ public class OcrService : IDisposable
     /// </remarks>
     internal Task KeepWarmForRealtime(string sourceLanguage, bool vertical)
     {
+        _ = SelectedEngine(sourceLanguage, vertical);
         var loads = new List<Task>(2);
 
         _engine.SetKeepWarm(true);

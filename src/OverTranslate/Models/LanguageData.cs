@@ -125,6 +125,7 @@ public static class LanguageData
         new("KO",      "S.Lang.Korean",             "Korean"),
         new("ZH-HANT", "S.Lang.TraditionalChinese", "Traditional Chinese"),
         new("ZH",      "S.Lang.SimplifiedChinese",  "Simplified Chinese"),
+        new("TH",      "S.Lang.Thai",               "Thai"),
         new("BG",      "S.Lang.Bulgarian",          "Bulgarian"),
         new("CS",      "S.Lang.Czech",              "Czech"),
         new("DA",      "S.Lang.Danish",             "Danish"),
@@ -162,6 +163,7 @@ public static class LanguageData
         new("KO",      "S.Lang.Korean",             "Korean"),
         new("ZH-HANT", "S.Lang.TraditionalChinese", "Traditional Chinese"),
         new("ZH",      "S.Lang.SimplifiedChinese",  "Simplified Chinese"),
+        new("TH",      "S.Lang.Thai",               "Thai"),
     ];
 
     public static readonly List<ProviderItem> Providers =
@@ -201,6 +203,7 @@ public static class LanguageData
         new("KO",      "S.Lang.Korean",             "Korean"),
         new("ZH-HANT", "S.Lang.TraditionalChinese", "Traditional Chinese"),
         new("ZH-HANS", "S.Lang.SimplifiedChinese",  "Simplified Chinese"),
+        new("TH",      "S.Lang.Thai",               "Thai"),
         new("BG",      "S.Lang.Bulgarian",          "Bulgarian"),
         new("CS",      "S.Lang.Czech",              "Czech"),
         new("DA",      "S.Lang.Danish",             "Danish"),

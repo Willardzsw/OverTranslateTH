@@ -18,6 +18,31 @@ namespace OverTranslate.Tests;
 /// </summary>
 public class OpenAiSettingsPanelTests
 {
+    [Theory]
+    [InlineData("NaN", 0)]
+    [InlineData("nan", 0)]
+    [InlineData("Infinity", 2)]
+    [InlineData("-Infinity", 0)]
+    [InlineData("1e9999", 2)]
+    [InlineData("-3", 0)]
+    [InlineData("1.25", 1.25)]
+    [InlineData("", 0)]
+    [InlineData("invalid", 0)]
+    public void EditedSamplingParametersRemainFiniteAndSerializable(string input, double expected)
+    {
+        var value = PromptEditOverlay.ParseParameterNumber(input, 2);
+        Assert.Equal(expected, value);
+        var settings = new AppSettings
+        {
+            OpenAi = new OpenAiSettings
+            {
+                Profiles = [new OpenAiModelProfile { Temperature = value, TopP = value }],
+            },
+        };
+        var json = OverTranslate.Services.SettingsService.Serialize(settings);
+        Assert.NotEmpty(json);
+    }
+
     // ── Tags ───────────────────────────────────────────────────────────────
 
     [Fact]

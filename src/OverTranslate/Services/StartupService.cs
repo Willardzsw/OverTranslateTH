@@ -6,7 +6,7 @@ namespace OverTranslate.Services;
 public static class StartupService
 {
     internal const string RunKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-    internal const string AppName = "OverTranslate";
+    internal const string AppName = "OverTranslate-Thai-Dev";
 
     public static bool IsEnabled
     {

@@ -13,6 +13,34 @@ namespace OverTranslate.Tests;
 
 public class OpenAiCompatibleProviderTests
 {
+    [Fact]
+    public async Task TranslationLog_DoesNotExposeEndpointCredentials()
+    {
+        var original = NLog.LogManager.Configuration;
+        var target = new NLog.Targets.MemoryTarget { Layout = "${message}" };
+        var config = new NLog.Config.LoggingConfiguration();
+        config.AddRuleForAllLevels(target);
+        NLog.LogManager.Configuration = config;
+        try
+        {
+            using var http = new HttpClient(new OpenAiFakeServer { Answer = _ => "translated" });
+            var provider = new OpenAiCompatibleProvider(http, () => new OpenAiCompatibleOptions(
+                "https://user:synthetic-password@example.test/v1?token=synthetic-query#synthetic-fragment",
+                "test-model", Template: "Translate: {text}"));
+
+            await provider.TranslateAsync([new("hello", new Rect())], "EN", "ZH", "");
+
+            var log = string.Join("\n", target.Logs);
+            Assert.Contains("example.test/v1/chat/completions", log);
+            Assert.DoesNotContain("synthetic-", log);
+            Assert.DoesNotContain("user:", log);
+        }
+        finally
+        {
+            NLog.LogManager.Configuration = original;
+        }
+    }
+
     [Theory]
     [InlineData("https://api.openai.com/v1", "https://api.openai.com/v1/chat/completions")]
     [InlineData("http://localhost:11434/v1/", "http://localhost:11434/v1/chat/completions")]
@@ -791,10 +819,13 @@ public class OpenAiCompatibleProviderTests
     /// assertions are that the surrounding text survives and that nothing malformed gets through.
     /// </remarks>
     [Theory]
-    [InlineData("壞掉的字元 \ud800 尾巴")]
-    [InlineData("壞掉的字元 \udc00 尾巴")]
-    public void Settings_ReplaceMalformedUtf16RatherThanFailingToSave(string prompt)
+    [InlineData(0xd800)]
+    [InlineData(0xdc00)]
+    public void Settings_ReplaceMalformedUtf16RatherThanFailingToSave(int malformedCodeUnit)
     {
+        // Test discovery normalizes malformed attribute strings to the same replacement character,
+        // giving both cases one ID and silently skipping one. Construct them after discovery.
+        var prompt = $"壞掉的字元 {(char)malformedCodeUnit} 尾巴";
         var written = new AppSettings();
         written.OpenAi.Profiles.Add(new OpenAiModelProfile
         {

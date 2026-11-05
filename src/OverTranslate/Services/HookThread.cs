@@ -27,21 +27,30 @@ internal sealed class HookThread : IDisposable
 
     // How long each step of Stop waits. Bounded rather than infinite: a hook listener is not worth
     // hanging the application's close on.
-    private static readonly TimeSpan ShutdownTimeout = TimeSpan.FromSeconds(2);
+    private readonly TimeSpan _shutdownTimeout;
 
     private readonly string _name;
     private Thread? _thread;
     private Dispatcher? _dispatcher;
+    private bool _stopping;
 
-    public HookThread(string name) => _name = name;
+    public HookThread(string name) : this(name, TimeSpan.FromSeconds(2)) { }
+
+    internal HookThread(string name, TimeSpan shutdownTimeout)
+    {
+        _name = name;
+        _shutdownTimeout = shutdownTimeout;
+    }
 
     /// <summary>The thread's dispatcher, or null while it is not running.</summary>
-    public Dispatcher? Dispatcher => _dispatcher is { HasShutdownStarted: false } d ? d : null;
+    public Dispatcher? Dispatcher => !_stopping && _dispatcher is { HasShutdownStarted: false } d ? d : null;
 
     /// <summary>Starts the thread if it is not already pumping. Safe to call repeatedly.</summary>
     public void Start()
     {
-        if (Dispatcher is not null) return;
+        // A timed-out shutdown still owns its thread. Do not start a second set of hooks beside it.
+        if (_thread?.IsAlive == true) return;
+        _stopping = false;
 
         // Waited on rather than assumed: the dispatcher belongs to the new thread and does not
         // exist until that thread reaches for it, and callers post work to it immediately.
@@ -78,6 +87,7 @@ internal sealed class HookThread : IDisposable
     public void Stop(Action? teardown = null)
     {
         if (_dispatcher is not { } dispatcher) return;
+        _stopping = true;
 
         if (!dispatcher.HasShutdownStarted)
         {
@@ -85,20 +95,30 @@ internal sealed class HookThread : IDisposable
             // inside an OS callback that nobody controls the length of, and waiting on it without a
             // limit would hang the application's close on exactly that — the hang this class is
             // here to keep off the interface thread in the first place.
-            if (teardown is not null &&
-                dispatcher.InvokeAsync(teardown).Wait(ShutdownTimeout) != DispatcherOperationStatus.Completed)
+            try
             {
-                Log.Warn("Hook thread '{Name}' did not run its teardown within {Timeout}", _name, ShutdownTimeout);
+                if (teardown is not null)
+                {
+                    if (dispatcher.CheckAccess()) teardown();
+                    else if (dispatcher.InvokeAsync(teardown).Wait(_shutdownTimeout) != DispatcherOperationStatus.Completed)
+                        Log.Warn("Hook thread '{Name}' did not run its teardown within {Timeout}", _name, _shutdownTimeout);
+                }
             }
-
-            dispatcher.InvokeShutdown();
+            finally
+            {
+                // InvokeShutdown marshals synchronously and can hang forever on the very callback
+                // that just timed out. Queue shutdown behind teardown and bound only the join.
+                dispatcher.BeginInvokeShutdown(DispatcherPriority.Background);
+            }
         }
 
-        // Said out loud rather than assumed: the fields are cleared either way, so a later Start
-        // would quietly build a second thread beside a first one that is still pumping, and two
-        // threads under the same name is not something anyone would work out from a stack list.
-        if (_thread?.Join(ShutdownTimeout) == false)
-            Log.Warn("Hook thread '{Name}' still running after {Timeout}", _name, ShutdownTimeout);
+        // Keep the fields on timeout so Start cannot create a second thread beside a live one.
+        if (_thread == Thread.CurrentThread) return;
+        if (_thread?.Join(_shutdownTimeout) == false)
+        {
+            Log.Warn("Hook thread '{Name}' still running after {Timeout}", _name, _shutdownTimeout);
+            return;
+        }
 
         _thread = null;
         _dispatcher = null;

@@ -23,18 +23,13 @@
 
     <!-- ── Shell window ── -->
     <sys:String x:Key="S.Shell.About">关于</sys:String>
-    <sys:String x:Key="S.Shell.QuickTools">快速工具</sys:String>
     <sys:String x:Key="S.Shell.CaptureTranslate">截图翻译</sys:String>
-    <sys:String x:Key="S.Shell.QuickLookup">取词翻译</sys:String>
     <sys:String x:Key="S.Shell.TextTranslate">文字翻译</sys:String>
-    <sys:String x:Key="S.Shell.RealtimeTranslate">实时翻译</sys:String>
     <sys:String x:Key="S.Shell.Settings">设置</sys:String>
     <sys:String x:Key="S.Shell.HideSidebar">收起侧边栏</sys:String>
     <sys:String x:Key="S.Shell.ShowSidebar">展开侧边栏</sys:String>
     <sys:String x:Key="S.Shell.Pin">固定后，窗口会常驻最上层</sys:String>
     <sys:String x:Key="S.Shell.Unpin">取消固定</sys:String>
-    <sys:String x:Key="S.Shell.CaptureBlockedByRealtimeFraming">正在框选实时翻译区块，请先点击「开始翻译」再使用截图翻译</sys:String>
-    <sys:String x:Key="S.Shell.QuickLookupBlockedByRealtime">实时翻译进行中，请先结束后再使用取词翻译</sys:String>
     <sys:String x:Key="S.Shell.UpdateAvailable">可更新至 v{0}</sys:String>
 
     <!-- ── Tray menu ── -->
@@ -57,27 +52,8 @@
     <sys:String x:Key="S.Toast.CopyFailed">复制失败，请稍后再试。</sys:String>
 
     <!-- ── Update ── -->
-    <sys:String x:Key="S.Update.WindowTitle">发现新版本</sys:String>
-    <sys:String x:Key="S.Update.Heading">发现新版本！</sys:String>
-    <sys:String x:Key="S.Update.Explanation">点击“立即更新”后将自动下载并应用，完成后自动重新启动。</sys:String>
-    <sys:String x:Key="S.Update.NotesBefore" xml:space="preserve">想了解这次更新了什么？</sys:String>
-    <sys:String x:Key="S.Update.NotesLink">查看更新内容</sys:String>
     <sys:String x:Key="S.Update.Later">稍后再说</sys:String>
-    <sys:String x:Key="S.Update.Now">立即更新</sys:String>
     <sys:String x:Key="S.Update.Skip">跳过此版本，不再提醒我</sys:String>
-    <sys:String x:Key="S.Update.DownloadingDelta">下载更新包 {0} · {1}</sys:String>
-    <sys:String x:Key="S.Update.DownloadingFull">下载完整安装包 {0} · {1}</sys:String>
-    <sys:String x:Key="S.Update.Patching">应用更新中…</sys:String>
-    <sys:String x:Key="S.Update.Preparing">准备安装…</sys:String>
-    <sys:String x:Key="S.Update.Applying">安装中…</sys:String>
-    <sys:String x:Key="S.Update.FellBackToFull">更新包无法应用，已切换为完整更新</sys:String>
-    <sys:String x:Key="S.Update.SlowBefore" xml:space="preserve">下载速度较慢？</sys:String>
-    <sys:String x:Key="S.Update.SlowLink">前往 GitHub 手动下载</sys:String>
-    <sys:String x:Key="S.Update.Cancel">取消更新</sys:String>
-    <sys:String x:Key="S.Update.Cancelling">取消中…</sys:String>
-    <sys:String x:Key="S.Update.Retry">重试</sys:String>
-    <sys:String x:Key="S.Update.Failed">下载更新失败：{0}</sys:String>
-    <sys:String x:Key="S.Update.CloseBlocked">更新进行中，完成后会自动重新启动</sys:String>
 
     <!-- ── Service errors ── -->
     <sys:String x:Key="S.Error.OpenAiHttp">OpenAI Compatible API 返回 {0}：{1}</sys:String>
@@ -88,7 +64,7 @@
     <sys:String x:Key="S.Error.OpenAiNoModel">尚未指定模型名称。请在「翻译服务设置」中填入要使用的模型。</sys:String>
     <sys:String x:Key="S.Error.UnknownError">未知错误</sys:String>
     <sys:String x:Key="S.Error.NoErrorContent">未提供错误内容</sys:String>
-    <sys:String x:Key="S.Error.OcrUnsupportedLanguage">目前 OCR 仅支持 AUTO、EN、ZH、ZH-HANT、JA、KO；“{0}”尚未支持。</sys:String>
+    <sys:String x:Key="S.Error.OcrUnsupportedLanguage">目前 OCR 仅支持 AUTO、EN、ZH、ZH-HANT、JA、KO、TH；“{0}”尚未支持。</sys:String>
     <sys:String x:Key="S.Error.OcrSwapTimeout">等待其他识别结束以切换 OCR 模型时超时。</sys:String>
     <sys:String x:Key="S.Error.OcrImageConvert">无法将图像转换为 ONNX OCR 可读的格式。</sys:String>
     <sys:String x:Key="S.Error.OcrModelMissing">找不到 OCR 模型文件：{0}</sys:String>
@@ -255,8 +231,6 @@
     <sys:String x:Key="S.Main.MinimizedTitle">OverTranslate 已最小化</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">程序已最小化到系统托盘，可使用 {0} 开始进行截图翻译。</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">已设置的快捷键</sys:String>
-    <sys:String x:Key="S.Main.RealtimeRunningTitle">实时翻译进行中</sys:String>
-    <sys:String x:Key="S.Main.RealtimeRunningBody">编辑翻译区块时无法使用取词翻译。</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">缺少 API Key</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyBody">请在设置中输入 API Key。</sys:String>
     <sys:String x:Key="S.Main.RecogniseFailedTitle">识别失败</sys:String>
@@ -404,7 +378,6 @@
     <sys:String x:Key="S.Realtime.WindowCaptureFailed">无法捕获此窗口，请切换到“无边框窗口”或“窗口化”后再试一次。</sys:String>
     <sys:String x:Key="S.Realtime.WindowCaptureFullscreen">当前的显示模式无法捕获，请切换到“无边框窗口”或“窗口化”后再试一次。</sys:String>
     <sys:String x:Key="S.Realtime.WindowCaptureNoFrame">无法获取窗口画面，请切换到“无边框窗口”或“窗口化”后再试一次。</sys:String>
-    <sys:String x:Key="S.Realtime.SessionEndedTitle">实时翻译已结束</sys:String>
     <sys:String x:Key="S.Realtime.RemoveBlock">移除此区块</sys:String>
 
     <!-- Block mode picker -->
@@ -466,9 +439,6 @@
     <sys:String x:Key="S.Settings.HotkeyGuideSharedExample">例：鼠标侧键可能让浏览器返回上一页</sys:String>
     <sys:String x:Key="S.Settings.HotkeyGuideSharedDouble">连按两下仅支持以上两组，避免重复触发原有功能</sys:String>
     <sys:String x:Key="S.Settings.HotkeyElevatedNote">在以管理员身份运行的程序中，此快捷键可能无法使用</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkey">实时翻译</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">按下快捷键开始[[框选翻译]]</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">未启动时按下快捷键开始框选，框选时再按一次开始翻译；翻译中可暂停或继续。</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkey">取词翻译</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkeyHint">按下快捷键打开[[取词翻译]]</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkeyNote">若已选中文字，打开窗口时会自动带入并翻译。</sys:String>
@@ -682,6 +652,7 @@
     <sys:String x:Key="S.Lang.English">英语</sys:String>
     <sys:String x:Key="S.Lang.Japanese">日语</sys:String>
     <sys:String x:Key="S.Lang.Korean">韩语</sys:String>
+    <sys:String x:Key="S.Lang.Thai">泰语</sys:String>
     <sys:String x:Key="S.Lang.TraditionalChinese">繁体中文</sys:String>
     <sys:String x:Key="S.Lang.SimplifiedChinese">简体中文</sys:String>
     <sys:String x:Key="S.Lang.Bulgarian">保加利亚语</sys:String>
@@ -737,4 +708,37 @@
     <!-- Two lines, one per half of the switch. xml:space is what keeps the break: without it XAML
          collapses the &#x0A; away and the two sentences run together. -->
     <sys:String x:Key="S.Debug.ScopeHint" xml:space="preserve">仅原文：框线只显示于原文画面&#x0A;原文与译文：原文、译文画面皆显示框线</sys:String>
+
+    <!-- Thai fork: notification only, with no official binary installer. -->
+    <sys:String x:Key="S.Update.NotifyHeading">官方有新版本</sys:String>
+    <sys:String x:Key="S.Update.NotifyExplanation">泰语版仅提示更新。请回到聊天中提供新版本号，合并官方源码并验证泰语功能后再更新。</sys:String>
+    <sys:String x:Key="S.Update.OfficialBaseline">当前官方基线：v{0}</sys:String>
+    <sys:String x:Key="S.Update.OfficialLatest">官方最新版本：v{0}</sys:String>
+    <sys:String x:Key="S.Update.OpenOfficialNotes">查看官方更新说明</sys:String>
+    <sys:String x:Key="S.Update.OpenNotesFailed">无法打开浏览器，请稍后重试。</sys:String>
+
+    <!-- Installed local OCR model selection. -->
+    <sys:String x:Key="S.OcrModel.Title">OCR 识别模型</sys:String>
+    <sys:String x:Key="S.OcrModel.ByLanguage">按源语言选择（默认）</sys:String>
+    <sys:String x:Key="S.OcrModel.General">PP-OCRv6 · 中英日（本地）</sys:String>
+    <sys:String x:Key="S.OcrModel.Thai">PP-OCRv5 · 泰语/英语（本地）</sys:String>
+    <sys:String x:Key="S.OcrModel.Korean">韩语专用模型（本地）</sys:String>
+    <sys:String x:Key="S.OcrModel.Hint">用于截图识别。模型需匹配源语言；选择后下次识别生效。</sys:String>
+    <sys:String x:Key="S.OcrModel.Incompatible">所选 OCR 模型不支持当前源语言。通用模型用于中英日；泰语模型用于泰语/英语；韩语模型用于韩语。</sys:String>
+    <sys:String x:Key="S.OcrModel.DetectorSize">文字检测规模（所有语言）</sys:String>
+    <sys:String x:Key="S.OcrModel.RecognizerSize">通用文字识别规模（中英日）</sys:String>
+    <sys:String x:Key="S.OcrModel.ScaleHint">规模越大通常越慢、占用越高，效果需同图比较。泰语和韩语保持专用识别模型。</sys:String>
+    <sys:String x:Key="S.OcrModel.Device">运行设备</sys:String>
+    <sys:String x:Key="S.OcrModel.DeviceHint">显卡使用 DirectML，无需 CUDA。首次运行可能较慢；选择显卡后若不可用会报错，请改选 CPU。</sys:String>
+    <sys:String x:Key="S.OcrModel.Tiny">Tiny · 快速</sys:String>
+    <sys:String x:Key="S.OcrModel.Small">Small · 均衡</sys:String>
+    <sys:String x:Key="S.OcrModel.Medium">Medium · 较大</sys:String>
+    <sys:String x:Key="S.OcrModel.Prepare">准备所选模型和显卡组件</sys:String>
+    <sys:String x:Key="S.OcrModel.Preparing">正在准备：{0}</sys:String>
+    <sys:String x:Key="S.OcrModel.Ready">所选组件已就绪。</sys:String>
+    <sys:String x:Key="S.OcrModel.PrepareNeeded">所选组件尚未准备，请点击“准备所选模型和显卡组件”。</sys:String>
+    <sys:String x:Key="S.OcrModel.PrepareFailed">准备失败：</sys:String>
+    <sys:String x:Key="S.OcrModel.ActualDevice">上次实际运行设备：{0}</sys:String>
+    <sys:String x:Key="S.OcrModel.NextRun">设置将在下次识别时生效。</sys:String>
+    <sys:String x:Key="S.OcrModel.DeviceUnavailable">所选显卡当前不可用（可改选 CPU）</sys:String>
 </ResourceDictionary>

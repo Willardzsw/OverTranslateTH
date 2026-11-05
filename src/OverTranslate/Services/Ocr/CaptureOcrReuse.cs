@@ -21,7 +21,7 @@ internal sealed class CaptureOcrReuse
 {
     private sealed record Entry(
         object Capture, Rect Region, string Language, bool VerticalText, CaptureLayoutMode LayoutMode,
-        List<OcrTextBlock> Blocks);
+        List<OcrTextBlock> Blocks, string ModelIdentity);
 
     private Entry? _last;
 
@@ -30,13 +30,14 @@ internal sealed class CaptureOcrReuse
     /// <param name="layoutMode">The mode as recognition receives it, after the application's policy.</param>
     public bool TryGet(
         object capture, Rect region, string sourceLanguage, bool verticalText, CaptureLayoutMode layoutMode,
-        out List<OcrTextBlock> blocks)
+        out List<OcrTextBlock> blocks, string modelIdentity = "")
     {
         if (_last is { } last &&
             ReferenceEquals(last.Capture, capture) &&
             last.Region == region &&
             last.Language == OcrLanguageRouter.Normalize(sourceLanguage) &&
             last.VerticalText == verticalText &&
+            last.ModelIdentity == modelIdentity &&
 
             // Vertical text has one grouping profile of its own and never looks at the mode.
             (verticalText || last.LayoutMode == layoutMode))
@@ -55,11 +56,11 @@ internal sealed class CaptureOcrReuse
     /// </remarks>
     public void Remember(
         object capture, Rect region, string sourceLanguage, bool verticalText, CaptureLayoutMode layoutMode,
-        List<OcrTextBlock> blocks)
+        List<OcrTextBlock> blocks, string modelIdentity = "")
     {
         _last = blocks.Count == 0
             ? null
-            : new Entry(capture, region, OcrLanguageRouter.Normalize(sourceLanguage), verticalText, layoutMode, blocks);
+            : new Entry(capture, region, OcrLanguageRouter.Normalize(sourceLanguage), verticalText, layoutMode, blocks, modelIdentity);
     }
 
     public void Clear() => _last = null;

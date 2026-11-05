@@ -1006,11 +1006,13 @@ public partial class QuickLookupWindow : Window
         if (_suppressAuto) return;
 
         _debounce.Stop();
+        // Invalidate immediately: an answer arriving during the debounce must
+        // neither replace the edited input's result nor auto-copy stale text.
+        _request.Supersede();
         SetTranslationLoading(false);
         ClearDictionaryResult();
         if (string.IsNullOrWhiteSpace(SourceTextBox.Text))
         {
-            _request.Supersede();
             _detectedLang = "";
 
             // An empty box has no language, so the header goes back to saying it will work one out.

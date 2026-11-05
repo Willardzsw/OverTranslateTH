@@ -23,18 +23,13 @@
 
     <!-- ── Shell window ── -->
     <sys:String x:Key="S.Shell.About">About</sys:String>
-    <sys:String x:Key="S.Shell.QuickTools">Quick tools</sys:String>
     <sys:String x:Key="S.Shell.CaptureTranslate">Screen capture</sys:String>
-    <sys:String x:Key="S.Shell.QuickLookup">Quick lookup</sys:String>
     <sys:String x:Key="S.Shell.TextTranslate">Text</sys:String>
-    <sys:String x:Key="S.Shell.RealtimeTranslate">Realtime</sys:String>
     <sys:String x:Key="S.Shell.Settings">Settings</sys:String>
     <sys:String x:Key="S.Shell.HideSidebar">Hide sidebar</sys:String>
     <sys:String x:Key="S.Shell.ShowSidebar">Show sidebar</sys:String>
     <sys:String x:Key="S.Shell.Pin">Pin the window on top of other windows</sys:String>
     <sys:String x:Key="S.Shell.Unpin">Unpin</sys:String>
-    <sys:String x:Key="S.Shell.CaptureBlockedByRealtimeFraming">Realtime blocks are being framed — click "Start" before using screen capture</sys:String>
-    <sys:String x:Key="S.Shell.QuickLookupBlockedByRealtime">Realtime translation is running — stop it before using quick lookup</sys:String>
     <sys:String x:Key="S.Shell.UpdateAvailable">Update to v{0}</sys:String>
 
     <!-- ── Tray menu ── -->
@@ -57,27 +52,8 @@
     <sys:String x:Key="S.Toast.CopyFailed">Copy failed. Please try again later.</sys:String>
 
     <!-- ── Update ── -->
-    <sys:String x:Key="S.Update.WindowTitle">Update available</sys:String>
-    <sys:String x:Key="S.Update.Heading">Update available</sys:String>
-    <sys:String x:Key="S.Update.Explanation">"Update now" downloads and applies the update, then restarts the app.</sys:String>
-    <sys:String x:Key="S.Update.NotesBefore" xml:space="preserve">Curious what changed? </sys:String>
-    <sys:String x:Key="S.Update.NotesLink">See the release notes</sys:String>
     <sys:String x:Key="S.Update.Later">Later</sys:String>
-    <sys:String x:Key="S.Update.Now">Update now</sys:String>
     <sys:String x:Key="S.Update.Skip">Skip this version and stop reminding me</sys:String>
-    <sys:String x:Key="S.Update.DownloadingDelta">Downloading update {0} · {1}</sys:String>
-    <sys:String x:Key="S.Update.DownloadingFull">Downloading full installer {0} · {1}</sys:String>
-    <sys:String x:Key="S.Update.Patching">Applying update...</sys:String>
-    <sys:String x:Key="S.Update.Preparing">Preparing to install...</sys:String>
-    <sys:String x:Key="S.Update.Applying">Installing...</sys:String>
-    <sys:String x:Key="S.Update.FellBackToFull">Update file could not be applied — using a full update</sys:String>
-    <sys:String x:Key="S.Update.SlowBefore" xml:space="preserve">Downloading slowly? </sys:String>
-    <sys:String x:Key="S.Update.SlowLink">Get it manually from GitHub</sys:String>
-    <sys:String x:Key="S.Update.Cancel">Cancel update</sys:String>
-    <sys:String x:Key="S.Update.Cancelling">Cancelling...</sys:String>
-    <sys:String x:Key="S.Update.Retry">Retry</sys:String>
-    <sys:String x:Key="S.Update.Failed">Could not download the update: {0}</sys:String>
-    <sys:String x:Key="S.Update.CloseBlocked">The update is running — the app restarts itself when it finishes</sys:String>
 
     <!-- ── Service errors ── -->
     <sys:String x:Key="S.Error.OpenAiHttp">The OpenAI-compatible API returned {0}: {1}</sys:String>
@@ -88,7 +64,7 @@
     <sys:String x:Key="S.Error.OpenAiNoModel">No model name is set. Enter the model to use in the translation service settings.</sys:String>
     <sys:String x:Key="S.Error.UnknownError">Unknown error</sys:String>
     <sys:String x:Key="S.Error.NoErrorContent">No error details provided</sys:String>
-    <sys:String x:Key="S.Error.OcrUnsupportedLanguage">OCR currently supports AUTO, EN, ZH, ZH-HANT, JA and KO only; "{0}" is not supported yet.</sys:String>
+    <sys:String x:Key="S.Error.OcrUnsupportedLanguage">OCR currently supports AUTO, EN, ZH, ZH-HANT, JA, KO and TH only; "{0}" is not supported yet.</sys:String>
     <sys:String x:Key="S.Error.OcrSwapTimeout">Timed out waiting for other recognition to finish before switching OCR models.</sys:String>
     <sys:String x:Key="S.Error.OcrImageConvert">Could not convert the image into a format the ONNX OCR can read.</sys:String>
     <sys:String x:Key="S.Error.OcrModelMissing">OCR model file not found: {0}</sys:String>
@@ -255,8 +231,6 @@ Actually used this time: {2}</sys:String>
     <sys:String x:Key="S.Main.MinimizedTitle">OverTranslate is still running</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">Minimised to the system tray. Press {0} to start a screen capture translation.</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">your shortcut</sys:String>
-    <sys:String x:Key="S.Main.RealtimeRunningTitle">Realtime translation is running</sys:String>
-    <sys:String x:Key="S.Main.RealtimeRunningBody">Quick lookup isn't available while editing blocks.</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">No API key</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyBody">Enter an API key in Settings.</sys:String>
     <sys:String x:Key="S.Main.RecogniseFailedTitle">Recognition failed</sys:String>
@@ -404,7 +378,6 @@ Details: {0}</sys:String>
     <sys:String x:Key="S.Realtime.WindowCaptureFailed">That window cannot be captured. Switch it to borderless window or windowed and try again.</sys:String>
     <sys:String x:Key="S.Realtime.WindowCaptureFullscreen">That display mode cannot be captured. Switch to borderless window or windowed and try again.</sys:String>
     <sys:String x:Key="S.Realtime.WindowCaptureNoFrame">No picture could be taken from that window. Switch it to borderless window or windowed and try again.</sys:String>
-    <sys:String x:Key="S.Realtime.SessionEndedTitle">Realtime translation ended</sys:String>
     <sys:String x:Key="S.Realtime.RemoveBlock">Remove this block</sys:String>
 
     <!-- Block mode picker -->
@@ -466,9 +439,6 @@ Details: {0}</sys:String>
     <sys:String x:Key="S.Settings.HotkeyGuideSharedExample">E.g. a side button may also take your browser back a page</sys:String>
     <sys:String x:Key="S.Settings.HotkeyGuideSharedDouble">Double press is limited to the two above, so programs don’t act twice</sys:String>
     <sys:String x:Key="S.Settings.HotkeyElevatedNote">May not work in programs running as administrator</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkey">Realtime translation</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">Press the shortcut to [[select blocks and translate]]</sys:String>
-    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">When it is not running, press the shortcut to select blocks, then press it again to start translating; while translating, it pauses and resumes.</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkey">Quick lookup</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkeyHint">Press the shortcut to open [[quick lookup]]</sys:String>
     <sys:String x:Key="S.Settings.QuickLookupHotkeyNote">If text is selected, it is carried in and translated as the popup opens.</sys:String>
@@ -684,6 +654,7 @@ same settings, the same seed usually gives the same output.</sys:String>
     <sys:String x:Key="S.Lang.English">English</sys:String>
     <sys:String x:Key="S.Lang.Japanese">Japanese</sys:String>
     <sys:String x:Key="S.Lang.Korean">Korean</sys:String>
+    <sys:String x:Key="S.Lang.Thai">Thai</sys:String>
     <sys:String x:Key="S.Lang.TraditionalChinese">Traditional Chinese</sys:String>
     <sys:String x:Key="S.Lang.SimplifiedChinese">Simplified Chinese</sys:String>
     <sys:String x:Key="S.Lang.Bulgarian">Bulgarian</sys:String>
@@ -739,4 +710,37 @@ same settings, the same seed usually gives the same output.</sys:String>
     <!-- Two lines, one per half of the switch. xml:space is what keeps the break: without it XAML
          collapses the &#x0A; away and the two sentences run together. -->
     <sys:String x:Key="S.Debug.ScopeHint" xml:space="preserve">Source only: outlines are drawn on the source view only.&#x0A;Source and translation: outlines are drawn on both the source view and the translation view</sys:String>
+
+    <!-- Thai fork: notification only, with no official binary installer. -->
+    <sys:String x:Key="S.Update.NotifyHeading">New official release</sys:String>
+    <sys:String x:Key="S.Update.NotifyExplanation">This Thai build only notifies you. Share the new version in your chat to request merging the official source and validating Thai support before updating.</sys:String>
+    <sys:String x:Key="S.Update.OfficialBaseline">Current official baseline: v{0}</sys:String>
+    <sys:String x:Key="S.Update.OfficialLatest">Latest official release: v{0}</sys:String>
+    <sys:String x:Key="S.Update.OpenOfficialNotes">View official release notes</sys:String>
+    <sys:String x:Key="S.Update.OpenNotesFailed">Could not open the browser. Please try again later.</sys:String>
+
+    <!-- Installed local OCR model selection. -->
+    <sys:String x:Key="S.OcrModel.Title">OCR recognition model</sys:String>
+    <sys:String x:Key="S.OcrModel.ByLanguage">Choose by source language (default)</sys:String>
+    <sys:String x:Key="S.OcrModel.General">PP-OCRv6 · Chinese/English/Japanese (local)</sys:String>
+    <sys:String x:Key="S.OcrModel.Thai">PP-OCRv5 · Thai/English (local)</sys:String>
+    <sys:String x:Key="S.OcrModel.Korean">Korean recognizer (local)</sys:String>
+    <sys:String x:Key="S.OcrModel.Hint">Used for screenshot OCR. Match the model to the source language. Changes apply to the next recognition.</sys:String>
+    <sys:String x:Key="S.OcrModel.Incompatible">This OCR model does not support the source language. General: Chinese/English/Japanese; Thai: Thai/English; Korean: Korean.</sys:String>
+    <sys:String x:Key="S.OcrModel.DetectorSize">Text detection size (all languages)</sys:String>
+    <sys:String x:Key="S.OcrModel.RecognizerSize">General recognition size (Chinese/English/Japanese)</sys:String>
+    <sys:String x:Key="S.OcrModel.ScaleHint">Larger models usually take more time and memory. Compare on the same images. Thai and Korean keep their dedicated recognizers.</sys:String>
+    <sys:String x:Key="S.OcrModel.Device">Execution device</sys:String>
+    <sys:String x:Key="S.OcrModel.DeviceHint">GPU uses DirectML; CUDA is not required. The first run may be slower. If the selected GPU fails, choose CPU.</sys:String>
+    <sys:String x:Key="S.OcrModel.Tiny">Tiny · Fast</sys:String>
+    <sys:String x:Key="S.OcrModel.Small">Small · Balanced</sys:String>
+    <sys:String x:Key="S.OcrModel.Medium">Medium · Larger</sys:String>
+    <sys:String x:Key="S.OcrModel.Prepare">Prepare selected models and GPU components</sys:String>
+    <sys:String x:Key="S.OcrModel.Preparing">Preparing: {0}</sys:String>
+    <sys:String x:Key="S.OcrModel.Ready">Selected components are ready.</sys:String>
+    <sys:String x:Key="S.OcrModel.PrepareNeeded">Components are missing. Click “Prepare selected models and GPU components”.</sys:String>
+    <sys:String x:Key="S.OcrModel.PrepareFailed">Preparation failed:</sys:String>
+    <sys:String x:Key="S.OcrModel.ActualDevice">Last execution device: {0}</sys:String>
+    <sys:String x:Key="S.OcrModel.NextRun">Changes apply to the next recognition.</sys:String>
+    <sys:String x:Key="S.OcrModel.DeviceUnavailable">Selected GPU unavailable (CPU can be selected)</sys:String>
 </ResourceDictionary>

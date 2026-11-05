@@ -19,8 +19,8 @@ public class SettingsBackupTests : IDisposable
         """;
 
     private readonly string _dir = Path.Combine(Path.GetTempPath(), "ot-settings-backup-" + Guid.NewGuid().ToString("N"));
-    private string SettingsPath => Path.Combine(_dir, "roaming", "appsettings.json");
-    private string LegacyPath => Path.Combine(_dir, "install", "appsettings.json");
+    private string SettingsPath => Path.Combine(_dir, "profile-thai", "appsettings.json");
+    private string LegacyPath => Path.Combine(_dir, "appsettings.json");
 
     public SettingsBackupTests()
     {
@@ -37,7 +37,7 @@ public class SettingsBackupTests : IDisposable
 
     /// <summary>Loads as a start of <paramref name="version"/> would, saving to the real path.</summary>
     private Models.AppSettings Start(string version, Action? beforeSave = null) =>
-        SettingsService.Load(SettingsPath, LegacyPath, version, settings =>
+        SettingsService.Load(SettingsPath, version, settings =>
         {
             beforeSave?.Invoke();
             File.WriteAllText(SettingsPath, SettingsService.Serialize(settings));
@@ -112,15 +112,12 @@ public class SettingsBackupTests : IDisposable
     }
 
     /// <summary>
-    /// The copy is there before the first save, also when the file is read from where 1.7.0 kept it
-    /// and saved to the new place straight away; it is that old file that is copied.
+    /// The independent profile's copy is there before the first save.
     /// </summary>
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void TheCopy_ComesBeforeAnySave(bool legacy)
+    [Fact]
+    public void TheCopy_ComesBeforeAnySave()
     {
-        File.WriteAllText(legacy ? LegacyPath : SettingsPath, OldFile);
+        File.WriteAllText(SettingsPath, OldFile);
         var saves = 0;
 
         Start("2.10.0", () =>
@@ -130,6 +127,60 @@ public class SettingsBackupTests : IDisposable
         });
 
         Assert.Equal(1, saves);
+    }
+
+    [Fact]
+    public void MissingIndependentProfile_DoesNotImportAdjacentLegacySettings()
+    {
+        File.WriteAllText(LegacyPath, OldFile);
+
+        var settings = Start("2.10.0");
+
+        Assert.Equal(new Models.AppSettings().Theme, settings.Theme);
+        Assert.Empty(settings.OpenAi.Profiles);
+        Assert.False(File.Exists(BackupPath("2.10.0")));
+        Assert.Equal(OldFile, File.ReadAllText(LegacyPath));
+    }
+
+    [Fact]
+    public void UnreadableProfile_IsProtectedUntilItCanBeReloaded()
+    {
+        var original = WithLastRun(SettingsBackup.CurrentVersion);
+        File.WriteAllText(SettingsPath, original);
+        SettingsService service;
+        using (var locked = new FileStream(SettingsPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+            service = new SettingsService(SettingsPath);
+
+        service.Current.Theme = "Dark";
+        service.Save();
+        Assert.Equal(original, File.ReadAllText(SettingsPath));
+
+        service.Load();
+        Assert.Equal("Light", service.Current.Theme);
+        service.Current.Theme = "Dark";
+        service.Save();
+        Assert.Equal("Dark", SettingsService.Parse(File.ReadAllText(SettingsPath)).Theme);
+    }
+
+    [Theory]
+    [InlineData("{\"Theme\":\"Light\", ")]
+    [InlineData("{\"Theme\":\"Light\",\"Theme\":\"Dark\"}")]
+    [InlineData("null")]
+    public void DamagedProfile_IsPreservedUntilItIsRepaired(string damaged)
+    {
+        File.WriteAllText(SettingsPath, damaged);
+
+        var service = new SettingsService(SettingsPath);
+        service.Current.Theme = "Dark";
+        service.Save();
+        Assert.Equal(damaged, File.ReadAllText(SettingsPath));
+
+        File.WriteAllText(SettingsPath, WithLastRun(SettingsBackup.CurrentVersion));
+        service.Load();
+        Assert.Equal("Light", service.Current.Theme);
+        service.Current.Theme = "Dark";
+        service.Save();
+        Assert.Equal("Dark", SettingsService.Parse(File.ReadAllText(SettingsPath)).Theme);
     }
 
     /// <summary>The running version is written once, and a second start with it saves nothing.</summary>

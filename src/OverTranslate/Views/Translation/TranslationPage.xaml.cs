@@ -56,6 +56,12 @@ public partial class TranslationPage : UserControl
     /// </remarks>
     private bool _srcTtsBlocked;
 
+    private void CaptureOcrBtn_Click(object sender, RoutedEventArgs e)
+    {
+        if (System.Windows.Application.Current.MainWindow is MainWindow main && Window.GetWindow(this) is { } shell)
+            main.StartCaptureFromShell(shell);
+    }
+
     public TranslationPage()
     {
         InitializeComponent();
@@ -241,6 +247,7 @@ public partial class TranslationPage : UserControl
 
     private void SourceTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
+        _detectedLang = "";
         RenderSourceActions();
         RequestTranslate();
     }
@@ -304,10 +311,14 @@ public partial class TranslationPage : UserControl
         if (_suppressAuto) return;
 
         _debounce.Stop();
+        // The old answer stopped belonging to the input at the edit, not when the
+        // debounce fires. Otherwise it can publish during the next 300 ms.
+        _request.Supersede();
+        SetTranslating(false);
         ClearDictionaryResult();
         if (string.IsNullOrWhiteSpace(SourceTextBox.Text))
         {
-            _request.Supersede(); // cancel any in-flight result
+            _detectedLang = "";
             TranslatedTextBox.Text = "";
             _lastDone = null;
             SetTranslating(false);
@@ -386,7 +397,13 @@ public partial class TranslationPage : UserControl
         var provider = SettingsService.Instance.Current.Provider;
 
         var key = (text, srcLang, tgtLang, provider);
-        if (_lastDone == key) return;   // identical to the last successful translation — skip
+        if (_lastDone == key)
+        {
+            SetTranslating(false);
+            SetStatus("", isError: false);
+            ShowRetry(false);
+            return;
+        }
 
         var (seq, token) = _request.Start();
         ShowRetry(false);

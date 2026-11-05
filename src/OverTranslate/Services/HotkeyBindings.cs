@@ -192,7 +192,7 @@ public static class HotkeyBindings
     /// <summary>
     /// Every shortcut, in priority order, each marked with whether it is live and what took it.
     /// </summary>
-    public static IReadOnlyList<HotkeyBinding> Resolve(AppSettings settings)
+    public static IReadOnlyList<HotkeyBinding> Resolve(AppSettings settings, bool includeRealtime = true)
     {
         // Declaration order IS the priority order; nothing else encodes it.
         var declared = new (HotkeyAction Action, ShortcutTrigger Trigger, bool Enabled)[]
@@ -217,6 +217,7 @@ public static class HotkeyBindings
 
         foreach (var (action, trigger, enabled) in declared)
         {
+            if (!includeRealtime && action == HotkeyAction.RealtimePause) continue;
             HotkeyAction? shadowedBy = null;
 
             // A disabled shortcut does not claim its trigger, so turning one off hands the trigger to

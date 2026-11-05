@@ -33,6 +33,7 @@ namespace OverTranslate.Views.Settings;
 public partial class PromptEditOverlay : UserControl
 {
     private static readonly Duration FadeDuration = new(TimeSpan.FromMilliseconds(140));
+    private readonly OverlayLanguageSubscription _languageSubscription;
 
     /// <summary>How many lines the template box accepts.</summary>
     private const int PromptMaxLines = 200;
@@ -64,6 +65,7 @@ public partial class PromptEditOverlay : UserControl
     public PromptEditOverlay()
     {
         InitializeComponent();
+        _languageSubscription = new(this, OnLanguageChanged);
 
         // On the control rather than checked on save: a name too long to fit the row it is drawn in
         // should stop being typed, not be silently shortened once it is too late to see.
@@ -144,7 +146,7 @@ public partial class PromptEditOverlay : UserControl
 
         Visibility = Visibility.Visible;
 
-        LocalizationService.LanguageChanged += OnLanguageChanged;
+        _languageSubscription.Subscribe();
 
         Card.CacheMode = new BitmapCache { SnapsToDevicePixels = true };
 
@@ -169,7 +171,7 @@ public partial class PromptEditOverlay : UserControl
 
     private void Close()
     {
-        LocalizationService.LanguageChanged -= OnLanguageChanged;
+        _languageSubscription.Dispose();
 
         var fade = new DoubleAnimation { From = 1, To = 0, Duration = FadeDuration };
         fade.Completed += (_, _) =>
@@ -593,14 +595,19 @@ public partial class PromptEditOverlay : UserControl
     /// separator someone types is the one their keyboard and their locale give them.
     /// </remarks>
     private static double ReadNumber(TextBox box, double max)
+        => ParseParameterNumber(box.Text, max);
+
+    internal static double ParseParameterNumber(string input, double max)
     {
-        var text = box.Text.Trim();
+        var text = input.Trim();
         if (text.Length == 0) return 0;
         if (!double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) &&
             !double.TryParse(text, NumberStyles.Float, CultureInfo.CurrentCulture, out value))
             return 0;
 
-        return Math.Clamp(value, 0, max);
+        // TryParse accepts NaN, but JSON cannot serialize it. Keeping it in a
+        // profile would make every subsequent settings save fail, not just this edit.
+        return double.IsNaN(value) ? 0 : Math.Clamp(value, 0, max);
     }
 
     /// <summary>What is in the seed box, or 0 when it is not a whole number at all.</summary>

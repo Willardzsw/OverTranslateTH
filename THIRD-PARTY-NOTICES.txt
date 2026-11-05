@@ -339,6 +339,8 @@ DEALINGS IN THE SOFTWARE.
 PaddleOCR Models
 -------------------------------------------------------------------------------
 Version: PP-OCRv5 / PP-OCRv6 models used by OverTranslate
+Thai development fork adds th_PP-OCRv5_rec_mobile and ppocrv5_th_dict.txt (RapidAI v3.10.0).
+Provenance and SHA-256: src/OverTranslate/ocrmodels/onnx/thai/provenance.json
 Project: https://github.com/PaddlePaddle/PaddleOCR
 License: Apache License 2.0
 

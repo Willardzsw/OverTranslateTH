@@ -17,6 +17,8 @@ obj/
 *.nupkg
 *.snupkg
 packages/
+.packages/
+profile-thai/
 project.lock.json
 project.fragment.lock.json
 artifacts/

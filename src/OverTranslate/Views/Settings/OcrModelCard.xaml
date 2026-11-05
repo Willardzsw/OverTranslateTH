@@ -1,0 +1,28 @@
+<UserControl x:Class="OverTranslate.Views.Settings.OcrModelCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Style="{StaticResource CardBorder}">
+        <StackPanel>
+            <TextBlock Text="{DynamicResource S.OcrModel.Title}" Style="{StaticResource FieldLabel}"/>
+            <ComboBox x:Name="ModelBox" Margin="0,8,0,0" Style="{StaticResource ModernComboBox}"
+                      SelectedValuePath="Id" SelectionChanged="ModelBox_SelectionChanged"/>
+            <TextBlock Text="{DynamicResource S.OcrModel.Hint}" Margin="0,8,0,0"
+                       Style="{StaticResource FieldHint}" TextWrapping="Wrap"/>
+            <TextBlock Text="{DynamicResource S.OcrModel.DetectorSize}" Margin="0,16,0,0" Style="{StaticResource FieldLabel}"/>
+            <ComboBox x:Name="DetectorBox" Margin="0,8,0,0" Style="{StaticResource ModernComboBox}"
+                      SelectedValuePath="Id" SelectionChanged="Performance_SelectionChanged"/>
+            <TextBlock Text="{DynamicResource S.OcrModel.RecognizerSize}" Margin="0,16,0,0" Style="{StaticResource FieldLabel}"/>
+            <ComboBox x:Name="RecognizerBox" Margin="0,8,0,0" Style="{StaticResource ModernComboBox}"
+                      SelectedValuePath="Id" SelectionChanged="Performance_SelectionChanged"/>
+            <TextBlock Text="{DynamicResource S.OcrModel.ScaleHint}" Margin="0,8,0,0" Style="{StaticResource FieldHint}" TextWrapping="Wrap"/>
+            <TextBlock Text="{DynamicResource S.OcrModel.Device}" Margin="0,16,0,0" Style="{StaticResource FieldLabel}"/>
+            <ComboBox x:Name="DeviceBox" Margin="0,8,0,0" Style="{StaticResource ModernComboBox}"
+                      SelectedValuePath="Id" SelectionChanged="Performance_SelectionChanged"/>
+            <TextBlock Text="{DynamicResource S.OcrModel.DeviceHint}" Margin="0,8,0,0" Style="{StaticResource FieldHint}" TextWrapping="Wrap"/>
+            <Button x:Name="PrepareButton" Content="{DynamicResource S.OcrModel.Prepare}" Margin="0,12,0,0"
+                    Style="{StaticResource FlatButton}" HorizontalAlignment="Left" Padding="16,8" Click="Prepare_Click"/>
+            <TextBlock x:Name="AssetStatus" Margin="0,8,0,0" Style="{StaticResource FieldHint}" TextWrapping="Wrap"/>
+            <TextBlock x:Name="ExecutionStatus" Margin="0,8,0,0" Style="{StaticResource FieldHint}" TextWrapping="Wrap"/>
+        </StackPanel>
+    </Border>
+</UserControl>

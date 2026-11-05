@@ -22,6 +22,12 @@ using OverTranslate.Services.Realtime;
 // the text it belongs to, which is the half that says whether a verdict was right.
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+if (args.Length > 0 && args[0] == "--ocr-performance")
+    return await OcrPerformanceProbe.Run(args[1..]);
+
+if (args.Length > 0 && args[0] == "--thai-verify")
+    return await ThaiOcrProbe.Run(args[1..]);
+
 if (args.Length > 0 && args[0] == "--panel-layout") return PanelLayoutProbe.Run(args[1..]);
 
 if (args.Length > 0 && args[0] == "--session-equivalence")

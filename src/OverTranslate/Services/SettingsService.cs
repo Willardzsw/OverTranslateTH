@@ -1,3 +1,4 @@
+using System.Collections;
 using System.IO;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -11,9 +12,7 @@ public class SettingsService
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    // Velopack installs each version into ...\OverTranslate\current\ and replaces that entire folder
-    // on update. Settings used to live in BaseDirectory, i.e. inside current\, so every update wiped
-    // them and the app came back up on factory defaults. Roaming AppData sits outside the install.
+    // Only this build's independent profile is eligible to supply settings.
     private static readonly string SettingsDirectory = AppDataPaths.Root;
 
     private static readonly string SettingsPath = Path.Combine(SettingsDirectory, "appsettings.json");
@@ -23,12 +22,6 @@ public class SettingsService
     /// values in it: <see cref="DiagnosticBundleService"/> copies it into a problem report.
     /// </summary>
     public static string FilePath => SettingsPath;
-
-    // Where 1.7.0 and earlier kept the file. Velopack has usually deleted it by the time an updated
-    // build runs, but when it survives — a build relaunched in place, a dev run — those are still the
-    // user's settings, so read them once on the way to the new location.
-    private static readonly string LegacySettingsPath = Path.Combine(
-        AppDomain.CurrentDomain.BaseDirectory, "appsettings.json");
 
     /// <summary>
     /// How the file is written: indented, and with the whole of Unicode left as itself.
@@ -64,18 +57,39 @@ public class SettingsService
 
     public AppSettings Current { get; private set; } = new();
 
-    private SettingsService()
+    private readonly string _settingsPath;
+    private bool _savingEnabled;
+
+    private SettingsService() : this(SettingsPath)
     {
+    }
+
+    // An explicit path keeps file-failure tests entirely inside their synthetic profile.
+    internal SettingsService(string settingsPath)
+    {
+        _settingsPath = settingsPath;
         Load();
     }
 
     public void Load()
     {
-        Current = Load(SettingsPath, LegacySettingsPath, SettingsBackup.CurrentVersion, settings =>
+        _savingEnabled = false;
+        try
         {
-            Current = settings;
-            Save();
-        });
+            Current = Load(_settingsPath, SettingsBackup.CurrentVersion, settings =>
+            {
+                Current = settings;
+                _savingEnabled = true;
+                Save();
+            });
+            _savingEnabled = true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+        {
+            // A sharing violation or access failure is not a new profile. Keep the file intact,
+            // even if startup or a later UI edit calls Save after the external lock disappears.
+            Log.Error(ex, "Could not load settings from {0}; saving is disabled until a successful reload", _settingsPath);
+        }
     }
 
     /// <summary>
@@ -85,9 +99,9 @@ public class SettingsService
     /// <remarks>
     /// The backup comes before every save: once anything is saved, the file it would copy is gone.
     /// </remarks>
-    internal static AppSettings Load(string path, string legacyPath, string version, Action<AppSettings> save)
+    internal static AppSettings Load(string path, string version, Action<AppSettings> save)
     {
-        var (json, readFrom) = ReadFirstAvailable(path, legacyPath);
+        var json = ReadSettings(path);
         if (json is null)
         {
             var fresh = new AppSettings { LastRunVersion = version };
@@ -95,22 +109,28 @@ public class SettingsService
             return fresh;
         }
 
-        var settings = Parse(json);
+        AppSettings settings;
+        try
+        {
+            settings = ParseDocument(json);
+        }
+        catch (Exception ex) when (ex is JsonException or ArgumentException or InvalidOperationException)
+        {
+            // Defaults are usable for this session, but must never be saved over a damaged file.
+            // Preserve the original in place so it can be repaired and loaded again.
+            throw new InvalidDataException("The settings document could not be safely loaded.", ex);
+        }
         if (settings.LastRunVersion != version)
         {
             // The first start after an update (or after 2.9.0 or earlier, which never wrote a
             // version). Anything else a later version has to do once on its way in goes here too,
             // before the version is written: after that this branch is not taken again.
             if (SettingsBackup.Needed(settings.LastRunVersion))
-                SettingsBackup.Copy(readFrom!, SettingsBackup.PathFor(path, version));
+                SettingsBackup.Copy(path, SettingsBackup.PathFor(path, version));
 
             settings.LastRunVersion = version;
             save(settings);
         }
-        // Nothing at the canonical path means what we just read came from the legacy one. Persist it
-        // now rather than waiting for the user to happen to change a setting.
-        else if (!File.Exists(path))
-            save(settings);
         return settings;
     }
 
@@ -123,27 +143,33 @@ public class SettingsService
     /// </summary>
     public static AppSettings Parse(string json)
     {
-        var settings = new AppSettings();
-
-        JsonObject? root;
         try
         {
-            root = JsonNode.Parse(json) as JsonObject;
+            return ParseDocument(json);
         }
-        catch (JsonException ex)
+        catch (Exception ex) when (ex is JsonException or ArgumentException or InvalidOperationException)
         {
-            Log.Warn(ex, "appsettings.json is not valid JSON; falling back to defaults");
-            return settings;
+            Log.Warn("appsettings.json could not be parsed ({0}); falling back to in-memory defaults", ex.GetType().Name);
+            return new AppSettings();
         }
+    }
 
-        if (root is null)
-            return settings;
+    private static AppSettings ParseDocument(string json)
+    {
+        var settings = new AppSettings();
+        var root = JsonNode.Parse(json) as JsonObject
+            ?? throw new JsonException("The settings root must be an object.");
 
         Apply(settings, root, "");
 
         // Retired options, read as the ones that replaced them — the pickers no longer list them.
         settings.Provider = LanguageData.CurrentProvider(settings.Provider);
         settings.Realtime.Provider = LanguageData.CurrentProvider(settings.Realtime.Provider);
+        // Retired/unrecognized OCR service choices safely return to installed language routing.
+        settings.OcrModels.Selection = Ocr.OcrModelCatalog.Normalize(settings.OcrModels.Selection);
+        settings.OcrModels.DetectorSize = Ocr.OcrModelCatalog.DetectorSize(settings.OcrModels);
+        settings.OcrModels.RecognizerSize = Ocr.OcrModelCatalog.RecognizerSize(settings.OcrModels);
+        settings.OcrModels.Device = Ocr.OcrModelCatalog.Device(settings.OcrModels);
 
         // 替換翻譯's languages (QuickTranslate, its name before #277). The grouped section wins.
         // Older files used flat QuickTranslate* keys, and before that shared the text-translation
@@ -201,9 +227,38 @@ public class SettingsService
                 continue;
             }
 
+            // A list of settings needs the same field-by-field treatment as a grouped section.
+            // Deserializing it whole admitted null profiles/null strings and let one bad value
+            // discard every other model profile.
+            if (node is JsonArray array && property.PropertyType.IsGenericType
+                && property.PropertyType.GetGenericTypeDefinition() == typeof(List<>)
+                && property.PropertyType.GetGenericArguments()[0] is { } itemType
+                && IsSettingsGroup(itemType))
+            {
+                var list = (IList)Activator.CreateInstance(property.PropertyType)!;
+                for (var i = 0; i < array.Count; i++)
+                {
+                    if (array[i] is not JsonObject item) continue;
+                    var child = Activator.CreateInstance(itemType)!;
+                    Apply(child, item, $"{name}[{i}].");
+                    list.Add(child);
+                }
+                property.SetValue(target, list);
+                continue;
+            }
+
             try
             {
                 var value = node.Deserialize(property.PropertyType);
+                // JSON permits exponent notation that can overflow a floating-point value.
+                // Non-null nullable numbers box as their underlying type, so this covers them
+                // too. Keeping Infinity would make the next save of the entire profile fail.
+                if (value is double number && !double.IsFinite(number)
+                    || value is float single && !float.IsFinite(single))
+                {
+                    Log.Warn("Ignoring non-finite setting '{0}'; keeping its default", name);
+                    continue;
+                }
                 if (value is not null)
                     property.SetValue(target, value);
             }
@@ -310,40 +365,37 @@ public class SettingsService
 
     public void Save()
     {
+        if (!_savingEnabled)
+        {
+            Log.Warn("Settings save skipped because the profile could not be loaded: {0}", _settingsPath);
+            return;
+        }
         try
         {
-            Directory.CreateDirectory(SettingsDirectory);
+            Directory.CreateDirectory(Path.GetDirectoryName(_settingsPath)!);
 
             // Write-then-rename: losing power mid-write leaves the previous file intact instead of a
             // truncated one, which the next launch would read as corrupt and replace with defaults.
-            var tempPath = SettingsPath + ".tmp";
+            var tempPath = _settingsPath + ".tmp";
             File.WriteAllText(tempPath, Serialize(Current));
-            File.Move(tempPath, SettingsPath, overwrite: true);
+            File.Move(tempPath, _settingsPath, overwrite: true);
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Failed to save settings to {0}", SettingsPath);
+            Log.Error(ex, "Failed to save settings to {0}", _settingsPath);
         }
     }
 
-    /// <returns>The text of the first file that could be read, and which file that was.</returns>
-    private static (string? Json, string? Path) ReadFirstAvailable(params string[] paths)
+    /// <returns>The profile text, or null only when no profile exists yet.</returns>
+    private static string? ReadSettings(string path)
     {
-        foreach (var path in paths)
+        try
         {
-            if (!File.Exists(path))
-                continue;
-
-            try
-            {
-                return (File.ReadAllText(path), path);
-            }
-            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-            {
-                Log.Warn(ex, "Could not read settings from {0}", path);
-            }
+            return File.ReadAllText(path);
         }
-
-        return (null, null);
+        catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
+        {
+            return null;
+        }
     }
 }

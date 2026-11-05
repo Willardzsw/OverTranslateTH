@@ -41,6 +41,7 @@ public partial class DiagnosticNoteOverlay : UserControl
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     private static readonly Duration FadeDuration = new(TimeSpan.FromMilliseconds(140));
+    private readonly OverlayLanguageSubscription _languageSubscription;
 
     /// <summary>The bundle this panel is about to send. Set by <see cref="Open"/>.</summary>
     private string _bundlePath = "";
@@ -66,6 +67,7 @@ public partial class DiagnosticNoteOverlay : UserControl
     public DiagnosticNoteOverlay()
     {
         InitializeComponent();
+        _languageSubscription = new(this, OnLanguageChanged);
 
         // The service owns the limit: it is the one that has to fit the note into a bundle with an
         // upload ceiling, and a box that accepted more would be promising something it cannot keep.
@@ -87,7 +89,7 @@ public partial class DiagnosticNoteOverlay : UserControl
 
         Visibility = Visibility.Visible;
 
-        LocalizationService.LanguageChanged += OnLanguageChanged;
+        _languageSubscription.Subscribe();
 
         // WPF switches text off pixel snapping while it is being animated and ramps it back over
         // about a second — the card is cached as a bitmap for the length of the scale so the title
@@ -117,7 +119,7 @@ public partial class DiagnosticNoteOverlay : UserControl
         // ended. Every route here is guarded, but they are guarded in one place.
         if (_uploading) return;
 
-        LocalizationService.LanguageChanged -= OnLanguageChanged;
+        _languageSubscription.Dispose();
 
         var result = new DiagnosticNoteResult(_code, _attemptFailed);
 

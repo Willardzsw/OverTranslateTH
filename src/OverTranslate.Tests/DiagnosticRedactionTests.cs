@@ -105,14 +105,41 @@ public class DiagnosticRedactionTests
             (string?)JsonNode.Parse(json)!.AsObject()["OpenAiBaseUrl"]);
     }
 
-    [Fact]
-    public void FileThatIsNotJson_IsReturnedUnchanged()
+    [Theory]
+    [InlineData("{\"ApiKey\":\"synthetic-secret\", ")]
+    [InlineData("{\"ApiKey\":\"synthetic-secret\",\"ApiKey\":\"second\"}")]
+    [InlineData("[ {\"ApiKey\":\"synthetic-secret\"} ]")]
+    [InlineData("\"synthetic-secret\"")]
+    public void SettingsThatCannotBeSafelyParsed_AreOmitted(string broken)
     {
-        const string broken = "{ this was truncated by a power cut";
+        var redacted = DiagnosticBundleService.RedactSettings(broken);
+        Assert.DoesNotContain("synthetic-secret", redacted);
+        Assert.Contains("omitted", redacted);
+        Assert.IsType<JsonObject>(JsonNode.Parse(redacted));
+    }
 
-        // A file in this shape cannot hold a key in a field we would recognise, and its shape is
-        // itself the bug being reported — so it goes into the bundle exactly as found.
-        Assert.Equal(broken, DiagnosticBundleService.RedactSettings(broken));
+    [Fact]
+    public void SecretsInsideNestedArrays_AndNonStringSecrets_AreRedacted()
+    {
+        var redacted = DiagnosticBundleService.RedactSettings("""
+            {"Profiles":[[{"Token":"synthetic-secret","Name":"keep"}]],
+             "ApiKey":{"value":"synthetic-object"},"Password":["synthetic-array"]}
+            """);
+
+        Assert.DoesNotContain("synthetic-", redacted);
+        Assert.Contains("keep", redacted);
+        Assert.Contains("<redacted:16>", redacted);
+    }
+
+    [Theory]
+    [InlineData("https://user:synthetic-password@example.test/v1?token=synthetic-query#synthetic-fragment")]
+    [InlineData("https://example.test/v1#synthetic-fragment")]
+    [InlineData("invalid-url?token=synthetic-query")]
+    public void CredentialBearingUrls_AreSafeInDiagnostics(string value)
+    {
+        var redacted = DiagnosticBundleService.RedactUrlCredentials(value);
+        Assert.DoesNotContain("synthetic-", redacted);
+        Assert.DoesNotContain("user:", redacted);
     }
 
     // The settings file is not the only thing in the bundle that carried something the user did not

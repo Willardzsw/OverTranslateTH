@@ -591,13 +591,13 @@ public sealed class MangaModelStoreTests : IDisposable
     }
 
     [Fact]
-    public void TheModelsLive_InTheLocalAssetsFolder_NotRoamingNorTheInstallFolder()
+    public void TheModelsLive_InTheIndependentThaiProfile_NotTheInstalledAppsFolder()
     {
         var roaming = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         var local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var assets = Environment.GetEnvironmentVariable(AppDataPaths.AssetsOverride) is { Length: > 0 } overridden
             ? Path.GetFullPath(overridden)
-            : Path.Combine(local, "OverTranslate-assets");
+            : Path.Combine(AppDataPaths.Root, "assets");
 
         Assert.Equal(assets, AppDataPaths.AssetsRoot);
         Assert.Equal(Path.Combine(assets, "models", "manga-vertical"), MangaModelStore.DefaultRoot);

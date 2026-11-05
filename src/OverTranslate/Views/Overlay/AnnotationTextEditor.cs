@@ -95,6 +95,7 @@ internal sealed class AnnotationTextEditor : Window
             // somewhere fall through to the overlay, which would end the typing instead.
             Background = new SolidColorBrush(Color.FromArgb(1, 128, 128, 128)),
         };
+        _colorView = new ColorTextView(_box) { Margin = _box.Margin };
         System.Windows.Automation.AutomationProperties.SetAutomationId(_box, "AnnotationTextBox");
         _box.PreviewKeyDown += Box_PreviewKeyDown;
         _box.TextChanged += (_, _) => _colorView.InvalidateVisual();
@@ -110,7 +111,6 @@ internal sealed class AnnotationTextEditor : Window
         // still places the caret and the selection, and the two agree because both lay the words
         // out the same way.
         _box.Foreground = Brushes.Transparent;
-        _colorView = new ColorTextView(_box) { Margin = _box.Margin };
 
         // Two frames, light under dark and dashed, so the box can be found on any screenshot.
         var light = new Rectangle { Stroke = Brushes.White, StrokeThickness = 1, Opacity = 0.9 };
@@ -245,7 +245,7 @@ internal sealed class AnnotationTextEditor : Window
         }
 
         public Color Color { get; set; }
-        public AnnotationTextStyle? Style { get; set; }
+        public AnnotationTextStyle? TextStyle { get; set; }
 
         /// <summary>The characters the input method is still composing, as (offset, length) into the box's text.</summary>
         public (int Offset, int Length)? Composing
@@ -263,7 +263,7 @@ internal sealed class AnnotationTextEditor : Window
 
         protected override void OnRender(DrawingContext dc)
         {
-            if (Style is not { } style || box.Text.Length == 0) return;
+            if (TextStyle is not { } style || box.Text.Length == 0) return;
 
             var text = box.Text.Replace("\r\n", "\n").Replace('\r', '\n');
             double ppd = VisualTreeHelper.GetDpi(this).PixelsPerDip;
@@ -377,7 +377,7 @@ internal sealed class AnnotationTextEditor : Window
     /// <summary>Hands the drawn words the box's current look, in the box's own DIP.</summary>
     private void SyncColorView()
     {
-        _colorView.Style = new AnnotationTextStyle(
+        _colorView.TextStyle = new AnnotationTextStyle(
             _style.Family, _box.FontSize, _style.Bold, _style.Italic, _style.Underline, _style.Strikethrough);
         _colorView.InvalidateVisual();
     }

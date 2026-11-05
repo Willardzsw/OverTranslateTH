@@ -294,27 +294,27 @@ public static class DiagnosticBundleService
     /// it the length a key of this kind should be" answers a good share of the reports this file is
     /// collected for, and neither question can be asked of a blank.
     ///
-    /// Unparseable input is returned as-is only when it is not JSON at all — that file cannot hold a
-    /// key in a field we would recognise anyway, and its shape is itself the bug being reported.
+    /// Unparseable input is omitted: a truncated file can still contain complete credentials.
     /// </remarks>
     public static string RedactSettings(string json)
     {
-        JsonNode? root;
         try
         {
-            root = JsonNode.Parse(json);
+            if (JsonNode.Parse(json) is not JsonObject obj)
+                return OmittedSettings;
+
+            RedactInPlace(obj);
+            return obj.ToJsonString(ReadableJson);
         }
-        catch (JsonException)
+        catch (Exception ex) when (ex is JsonException or ArgumentException or InvalidOperationException)
         {
-            return json;
+            // Duplicate properties can fail only when JsonObject is first enumerated. Never return
+            // the original text on any parse/redaction failure, including that lazy parsing case.
+            return OmittedSettings;
         }
-
-        if (root is not JsonObject obj)
-            return json;
-
-        RedactInPlace(obj);
-        return obj.ToJsonString(ReadableJson);
     }
+
+    private const string OmittedSettings = "{\"diagnostic\":\"Settings omitted because they could not be safely redacted.\"}";
 
     /// <summary>
     /// Relaxed escaping, because this copy is written to be read by a person. The default encoder
@@ -335,6 +335,13 @@ public static class DiagnosticBundleService
         // the live collection.
         foreach (var name in obj.Select(pair => pair.Key).ToList())
         {
+            if (IsSecret(name))
+            {
+                obj[name] = obj[name] is JsonValue secret && secret.TryGetValue(out string? text)
+                    ? Mask(text) : obj[name] is null ? null : "<redacted>";
+                continue;
+            }
+
             switch (obj[name])
             {
                 // Realtime keeps its own copy of the provider settings, so the walk has to recurse
@@ -343,13 +350,24 @@ public static class DiagnosticBundleService
                     RedactInPlace(nested);
                     continue;
 
+                case JsonArray array:
+                    RedactArray(array);
+                    continue;
+
                 case JsonValue value when value.TryGetValue(out string? text):
-                    if (IsSecret(name))
-                        obj[name] = Mask(text);
-                    else if (name.EndsWith("BaseUrl", StringComparison.Ordinal))
-                        obj[name] = StripUrlCredentials(text);
+                    if (name.EndsWith("BaseUrl", StringComparison.OrdinalIgnoreCase))
+                        obj[name] = RedactUrlCredentials(text);
                     continue;
             }
+        }
+    }
+
+    private static void RedactArray(JsonArray array)
+    {
+        foreach (var item in array)
+        {
+            if (item is JsonObject obj) RedactInPlace(obj);
+            else if (item is JsonArray nested) RedactArray(nested);
         }
     }
 
@@ -368,13 +386,16 @@ public static class DiagnosticBundleService
     /// OpenAI-compatible provider misbehaves. What cannot be kept is a token someone put in the
     /// user info or the query string, which some self-hosted front ends still ask for.
     /// </remarks>
-    private static string StripUrlCredentials(string? value)
+    internal static string RedactUrlCredentials(string? value)
     {
         if (string.IsNullOrWhiteSpace(value)) return value ?? "";
-        if (!Uri.TryCreate(value, UriKind.Absolute, out var uri)) return value;
-        if (string.IsNullOrEmpty(uri.UserInfo) && string.IsNullOrEmpty(uri.Query)) return value;
+        if (!Uri.TryCreate(value, UriKind.Absolute, out var uri)
+            || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            return "<redacted:invalid-url>";
+        if (string.IsNullOrEmpty(uri.UserInfo) && string.IsNullOrEmpty(uri.Query)
+            && string.IsNullOrEmpty(uri.Fragment)) return value;
 
-        var builder = new UriBuilder(uri) { UserName = "", Password = "", Query = "" };
+        var builder = new UriBuilder(uri) { UserName = "", Password = "", Query = "", Fragment = "" };
         return builder.Uri.ToString();
     }
 
@@ -456,7 +477,8 @@ public static class DiagnosticBundleService
         sb.AppendLine($"exports   : {CollapseUserPaths(DefaultExportDirectory)}");
         // Written before any upload is attempted, so this says where it would go rather than where
         // it went — which is the line worth having when the upload is what failed.
-        sb.AppendLine($"upload    : {(DiagnosticUploadService.IsConfigured ? DiagnosticUploadService.Endpoint : "(disabled)")}");
+        sb.AppendLine($"upload    : {(DiagnosticUploadService.IsConfigured
+            ? RedactUrlCredentials(DiagnosticUploadService.Endpoint) : "(disabled)")}");
         sb.AppendLine();
         sb.AppendLine("=== What is in this file ===");
         sb.AppendLine("environment.txt            this file");

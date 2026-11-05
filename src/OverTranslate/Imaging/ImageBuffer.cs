@@ -63,11 +63,19 @@ internal sealed unsafe class ImageBuffer : IDisposable
     {
         ArgumentOutOfRangeException.ThrowIfNegative(width);
         ArgumentOutOfRangeException.ThrowIfNegative(height);
+        if (!Enum.IsDefined(type)) throw new ArgumentOutOfRangeException(nameof(type));
+        // Every row and contiguous span is int-sized. Validate before renting memory: wrapping
+        // the stride could otherwise create a tiny allocation with a huge apparent image width.
+        long stride = (long)width * type.PixelSize();
+        if (stride > int.MaxValue)
+            throw new ArgumentOutOfRangeException(nameof(width), "Image row exceeds the supported size.");
+        long bytes = stride * height;
+        if (bytes > int.MaxValue)
+            throw new ArgumentOutOfRangeException(nameof(width), "Image storage exceeds the supported size.");
         Width = width;
         Height = height;
         Type = type;
-        Stride = width * type.PixelSize();
-        long bytes = (long)Stride * height;
+        Stride = (int)stride;
         _storage = PixelStorage.Rent(Math.Max(1, bytes));
         _data = _storage.Pointer;
         if (clear) new Span<byte>(_data, (int)bytes).Clear();
@@ -79,7 +87,7 @@ internal sealed unsafe class ImageBuffer : IDisposable
     {
         var storage = parent.Storage;
         if (area.X < 0 || area.Y < 0 || area.Width < 0 || area.Height < 0
-            || area.Right > parent.Width || area.Bottom > parent.Height)
+            || (long)area.X + area.Width > parent.Width || (long)area.Y + area.Height > parent.Height)
             throw new ArgumentOutOfRangeException(nameof(area), $"{area} is outside {parent.Width}x{parent.Height}.");
         storage.AddReference();
         _storage = storage;
@@ -117,7 +125,7 @@ internal sealed unsafe class ImageBuffer : IDisposable
     /// <summary>A new single-channel float image holding <paramref name="values"/>, row by row.</summary>
     public static ImageBuffer FromFloats(int width, int height, ReadOnlySpan<float> values)
     {
-        if (values.Length != width * height) throw new ArgumentException("Wrong number of values.", nameof(values));
+        if (values.Length != (long)width * height) throw new ArgumentException("Wrong number of values.", nameof(values));
         var image = Uninitialized(width, height, PixelType.F32C1);
         values.CopyTo(new Span<float>(image._data, values.Length));
         return image;
