@@ -202,6 +202,6 @@ public class SettingsBackupTests : IDisposable
     public void TheCurrentVersion_HasNoCommitSuffix()
     {
         Assert.DoesNotContain("+", SettingsBackup.CurrentVersion);
-        Assert.True(Velopack.SemanticVersion.TryParse(SettingsBackup.CurrentVersion, out _));
+        Assert.True(Version.TryParse(SettingsBackup.CurrentVersion.Split('-')[0], out _));
     }
 }

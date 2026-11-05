@@ -21,10 +21,6 @@ public partial class App
     [STAThread]
     private static void Main(string[] args)
     {
-        // Uninstalling takes everything the app wrote with it — settings, logs, models — and the
-        // sign-in entry. Runs in a process of its own that exits straight after; see UninstallCleanup.
-        // Independent development build: no installed-app updater or uninstall callbacks.
-
         var app = new App();
         app.InitializeComponent();
         app.Run();
@@ -101,16 +97,9 @@ public partial class App
         // Past the single-instance check for the reason given below, and before any window: the
         // card and the hints read the switch this puts in step.
 
-        // Before the tray icon exists, so its first notification already carries the name.
-        // Do not replace the installed application's Windows notification registration.
-
         var mainWindow = new MainWindow();
         MainWindow = mainWindow;
         mainWindow.InitializeApp();
-
-        // A manga model download the app was closed in the middle of is not kept. Here, past the
-        // single-instance check, rather than when the store is built: a second launch must not clear
-        // the folder the running instance is downloading into.
     }
 
     private void MonitorActivationRequests()

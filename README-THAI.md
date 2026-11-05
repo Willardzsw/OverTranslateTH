@@ -85,6 +85,10 @@ dotnet run --project tools/OcrHarness -c Release -- --ocr-performance .test-arti
 - 模型来源、固定版本、SHA-256、字典约定见 `src/OverTranslate/ocrmodels/onnx/thai/provenance.json`；Apache-2.0 许可见原 `THIRD-PARTY-NOTICES.txt` 的 PaddleOCR 部分。
 - 配置/日志：每个可执行文件旁的 `profile-thai/`；资产：`profile-thai/assets/`。独立资产覆盖环境变量为 `OVERTRANSLATE_THAI_ASSETS_DIR`。
 
+## 精简说明
+
+漫画竖排模型、Velopack 安装与更新组件、卸载清理代码都已删除。日语等竖排文字继续走常规 OCR 流程。
+
 ## 更新方式
 
 - 程序不检查官方版本，启动和运行时都不会请求官方 Release 接口，也不提示更新。

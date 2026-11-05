@@ -1,5 +1,5 @@
 using System.IO;
-using OverTranslate.Services.Ocr.Manga;
+using OverTranslate.Services.Ocr;
 using Xunit;
 
 namespace OverTranslate.Tests;

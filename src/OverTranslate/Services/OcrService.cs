@@ -2,7 +2,6 @@ using System.Drawing;
 using System.Windows;
 using OverTranslate.Services.Ocr;
 using OverTranslate.Models;
-using OverTranslate.Services.Ocr.Manga;
 
 namespace OverTranslate.Services;
 
@@ -101,7 +100,6 @@ public class OcrService : IDisposable
     private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
     private readonly OnnxOcrEngine _engine;
-    private readonly MangaOcrEngine? _manga;
     private readonly Func<OcrModelSettings> _modelSettings;
 
     public OcrService() : this(static () => new OcrModelSettings()) { }
@@ -122,21 +120,6 @@ public class OcrService : IDisposable
         OcrModelCatalog.Validate(settings, language, vertical);
         return _engine;
     }
-
-    /// <param name="mangaModels">
-    /// Where the downloadable manga models are. With them, Japanese vertical text is read by those
-    /// models on the GPU whenever they can be used — see <see cref="RecognizeVerticalAsync"/>.
-    /// </param>
-    internal OcrService(MangaModelStore mangaModels) : this() => _manga = new MangaOcrEngine(mangaModels);
-
-    internal OcrService(MangaModelStore mangaModels, Func<OcrModelSettings> modelSettings) : this(modelSettings)
-        => _manga = new MangaOcrEngine(mangaModels);
-
-    /// <summary>For tests, which hand in a manga engine whose adapter and loads they control.</summary>
-    internal OcrService(MangaOcrEngine manga) : this() => _manga = manga;
-
-    /// <summary>The manga models' engine, or null in a build that was not given them.</summary>
-    internal MangaOcrEngine? Manga => _manga;
 
     /// <param name="layoutMode">
     /// What the user said this capture holds. The only thing it decides here is which thresholds
@@ -159,7 +142,7 @@ public class OcrService : IDisposable
         // The mode picks the thresholds for horizontal text only. Vertical has its own profile and
         // does not take a parameter for one — see RecognizeVerticalAsync.
         return LevelCrowdedTilts(verticalText
-            ? RecognizeVerticalAsync(engine, bitmap, language, cancellationToken, _manga)
+            ? RecognizeVerticalAsync(engine, bitmap, language, cancellationToken)
             : RecognizeAndGroupAsync(engine, bitmap, language, GroupingProfile.For(layoutMode), cancellationToken));
     }
 
@@ -196,8 +179,7 @@ public class OcrService : IDisposable
         if (orientation == Realtime.RealtimeTextOrientation.Vertical)
         {
             var columns = await TryRecognizeVerticalAsync(
-                engine, bitmap, OcrLanguageRouter.Normalize(sourceLanguage), maxDetectSize, cancellationToken,
-                _manga);
+                engine, bitmap, OcrLanguageRouter.Normalize(sourceLanguage), maxDetectSize, cancellationToken);
             return columns is null ? null : TiltedOverlap.Level(columns);
         }
 
@@ -221,44 +203,14 @@ public class OcrService : IDisposable
         return TiltedOverlap.Level(GroupRealtime(blocks, bitmap.Height, mode));
     }
 
-    /// <summary>
-    /// The column detector alone, for the manga path to tell which of its blocks are tilted — see
-    /// <see cref="Ocr.Manga.MangaColumnAngles"/>. Null for an engine that is not the ONNX one.
-    /// </summary>
-    private static Func<Bitmap, IReadOnlyList<SkiaSharp.SKPointI[]>>? ColumnDetector(IOcrEngine engine, string language) =>
-        engine is OnnxOcrEngine onnx ? mosaic => onnx.DetectQuads(mosaic, language) : null;
-
-    /// <summary>
-    /// The column detector as it detects a vertical page, for the manga path to tell which way each
-    /// block's lines run — see <see cref="Ocr.Manga.MangaLineGeometry"/>. Null for an engine that is
-    /// not the ONNX one, which leaves every block to its shape.
-    /// </summary>
-    private static Func<Bitmap, IReadOnlyList<SkiaSharp.SKPointI[]>>? LineDetector(IOcrEngine engine, string language) =>
-        engine is OnnxOcrEngine onnx ? mosaic => onnx.DetectLineQuads(mosaic, language) : null;
-
     /// <summary>Reads original-frame columns without queueing a busy realtime engine.</summary>
-    /// <remarks>
-    /// With <paramref name="manga"/> usable the page goes to the manga models instead, as on the
-    /// screenshot path — see <see cref="RecognizeVerticalAsync"/>. A GPU busy with another page is
-    /// null here, like a busy column engine: the next poll asks again.
-    /// </remarks>
     internal static async Task<List<OcrTextBlock>?> TryRecognizeVerticalAsync(
         IOcrEngine engine,
         Bitmap bitmap,
         string language,
         int? maxDetectSize,
-        CancellationToken cancellationToken,
-        MangaOcrEngine? manga = null)
+        CancellationToken cancellationToken)
     {
-        if (manga is not null && ReadsWithMangaModels(language))
-        {
-            var (outcome, read) = await MangaVerticalReader.ReadAsync(
-                manga, bitmap, wait: false, engine, language, maxDetectSize, cancellationToken,
-                ColumnDetector(engine, language), LineDetector(engine, language));
-            if (outcome == MangaReadOutcome.Busy) return null;
-            if (outcome == MangaReadOutcome.Read) return read;
-        }
-
         var blocks = await engine.TryRecognizeAsync(
             bitmap, language, maxDetectSize, cancellationToken, verticalText: true);
         return blocks is null
@@ -372,24 +324,16 @@ public class OcrService : IDisposable
     public void SetKeepWarm(bool keepWarm)
     {
         _engine.SetKeepWarm(keepWarm);
-        _manga?.SetKeepWarm(keepWarm);
     }
 
     /// <summary>
-    /// What a realtime session holds as it starts: the recogniser always; the manga models only when
-    /// a block is vertical and they would read the language. Whichever of them is not in memory yet
+    /// What a realtime session holds as it starts: the recogniser. If it is not in memory yet it
     /// is loaded now rather than by the first frame with text on it.
     /// </summary>
     /// <returns>
     /// The loads, done when every one has ended, failed ones included; already done when there was
     /// nothing to load. For 載入模型中… on the bar.
     /// </returns>
-    /// <remarks>
-    /// Decided once for the session, not per block: every block reads with the same two engines.
-    /// Not needed this time, the manga models are let go at once — a session keeps what it holds
-    /// through pauses and framing until 結束, and 330MB of video memory held for blocks that no
-    /// longer read with them is memory a game beside it could have used.
-    /// </remarks>
     internal Task KeepWarmForRealtime(string sourceLanguage, bool vertical)
     {
         _ = SelectedEngine(sourceLanguage, vertical);
@@ -402,26 +346,11 @@ public class OcrService : IDisposable
             loads.Add(_engine.PreloadAsync(sourceLanguage));
         }
 
-        if (_manga is not null && vertical && ReadsVerticalWithMangaModels(sourceLanguage))
-        {
-            _manga.SetKeepWarm(true);
-            if (!_manga.InMemory)
-            {
-                Log.Info("Loading the manga models ahead of a realtime session");
-                loads.Add(_manga.PreloadAsync());
-            }
-        }
-        else if (_manga is not null)
-        {
-            if (_manga.IsLoaded) Log.Info("Manga models not needed by this realtime session: released");
-            _manga.ReleaseNow();
-        }
-
         return Task.WhenAll(loads);
     }
 
-    /// <summary>Whether either engine is loading its models right now; never waits for them.</summary>
-    internal bool IsLoadingModels => _engine.IsLoading || _manga?.IsLoading == true;
+    /// <summary>Whether the engine is loading its models right now; never waits for them.</summary>
+    internal bool IsLoadingModels => _engine.IsLoading;
 
     /// <summary>
     /// Releases the loaded model immediately rather than after the inactivity delay — see
@@ -430,20 +359,7 @@ public class OcrService : IDisposable
     public void ReleaseModel()
     {
         _engine.ReleaseNow();
-        _manga?.ReleaseNow();
     }
-
-    /// <summary>
-    /// Whether a vertical page in this language would be read by the manga models right now.
-    /// </summary>
-    /// <remarks>
-    /// For the realtime loop's confirmation pass. The column pipeline's answer moves with the detector
-    /// size, which is what makes a second read at another size worth having (see
-    /// <see cref="Ocr.VerticalSecondLook"/>); the manga detector always sees the page at 640×640, so
-    /// reading the same frame again returns the same page.
-    /// </remarks>
-    internal bool ReadsVerticalWithMangaModels(string sourceLanguage) =>
-        _manga is not null && ReadsWithMangaModels(sourceLanguage) && _manga.UnavailableReason is null;
 
     /// <summary>
     /// How many recognitions may run at once. Exposed so a caller that was turned away can say how
@@ -453,7 +369,6 @@ public class OcrService : IDisposable
 
     public void Dispose()
     {
-        _manga?.Dispose();
         _engine.Dispose();
     }
 
@@ -500,30 +415,12 @@ public class OcrService : IDisposable
     /// Detects columns in the original frame; only recognition crops change orientation.
     /// Screenshot and realtime share the same source-coordinate grouping.
     /// </summary>
-    /// <remarks>
-    /// <para>Japanese goes to the manga models (RT-DETR bubble and text detection, manga-ocr
-    /// recognition, on the GPU) when they are downloaded and a hardware GPU can run them — see
-    /// <see cref="MangaVerticalReader"/>. Everything else — another language, no models, no GPU, a
-    /// load that failed — is read with the column pipeline, exactly as it was before they existed.</para>
-    ///
-    /// <para>manga-ocr reads Japanese only; a Chinese or Korean page stays on the columns.</para>
-    /// </remarks>
     internal static async Task<List<OcrTextBlock>> RecognizeVerticalAsync(
         IOcrEngine engine,
         Bitmap bitmap,
         string sourceLanguage,
-        CancellationToken cancellationToken,
-        MangaOcrEngine? manga = null)
+        CancellationToken cancellationToken)
     {
-        if (manga is not null && ReadsWithMangaModels(sourceLanguage))
-        {
-            var (outcome, read) = await MangaVerticalReader.ReadAsync(
-                manga, bitmap, wait: true, engine, OcrLanguageRouter.Normalize(sourceLanguage),
-                maxDetectSize: null, cancellationToken,
-                ColumnDetector(engine, sourceLanguage), LineDetector(engine, sourceLanguage));
-            if (outcome == MangaReadOutcome.Read) return read!;
-        }
-
         return await ReadColumnsAsync(engine, bitmap, sourceLanguage, cancellationToken);
     }
 
@@ -534,6 +431,4 @@ public class OcrService : IDisposable
             bitmap, sourceLanguage, cancellationToken, verticalText: true);
         return Ocr.VerticalColumnGrouping.Group(blocks, bitmap.Width, bitmap: bitmap, language: sourceLanguage);
     }
-
-    private static bool ReadsWithMangaModels(string language) => OcrLanguageRouter.Normalize(language) == "JA";
 }

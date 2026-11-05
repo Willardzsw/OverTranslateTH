@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.Json;
 using OverTranslate.Models;
-using OverTranslate.Services.Ocr.Manga;
 
 namespace OverTranslate.Services.Ocr;
 
@@ -15,7 +14,7 @@ internal static class OcrModelAssets
     private sealed record Manifest(Asset[] Files);
     internal static string Root => Path.Combine(AppDataPaths.Models, "ppocrv6");
     internal static string RuntimePath => Path.Combine(AppDataPaths.Runtimes, "directml", "1.15.4", "DirectML.dll");
-    internal static readonly MangaModelFile RuntimeFile = new("directml", "DirectML.dll", 18527776,
+    internal static readonly PinnedRuntimeFile RuntimeFile = new("directml", "DirectML.dll", 18527776,
         "9c9e6d822561c6c41b90e6994b3e8857cf1d66dbfb1e0c4c799c7c89b4e92da1");
     private const string RuntimeUrl = "https://api.nuget.org/v3-flatcontainer/microsoft.ai.directml/1.15.4/microsoft.ai.directml.1.15.4.nupkg";
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromMinutes(10) };

@@ -554,53 +554,6 @@ internal sealed class OnnxOcrEngine : IOcrEngine
     }
 
     /// <summary>
-    /// The detector's quadrilaterals over a whole bitmap, and nothing read: detection alone, at the
-    /// bitmap's own size (never enlarged), without the chromatic repair of split rows.
-    /// </summary>
-    /// <remarks>
-    /// For <see cref="Manga.MangaColumnAngles"/>, which only wants to know which way the columns of a
-    /// few blocks run. A separate call so no existing detection changes: it goes through
-    /// <see cref="BeginDetection"/> exactly as OcrHarness does.
-    /// </remarks>
-    internal IReadOnlyList<SKPointI[]> DetectQuads(Bitmap bitmap, string sourceLanguage)
-    {
-        using var session = BeginDetection(bitmap, sourceLanguage, maxDetectSize: null, repairRows: false);
-        return session.Quads();
-    }
-
-    /// <summary>
-    /// The detector's quadrilaterals as the column pipeline finds them on a page of vertical
-    /// writing — columns merged on the artwork taken apart on the probability map — and nothing read.
-    /// </summary>
-    /// <remarks>
-    /// For <see cref="Manga.MangaLineGeometry"/>, which asks which way the lines of a block run. The
-    /// vertical detection rather than <see cref="DetectQuads"/>: measured over the 1753 manga blocks
-    /// of the vertical and comic corpora, each cut out and detected on its own, the plain detection
-    /// joined short columns standing side by side into one box across and turned 16 blocks of
-    /// columns into rows, this one 7 — and 0 on the mosaic that class builds.
-    /// </remarks>
-    internal IReadOnlyList<SKPointI[]> DetectLineQuads(Bitmap bitmap, string sourceLanguage)
-    {
-        var normalizedLanguage = OcrLanguageRouter.Normalize(sourceLanguage);
-        var runtime = AcquireRuntime(normalizedLanguage);
-        DetectionSession session;
-        try
-        {
-            session = new DetectionSession(
-                this, runtime, bitmap, normalizedLanguage, maxDetectSize: null,
-                repairRows: false, verticalText: true);
-        }
-        catch
-        {
-            ReleaseRuntime();
-            throw;
-        }
-
-        using (session)
-            return session.Quads();
-    }
-
-    /// <summary>
     /// One detection, kept alive so its boxes can be recognised a subset at a time.
     /// </summary>
     internal sealed class DetectionSession : IDisposable

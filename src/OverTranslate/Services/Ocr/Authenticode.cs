@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 
-namespace OverTranslate.Services.Ocr.Manga;
+namespace OverTranslate.Services.Ocr;
 
 /// <summary>
 /// Whether a file carries an embedded Authenticode signature this machine trusts, made out to a

@@ -219,7 +219,7 @@ public sealed class RealtimeTranslationSession
         // A watched region is idle between lines, and the recogniser cannot tell that from a tray
         // icon nobody has touched all afternoon. Told explicitly, it stops releasing the model that
         // the next line is about to need — loads now whatever it will read with and does not have
-        // yet, and lets the manga models go if no block will read with them. See
+        // yet. See
         // OcrService.KeepWarmForRealtime.
         //
         // The translation model is asked to load beside it, and the bar's 載入模型中… waits for both:
@@ -355,8 +355,7 @@ public sealed class RealtimeTranslationSession
     /// <remarks>
     /// <para>A running session starts again on the new pair at once, reading every region the way
     /// <see cref="Resume"/> does — the user has just asked, and is watching for the words. Starting
-    /// again rather than patching the loops in place is what loads the recogniser and the manga
-    /// models the new source needs, and lets go of the ones it no longer does: see
+    /// again rather than patching the loops in place is what loads the recogniser the new source needs: see
     /// <see cref="Start"/> and OcrService.KeepWarmForRealtime.</para>
     ///
     /// <para>A paused session stays paused and only remembers the pair: 繼續 is what starts it, on
@@ -770,18 +769,12 @@ public sealed class RealtimeTranslationSession
         // the size of its input and not smoothly, so the same picture read again at another size
         // puts balloons together that the first size left in pieces — and this read was happening
         // anyway, reading the identical picture at the identical size for the identical answer.
-        //
-        // Not when the manga models read the page. Their detector sees the whole frame at 640×640
-        // whatever size is asked for, so there is no other geometry to ask with: MEASURED, reading
-        // the same frame twice returned the identical page on all 46 transcribed pages, and merging
-        // the two changed nothing. The previous reading is the answer, without a second GPU pass.
         var columnsAgain = region.Orientation == RealtimeTextOrientation.Vertical && state.ReadingAgain;
-        var mangaModels = columnsAgain && _ocr.ReadsVerticalWithMangaModels(sourceLanguage);
-        var otherSize = columnsAgain && !mangaModels
+        var otherSize = columnsAgain
             ? Ocr.VerticalSecondLook.OtherSize(frame.Width, frame.Height, primarySize)
             : null;
         var confirmation = ChooseConfirmationRead(
-            columnsAgain, mangaModels, otherSize is not null, state.SamePictureAsRead);
+            columnsAgain, otherSize is not null, state.SamePictureAsRead);
         var readingAgain = confirmation == ConfirmationRead.OtherSize;
         var sameAsLastRead = confirmation == ConfirmationRead.ReuseLastRead;
         if (readingAgain) primarySize = otherSize!.Value;
@@ -1089,10 +1082,9 @@ public sealed class RealtimeTranslationSession
     /// the pass reads as it always did.
     /// </remarks>
     internal static ConfirmationRead ChooseConfirmationRead(
-        bool columnsAgain, bool mangaModels, bool hasOtherSize, bool samePicture)
+        bool columnsAgain, bool hasOtherSize, bool samePicture)
     {
-        if (columnsAgain && !mangaModels && hasOtherSize) return ConfirmationRead.OtherSize;
-        if (columnsAgain && mangaModels) return ConfirmationRead.ReuseLastRead;
+        if (columnsAgain && hasOtherSize) return ConfirmationRead.OtherSize;
         return samePicture ? ConfirmationRead.ReuseLastRead : ConfirmationRead.Recognise;
     }
 

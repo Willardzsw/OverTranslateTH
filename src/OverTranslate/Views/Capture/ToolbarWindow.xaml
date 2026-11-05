@@ -593,18 +593,6 @@
                                             </StackPanel>
                                         </CheckBox.ToolTip>
                                     </CheckBox>
-                                    <!-- The model footer under this bar (CaptureSettings.ShowModelHint).
-                                         This bar's own: the realtime page shows its line regardless.
-                                         Put positively, like the two above it — ticked turns something on. -->
-                                    <CheckBox x:Name="ModelHintSwitch" Style="{StaticResource ToolbarMenuToggle}"
-                                              Content="{DynamicResource S.Toolbar.ModelHintSwitch}"
-                                              ToolTip="{DynamicResource S.Toolbar.ModelHintSwitchTip}"
-                                              Checked="ModelHintSwitch_Changed" Unchecked="ModelHintSwitch_Changed">
-                                        <CheckBox.Tag>
-                                            <Path Style="{StaticResource DrawnMark}" StrokeThickness="1.2"
-                                                  Data="M8,1.5 C8.5,5.3 10.7,7.5 14.5,8 C10.7,8.5 8.5,10.7 8,14.5 C7.5,10.7 5.3,8.5 1.5,8 C5.3,7.5 7.5,5.3 8,1.5 Z"/>
-                                        </CheckBox.Tag>
-                                    </CheckBox>
 
                                     <!-- 偵錯輔助 folds: the boxes are for reporting a problem, and open
                                          they took half the menu from everyone else (#323). The heading
@@ -726,40 +714,9 @@
 
                     </StackPanel>
 
-                    <!-- The manga model hint, as a line of its own under the bar rather than in
-                         it: when there is something to say the bar grows a footer, and when there
-                         is not it is exactly the bar it always was. Nothing in the row above moves
-                         either way — the window keeps its top and grows down, and it is placed as
-                         though the footer were there (PositionNearSelection), so it never grows
-                         over the selection or off the screen.
-
-                         The rule runs the width of the row, inset from the rounded ends by the
-                         bar's own padding, so the footer reads as part of the one bar. The text
-                         starts at the row's left edge, under the speaker, one size up from the
-                         stacked labels: it is a sentence to be read, not a caption. Spacing:
-                         4 under the row, the rule, 7, a 16px line, then the bar's padding of 8. -->
                     <Grid x:Name="FooterSlot">
-                        <Border x:Name="MangaFooter"
-                                HorizontalAlignment="Left"
-                                Width="{Binding ActualWidth, ElementName=BarRow}"
-                                Height="24" Margin="0,4,0,0"
-                                BorderThickness="0,1,0,0"
-                                BorderBrush="{DynamicResource ToolbarDivider}"
-                                Visibility="{Binding Visibility, ElementName=MangaHint}"
-                                ClipToBounds="True">
-                            <ctl:MangaModelHintText x:Name="MangaHint"
-                                                    CollapsesWhenHidden="True"
-                                                    FollowsCaptureHintSwitch="True"
-                                                    FontSize="12"
-                                                    LineHeight="16" LineStackingStrategy="BlockLineHeight"
-                                                    Margin="0,7,0,0"/>
-                        </Border>
-
-                        <!-- What came of the last thing pressed on this bar: a line of its own, built
-                             like the manga footer so it reads as part of the bar rather than as a window
-                             of its own. In the same cell as that footer and drawn over it — the hint is
-                             always there, this is there for three seconds — so it never pushes the hint
-                             down, and closing it brings the hint back as it was.
+                        <!-- What came of the last thing pressed on this bar: a line of its own that reads
+                             as part of the bar rather than as a window of its own.
                              One line: icon, title, message. A message too long for the row wraps under
                              itself, up to three lines; the copy button takes the whole of it. The icon
                              and title stay on the first line, the two buttons sit in the middle. The

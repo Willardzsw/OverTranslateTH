@@ -17,4 +17,3 @@ src/OverTranslate/ocrmodels/**/dict.txt -text
 # on Windows (+25 bytes) and a rebuild no longer matches the binary committed under dist/,
 # which silently breaks "build it yourself and compare the hash" — hit in practice.
 # That binary's whole value is having bytes that never change across releases (#210).
-src/OverTranslate.Launcher/launcher.manifest -text

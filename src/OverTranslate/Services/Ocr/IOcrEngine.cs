@@ -34,9 +34,7 @@ internal interface IOcrEngine : IDisposable
     /// spending anything else; null when none is free.
     /// </summary>
     /// <remarks>
-    /// For the manga path on a live screen, which reads part of a page with the manga models and
-    /// part with this engine: finding the engine busy only after the manga models had read their
-    /// part would throw that work away. An engine without slots of its own reads straight through.
+    /// An engine without slots of its own reads straight through.
     /// </remarks>
     IOcrSlot? TryTakeSlot() => new ThroughSlot(this);
 

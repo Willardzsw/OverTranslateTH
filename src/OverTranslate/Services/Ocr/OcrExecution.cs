@@ -1,7 +1,6 @@
 using Microsoft.ML.OnnxRuntime;
 using System.Reflection;
 using OverTranslate.Models;
-using OverTranslate.Services.Ocr.Manga;
 using RapidOcrNet;
 
 namespace OverTranslate.Services.Ocr;

@@ -30,15 +30,6 @@ $items = @(
         )
     },
     @{
-        Name = "Velopack"
-        Version = "1.2.0"
-        License = "MIT License"
-        Project = "https://github.com/velopack/velopack"
-        Files = @(
-            @{ Label = "LICENSE"; Url = "https://raw.githubusercontent.com/velopack/velopack/develop/LICENSE" }
-        )
-    },
-    @{
         Name = "PaddleOCR Models"
         Version = "PP-OCRv5 / PP-OCRv6 models used by OverTranslate"
         License = "Apache License 2.0"
@@ -77,47 +68,6 @@ $items = @(
             @{ Label = "Intel License Agreement"; Url = "https://raw.githubusercontent.com/opencv/opencv/4.13.0/modules/photo/src/inpaint.cpp"; Until = "//M*/" }
         )
     },
-    @{
-        Name = "comic-text-and-bubble-detector (manga models, downloaded separately)"
-        Version = "ogkalu/comic-text-and-bubble-detector, RT-DETR-v2 r50vd"
-        License = "Apache License 2.0"
-        Project = "https://huggingface.co/ogkalu/comic-text-and-bubble-detector"
-        Note = "Modified by OverTranslate: the published detector.onnx converted to fp16 (TopK, GatherElements and Cast kept in fp32; duplicate Cast nodes removed). Not included in the installer; downloaded on request as detector.fp16.onnx."
-        Files = @(
-            @{ Label = "LICENSE"; Url = "https://www.apache.org/licenses/LICENSE-2.0.txt" }
-        )
-    },
-    @{
-        Name = "manga-ocr (manga models, downloaded separately)"
-        Version = "kha-white/manga-ocr-base"
-        License = "Apache License 2.0"
-        Project = "https://github.com/kha-white/manga-ocr"
-        Note = "Architecture and initial weights of manga-ocr-base-CPT-flex below. Manga model set version 1 shipped this model, exported to ONNX in fp16 with the decoder split into a cross-attention graph and a single-step graph with a key/value cache; version 2 replaces it with manga-ocr-base-CPT-flex."
-        Files = @(
-            @{ Label = "LICENSE"; Url = "https://raw.githubusercontent.com/kha-white/manga-ocr/master/LICENSE" }
-        )
-    },
-    @{
-        Name = "manga-ocr-base-CPT-flex (manga models, downloaded separately)"
-        Version = "muscgab/manga-ocr-base-CPT-flex, revision 9cc15742f8dc37cb5222a6569839bc774dfc0392"
-        License = "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International"
-        Project = "https://huggingface.co/muscgab/manga-ocr-base-CPT-flex"
-        Note = "By muscgab; use, conversion and redistribution in OverTranslate agreed at https://huggingface.co/muscgab/manga-ocr-base-CPT/discussions/1. Modified by OverTranslate: the published weights exported to ONNX in fp16, with an aspect-preserving patch input for the encoder and the decoder split into a cross-attention graph and a single-step graph with a key/value cache and a memory mask; vocab.txt is the BERT special tokens followed by the model's 6817 characters. The converted files are distributed under the same license at https://huggingface.co/hon-lu/manga-ocr-base-CPT-flex-onnx-fp16. Not included in the installer; downloaded on request."
-        Files = @(
-            @{ Label = "LICENSE_MODEL"; Url = "https://huggingface.co/muscgab/manga-ocr-base-CPT-flex/raw/9cc15742f8dc37cb5222a6569839bc774dfc0392/LICENSE_MODEL" }
-            @{ Label = "NOTICE.md"; Url = "https://huggingface.co/muscgab/manga-ocr-base-CPT-flex/raw/9cc15742f8dc37cb5222a6569839bc774dfc0392/NOTICE.md" }
-        )
-    },
-    @{
-        Name = "CRAFT (manga models, downloaded separately)"
-        Version = "clovaai/CRAFT-pytorch, craft_mlt_25k weights"
-        License = "MIT License"
-        Project = "https://github.com/clovaai/CRAFT-pytorch"
-        Note = "Modified by OverTranslate: the craft_mlt_25k weights (the file EasyOCR redistributes in its releases) exported to ONNX and converted to fp16 with float32 inputs and outputs. Not included in the installer; downloaded on request as craft.fp16.onnx."
-        Files = @(
-            @{ Label = "LICENSE"; Url = "https://raw.githubusercontent.com/clovaai/CRAFT-pytorch/master/LICENSE" }
-        )
-    }
 )
 
 $separator = "-" * 79

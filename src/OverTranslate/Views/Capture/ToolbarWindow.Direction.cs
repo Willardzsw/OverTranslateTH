@@ -72,7 +72,7 @@ public partial class ToolbarWindow
     }
 
     /// <summary>
-    /// The direction just picked: kept for next time, the manga hint brought in line with it, and
+    /// The direction just picked: kept for next time, and
     /// the switch set moving.
     /// </summary>
     private void DirectionSegment_Checked(object sender, RoutedEventArgs e)
@@ -84,7 +84,6 @@ public partial class ToolbarWindow
         if (_initializingDirection) return;
 
         SaveTextDirectionSelection();
-        RenderMangaHint();
         StartDirectionSpring();
     }
 

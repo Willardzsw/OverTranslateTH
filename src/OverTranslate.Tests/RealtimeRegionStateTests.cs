@@ -193,20 +193,18 @@ public class RealtimeRegionStateTests
 
     [Theory]
     // A page of columns read by the general models: the other detector size is new information.
-    [InlineData(true, false, true, true, "OtherSize")]
-    [InlineData(true, false, true, false, "OtherSize")]
-    // The manga models have no other size to ask with, as before.
-    [InlineData(true, true, false, false, "ReuseLastRead")]
+    [InlineData(true, true, true, "OtherSize")]
+    [InlineData(true, true, false, "OtherSize")]
     // Everything else: reuse only over the identical picture.
-    [InlineData(false, false, false, true, "ReuseLastRead")]
-    [InlineData(false, false, false, false, "Recognise")]
-    [InlineData(true, false, false, true, "ReuseLastRead")]
+    [InlineData(false, false, true, "ReuseLastRead")]
+    [InlineData(false, false, false, "Recognise")]
+    [InlineData(true, false, true, "ReuseLastRead")]
     public void TheSecondLookAtColumnsIsNotReplacedByReuse(
-        bool columnsAgain, bool mangaModels, bool hasOtherSize, bool samePicture, string expected) =>
+        bool columnsAgain, bool hasOtherSize, bool samePicture, string expected) =>
         Assert.Equal(
             Enum.Parse<RealtimeTranslationSession.ConfirmationRead>(expected),
             RealtimeTranslationSession.ChooseConfirmationRead(
-            columnsAgain, mangaModels, hasOtherSize, samePicture));
+            columnsAgain, hasOtherSize, samePicture));
 
     private static (RealtimeRegionState State, FakeFrame Frame) ReadOnce()
     {

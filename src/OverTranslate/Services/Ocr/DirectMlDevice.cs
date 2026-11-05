@@ -2,11 +2,11 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace OverTranslate.Services.Ocr.Manga;
+namespace OverTranslate.Services.Ocr;
 
 /// <summary>
-/// Which graphics adapter the manga models may run on, or why none; and loading the DirectML
-/// runtime they run with.
+/// Which graphics adapter OCR may run on, or why none; and loading the DirectML
+/// runtime it runs with.
 /// </summary>
 /// <remarks>
 /// <para>ONNX Runtime's DirectML device id is the adapter's position in DXGI's
@@ -24,7 +24,7 @@ namespace OverTranslate.Services.Ocr.Manga;
 /// the UI thread by every model hint. Just before loading, the driver is being loaded anyway.</para>
 ///
 /// <para>DirectML.dll is not shipped with the app; it is downloaded with the models
-/// (<see cref="MangaModelStore.RuntimePath"/>). onnxruntime.dll imports it delay-loaded, by module
+/// (<see cref="OcrModelAssets.RuntimePath"/>). onnxruntime.dll imports it delay-loaded, by module
 /// name, on the first DirectML session. So it is loaded here first, by full path, after checking
 /// it is the file the manifest pins and carries Microsoft's signature: the delay-load then finds
 /// that module already in the process and uses it. Never the copy in System32, which can be older
@@ -85,7 +85,7 @@ internal static class DirectMlDevice
     /// it was not, and then no DirectML session may be created.
     /// </summary>
     /// <param name="file">What the manifest says the file is: its size and SHA-256.</param>
-    internal static string? Load(string? path, MangaModelFile? file)
+    internal static string? Load(string? path, PinnedRuntimeFile? file)
     {
         if (path is null || file is null)
             return "this build does not download DirectML";
@@ -114,7 +114,7 @@ internal static class DirectMlDevice
     }
 
     /// <summary>Why the file at <paramref name="path"/> is not the runtime the manifest names, or null.</summary>
-    internal static string? Problem(string path, MangaModelFile file)
+    internal static string? Problem(string path, PinnedRuntimeFile file)
     {
         try
         {
@@ -266,3 +266,6 @@ internal static class DirectMlDevice
         public uint Flags;
     }
 }
+
+/// <summary>A runtime file pinned by size and hash.</summary>
+internal sealed record PinnedRuntimeFile(string Role, string Name, long Size, string Sha256);

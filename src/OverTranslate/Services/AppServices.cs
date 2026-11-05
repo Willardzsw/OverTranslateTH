@@ -21,13 +21,6 @@ namespace OverTranslate.Services;
 /// </remarks>
 internal static class AppServices
 {
-    /// <summary>
-    /// The downloadable manga models for vertical Japanese: whether they are here, and fetching them.
-    /// Declared before <see cref="Ocr"/>, which reads them.
-    /// </summary>
-    private static readonly Lazy<Services.Ocr.Manga.MangaModelStore> MangaStore = new(Services.Ocr.Manga.MangaModelStore.CreateDefault);
-    public static Services.Ocr.Manga.MangaModelStore MangaModels => MangaStore.Value;
-
     /// <summary>Recognition. Construction is cheap — the model itself is loaded on first use.</summary>
     public static OcrService Ocr { get; } = new(() => SettingsService.Instance.Current.OcrModels);
 

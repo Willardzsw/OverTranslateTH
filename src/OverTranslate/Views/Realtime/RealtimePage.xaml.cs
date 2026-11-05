@@ -184,10 +184,6 @@ public partial class RealtimePage : UserControl
         RealtimeSessionController.Instance.LanguagesChanged += OnSessionLanguagesChanged;
         RealtimeSessionController.Instance.AppearanceChanged += OnSessionAppearanceChanged;
 
-        // The direction is set on the edit layer, which says so through MangaModelOptions.
-        MangaModelOptions.Changed += OnMangaModelOptionsChanged;
-        RenderMangaHint();
-
         // Not just the stepper: the start button has to begin unavailable too, because 原文語言
         // starts unset and RenderState is what ties the two together.
         RenderState();
@@ -352,8 +348,6 @@ public partial class RealtimePage : UserControl
         RealtimeSessionController.Instance.StateChanged -= OnSessionStateChanged;
         RealtimeSessionController.Instance.LanguagesChanged -= OnSessionLanguagesChanged;
         RealtimeSessionController.Instance.AppearanceChanged -= OnSessionAppearanceChanged;
-        // A static event: left attached, it would keep this page and the closed window around it alive.
-        MangaModelOptions.Changed -= OnMangaModelOptionsChanged;
     }
 
     /// <summary>
@@ -382,13 +376,7 @@ public partial class RealtimePage : UserControl
                 settings.Realtime.SourceLanguage = LanguageData.GetValidOcrSourceCode(sourceLanguage));
 
         RenderState();
-        RenderMangaHint();
     }
-
-    // Japanese only, whatever direction the blocks turn out to be; see MangaModelHints.ForRealtimePage.
-    private void RenderMangaHint() => MangaHint.Show(vertical: true, SrcLangBox.SelectedValue as string);
-
-    private void OnMangaModelOptionsChanged(object? sender, EventArgs e) => RenderMangaHint();
 
     private void TgtLangBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {

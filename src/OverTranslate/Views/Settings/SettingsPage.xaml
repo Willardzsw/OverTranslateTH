@@ -1158,11 +1158,6 @@
                             </Grid>
                         </Grid>
 
-                        <!-- 漫畫直排模型. A download rather than a switch: with the models present and a
-                             GPU that can run them, Japanese vertical text simply reads with them, and
-                             without either it reads the way it always has. So the card only says what
-                             they are, whether they are here, and why they would not be used; what it
-                             shows at the foot changes with that (MangaModelCard). -->
                         <local:OcrModelCard Margin="0,16,0,0"/>
                     </StackPanel>
                 </Border>

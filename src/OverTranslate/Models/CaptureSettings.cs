@@ -30,17 +30,6 @@ public class CaptureSettings
     public CaptureLayoutMode LayoutMode { get; set; } = CaptureLayoutMode.General;
 
     /// <summary>
-    /// Whether the capture toolbar grows its footer saying which model will read the selection.
-    /// On by default; set from the toolbar's 設定 menu.
-    /// </summary>
-    /// <remarks>
-    /// The capture toolbar's alone. The line under the source picker on the realtime page is always
-    /// shown when it has something to say: that page is where a session is set up, not a bar laid
-    /// over what is being read.
-    /// </remarks>
-    public bool ShowModelHint { get; set; } = true;
-
-    /// <summary>
     /// Whether 截圖 ends the capture once the picture is on the clipboard. Off by default; set from
     /// the toolbar's 設定 menu (#323).
     /// </summary>

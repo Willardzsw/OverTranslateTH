@@ -479,10 +479,7 @@ internal static class VerticalColumnGrouping
     /// and more — a first column set higher than the rest, ちょっと悪いんだけど beside
     /// そこの魔法陣に入って頂戴 at 0.72, and ragged detections. The bar sits in the gap. One cut
     /// under it, at 0.46, goes through a column the detector ran across two blocks (below), which
-    /// was two blocks in one group before it was cut. The manga
-    /// models' bar for the same question (<see cref="Manga.MangaPageLayout.SideBySideShare"/>) is
-    /// higher because it compares whole blocks the detector boxed, not columns with their ruby and
-    /// fragments.</para>
+    /// was two blocks in one group before it was cut.</para>
     ///
     /// <para>No cut is made across the columns, for blocks one above the other. Pairs of columns
     /// one above the other do not join in the first place (<see cref="SideBySideAlongTheColumn"/>);

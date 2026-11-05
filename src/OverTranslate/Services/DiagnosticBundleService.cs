@@ -255,7 +255,7 @@ public static class DiagnosticBundleService
     /// <remarks>
     /// The account name is on a great many machines the person's real name, and it appeared four
     /// times in a file whose four path lines were only ever interesting for their shape: is the log
-    /// where it is expected, is this a Velopack install or something run loose from a folder. That
+    /// where it is expected, is this run from the usual folder. That
     /// shape survives this; the name does not.
     ///
     /// A path that is not under any of those roots is returned untouched, which is deliberate. Being

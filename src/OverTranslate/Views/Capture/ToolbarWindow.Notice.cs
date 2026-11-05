@@ -248,7 +248,7 @@ public partial class ToolbarWindow
     /// <summary>Takes the notice away by folding it into the bar, fading as it goes.</summary>
     /// <remarks>
     /// Fading alone left the bar to drop back to its own height in one step at the end, which read
-    /// as the window jumping. So the line closes up as it fades — down to the manga footer it was
+    /// as the window jumping. So the line closes up as it fades — down to the bar it was
     /// covering, if that is showing, so the hint is uncovered rather than redrawn.
     /// The window itself is held at its size meanwhile and the bar pinned to its top, so the bar
     /// shrinks inside a window that does not move. Only the transparent margin is let go at the end,
@@ -270,11 +270,8 @@ public partial class ToolbarWindow
         SizeToContent = SizeToContent.Manual;
         ((FrameworkElement)Content).VerticalAlignment = VerticalAlignment.Top;
 
-        // It can close onto the manga footer, which sits in the same cell at the same margin;
-        // without that footer there is nothing there, so the margin closes too.
-        bool ontoHint = MangaFooter.Visibility == Visibility.Visible;
-        double toHeight = ontoHint ? MangaFooter.Height : 0;
-        var toMargin = ontoHint ? NoticeFooter.Margin : new Thickness(0);
+        double toHeight = 0;
+        var toMargin = new Thickness(0);
 
         var duration = TimeSpan.FromMilliseconds(NoticeFadeMs);
         var ease = new CubicEase { EasingMode = EasingMode.EaseInOut };

@@ -1,7 +1,6 @@
 using System.IO;
 using System.Reflection;
 using NLog;
-using Velopack;
 
 namespace OverTranslate.Services;
 
@@ -25,11 +24,11 @@ public static class SettingsBackup
 
     /// <summary>A version whose settings mean something different from those of every version before it.</summary>
     /// <param name="Change">What changed, for whoever reads this list next.</param>
-    public sealed record Break(SemanticVersion Version, string Change);
+    public sealed record Break(Version Version, string Change);
 
     public static readonly IReadOnlyList<Break> Breaks =
     [
-        new(SemanticVersion.Parse("2.10.0"), "OpenAI 提示詞改為單一模板"),
+        new(new Version(2, 10, 0), "OpenAI 提示詞改為單一模板"),
     ];
 
     /// <summary>
@@ -47,9 +46,16 @@ public static class SettingsBackup
     /// or earlier — or unreadable counts as older than all of them.
     /// </remarks>
     public static bool Needed(string lastRunVersion) =>
-        !SemanticVersion.TryParse(lastRunVersion, out var last)
-            ? Breaks.Count > 0
-            : Breaks.Any(b => last < b.Version);
+        Breaks.Any(b => IsBefore(lastRunVersion, b.Version));
+
+    // A pre-release (2.10.0-beta.1) comes before its own release.
+    private static bool IsBefore(string text, Version target)
+    {
+        var parts = (text ?? "").Split('+')[0].Split('-', 2);
+        if (!Version.TryParse(parts[0], out var version)) return true;
+        var order = version.CompareTo(target);
+        return order < 0 || (order == 0 && parts.Length > 1);
+    }
 
     /// <summary>Where the copy for <paramref name="version"/> goes, beside the settings file.</summary>
     public static string PathFor(string settingsPath, string version) =>

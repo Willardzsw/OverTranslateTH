@@ -12,6 +12,7 @@
 - Relevant checks: dotnet test src/OverTranslate.Tests/OverTranslate.Tests.csproj -c Release; offline OCR and overlay commands are in README-THAI.md.
 - Generated public/synthetic image reports live under .test-artifacts and must be labeled as such. Do not claim a live API call or user-game screenshot was tested unless it actually was.
 
+- User-approved direction: a streamlined Thai office tool. The manga models, Velopack and installer/uninstall code are removed on purpose; do not restore them when merging upstream.
 - User-approved compact UI: expose only text translation and settings, with text translation as the startup/default home. Keep screenshot OCR on that page and via its shortcut. Do not restore realtime navigation, realtime start/pause hotkeys, or the manga-model download card.
 - User-approved diagnostics policy: export only. Do not compile in an upload endpoint or send diagnostics to the upstream project's server.
 
