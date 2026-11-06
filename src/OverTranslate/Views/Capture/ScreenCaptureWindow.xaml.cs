@@ -59,6 +59,12 @@ public partial class ScreenCaptureWindow : Window
     public Bitmap? CroppedBitmap { get; private set; }
     public bool HasSelection => _hasSelection;
 
+    /// <summary>
+    /// The frozen desktop as this window shows it: pixel (0,0) at the window's DIP (0,0), at the
+    /// window's scale. What the overlay's 馬賽克 and 模糊 are made from.
+    /// </summary>
+    public BitmapSource? ScreenshotSource => ScreenshotImage.Source as BitmapSource;
+
     private double _dpiX = 1.0;
     private double _dpiY = 1.0;
 
@@ -207,6 +213,18 @@ public partial class ScreenCaptureWindow : Window
         {
             _selectionTcs.TrySetResult(false);
             Close();
+            return;
+        }
+
+        if ((System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) != 0 && CanPin)
+        {
+            var trigger = SettingsService.Instance.Current.Capture.PinSelectionTrigger;
+            if ((e.Key == Key.T && trigger == Models.PinSelectionTrigger.CtrlT) ||
+                (e.Key == Key.P && trigger == Models.PinSelectionTrigger.CtrlP))
+            {
+                e.Handled = true;
+                PinRequested?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 
@@ -231,10 +249,80 @@ public partial class ScreenCaptureWindow : Window
         DrawRect(_startPoint, _startPoint);
     }
 
+    /// <summary>
+    /// Raised when a double-click inside the settled box asks for the picture to be copied and the
+    /// capture ended (Snipaste's way of finishing). Only raised while 雙擊完成 is on.
+    /// </summary>
+    public event EventHandler? FinishRequested;
+
+    /// <summary>
+    /// Raised when a right-click asks for the whole capture to end. Only raised while 右鍵取消 is
+    /// on. Raised rather than closing here, because once there is a selection the session also owns
+    /// a toolbar and an overlay that have to go with it.
+    /// </summary>
+    public event EventHandler? CancelRequested;
+
+    /// <summary>Raised when the 貼圖 gesture set for captures asks for the selection to be pinned.</summary>
+    public event EventHandler? PinRequested;
+
+    private bool CanPin => _hasSelection && !_isDragging;
+
+    protected override void OnMouseDown(MouseButtonEventArgs e)
+    {
+        base.OnMouseDown(e);
+        if (e.ChangedButton == System.Windows.Input.MouseButton.Middle && CanPin &&
+            SettingsService.Instance.Current.Capture.PinSelectionTrigger == Models.PinSelectionTrigger.MiddleClick)
+        {
+            e.Handled = true;
+            PinRequested?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+    {
+        // A double-click on the box itself, while it is still the user's to edit. Asked in the
+        // preview pass because the move thumb under the pointer takes the ordinary press for itself.
+        if (e.ClickCount == 2 && _hasSelection && !_processingStarted && !_annotationHoldsSelection &&
+            SettingsService.Instance.Current.Capture.DoubleClickToFinish &&
+            _selectionWpfRect.Contains(e.GetPosition(this)))
+        {
+            e.Handled = true;
+            FinishRequested?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
+        base.OnPreviewMouseLeftButtonDown(e);
+    }
+
     protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
     {
         if (_processingStarted) return;
         base.OnMouseRightButtonDown(e);
+        if (!SettingsService.Instance.Current.Capture.RightClickToCancel) return;
+
+        e.Handled = true;
+
+        // A box still being dragged out is dropped and nothing else: the right button pressed
+        // mid-drag is a change of mind about that box.
+        if (_isDragging)
+        {
+            _isDragging = false;
+            ReleaseMouseCapture();
+            SetFrameVisibility(false);
+            SetHandlesVisibility(false);
+            UpdateDimLayer();
+            HintHost.Visibility = Visibility.Visible;
+            return;
+        }
+
+        if (_hasSelection)
+        {
+            CancelRequested?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
+        _selectionTcs.TrySetResult(false);
+        Close();
     }
 
     protected override void OnMouseMove(MouseEventArgs e)

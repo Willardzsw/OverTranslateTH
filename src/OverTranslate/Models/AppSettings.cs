@@ -148,6 +148,30 @@ public class AppSettings
     /// <inheritdoc cref="TranslationWindowHotkeyEnabled"/>
     public bool QuickTranslateHotkeyEnabled { get; set; } = true;
 
+    /// <summary>
+    /// 貼圖's global shortcut: pins what is on the clipboard (a picture, or text drawn as a card)
+    /// under the pointer. F3 by default, the key Snipaste uses for the same thing.
+    /// </summary>
+    /// <remarks>
+    /// Keys of their own (PinClipboard…) rather than the PinHotkey… ones 1.1.0–1.1.4 wrote, whose
+    /// default was Ctrl+Alt+P and which also pinned the selection during a capture: that is now a
+    /// capture gesture (CaptureSettings.PinSelectionTrigger), and a profile that had saved the old
+    /// default would otherwise never get F3. RegisterHotKey takes F3 from every other program, so
+    /// with Snipaste also running one of the two loses it.
+    /// </remarks>
+    public uint PinClipboardHotkeyModifiers { get; set; } = 0;
+
+    /// <inheritdoc cref="PinClipboardHotkeyModifiers"/>
+    public uint PinClipboardHotkeyVirtualKey { get; set; } = 0x72;
+
+    /// <inheritdoc cref="PinClipboardHotkeyModifiers"/>
+    public string PinClipboardHotkeyDisplay { get; set; } = "F3";
+    public ShortcutInputKind PinClipboardHotkeyInputKind { get; set; } = ShortcutInputKind.Keyboard;
+    public GamepadShortcutButton PinClipboardHotkeyGamepadButton { get; set; } = GamepadShortcutButton.None;
+
+    /// <inheritdoc cref="TranslationWindowHotkeyEnabled"/>
+    public bool PinClipboardHotkeyEnabled { get; set; } = true;
+
     public string SourceLanguage { get; set; } = LanguageData.DefaultOcrSourceLanguage;
     public string TargetLanguage { get; set; } = "ZH-HANT";
     public TranslationProvider Provider { get; set; } = TranslationProvider.Microsoft;
@@ -248,6 +272,9 @@ public class AppSettings
     /// flat legacy half first and its feature-owned groups together afterwards.
     /// </remarks>
     public CaptureSettings Capture { get; set; } = new();
+
+    /// <summary>貼圖操作: how a pinned picture is zoomed, faded, closed and reset.</summary>
+    public PinSettings Pin { get; set; } = new();
 
     /// <summary>What 取詞翻譯 keeps between lookups, grouped.</summary>
     public QuickLookupSettings QuickLookup { get; set; } = new();

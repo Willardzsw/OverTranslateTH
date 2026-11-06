@@ -702,4 +702,56 @@
     <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">중지 상태에서 단축키를 누르면 블록 선택을 시작하고, 선택 중에 다시 누르면 번역을 시작합니다. 번역 중에는 일시 정지·재개할 수 있습니다.</sys:String>
     <sys:String x:Key="S.Shell.RealtimeTranslate">실시간 번역</sys:String>
 
+
+    <!-- Snipaste-style additions: gestures, pinning, mosaic / blur / numbers -->
+    <sys:String x:Key="S.Toolbar.DoubleClickFinish">더블클릭으로 완료</sys:String>
+    <sys:String x:Key="S.Toolbar.DoubleClickFinishTip">선택 영역 안을 더블클릭하면 스크린샷을 복사하고 종료합니다</sys:String>
+    <sys:String x:Key="S.Toolbar.RightClickCancel">우클릭으로 취소</sys:String>
+    <sys:String x:Key="S.Toolbar.RightClickCancelTip">마우스 오른쪽 버튼을 누르면 바로 종료합니다</sys:String>
+    <sys:String x:Key="S.Toolbar.Pin">고정</sys:String>
+    <sys:String x:Key="S.Toolbar.PinHint">선택 영역을 화면 맨 위에 고정하고 종료합니다</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkey">고정(클립보드)</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkeyHint">클립보드의 이미지나 텍스트를 [[화면에 고정]]</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkeyNote">드래그로 이동, 휠로 확대/축소, Ctrl+휠로 투명도 조절. 더블클릭이나 Esc로 닫고, 오른쪽 클릭으로 더 많은 기능.</sys:String>
+    <sys:String x:Key="S.Pin.Title">고정</sys:String>
+    <sys:String x:Key="S.Pin.Copy">복사</sys:String>
+    <sys:String x:Key="S.Pin.SaveAs">다른 이름으로 저장…</sys:String>
+    <sys:String x:Key="S.Pin.ActualSize">원래 크기</sys:String>
+    <sys:String x:Key="S.Pin.Opacity">투명도</sys:String>
+    <sys:String x:Key="S.Pin.Close">닫기</sys:String>
+    <sys:String x:Key="S.Pin.CloseAll">모든 고정 닫기</sys:String>
+    <sys:String x:Key="S.Pin.ClipboardEmpty">클립보드에 고정할 이미지나 텍스트가 없습니다.</sys:String>
+    <sys:String x:Key="S.Annotate.Mosaic">모자이크</sys:String>
+    <sys:String x:Key="S.Annotate.Blur">흐림</sys:String>
+    <sys:String x:Key="S.Annotate.Number">번호</sys:String>
+    <sys:String x:Key="S.Annotate.Intensity">강도</sys:String>
+    <sys:String x:Key="S.Annotate.Light">약하게</sys:String>
+    <sys:String x:Key="S.Annotate.Heavy">강하게</sys:String>
+
+    <sys:String x:Key="S.Settings.PinOps">고정 이미지 조작</sys:String>
+    <sys:String x:Key="S.Settings.PinZoom">확대/축소:</sys:String>
+    <sys:String x:Key="S.Settings.PinOpacity">투명도:</sys:String>
+    <sys:String x:Key="S.Settings.PinClose">닫기:</sys:String>
+    <sys:String x:Key="S.Settings.PinReset">초기화:</sys:String>
+    <sys:String x:Key="S.Settings.PinOr">또는</sys:String>
+    <sys:String x:Key="S.Settings.PinNone">없음</sys:String>
+    <sys:String x:Key="S.Settings.PinWheel">마우스 휠</sys:String>
+    <sys:String x:Key="S.Settings.PinLeftDouble">왼쪽 더블클릭</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleClick">가운데 클릭</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleDouble">가운데 더블클릭</sys:String>
+    <sys:String x:Key="S.Settings.PinConflictNote">* 겹치면 위쪽 항목이 우선합니다. Esc로 언제든 닫을 수 있습니다.</sys:String>
+
+    <sys:String x:Key="S.Settings.OcrFold">OCR 설정</sys:String>
+    <sys:String x:Key="S.Settings.OcrFoldTitle">문자 인식(OCR)</sys:String>
+    <sys:String x:Key="S.Settings.OcrFoldHint">인식 모델, 검출 크기, 실행 장치</sys:String>
+
+    <sys:String x:Key="S.Pin.PassThrough">마우스 통과</sys:String>
+    <sys:String x:Key="S.Pin.PassThroughOn">마우스 통과를 켰습니다. 고정 이미지 위에서 고정 단축키를 누르거나 트레이 메뉴에서 끌 수 있습니다</sys:String>
+    <sys:String x:Key="S.Pin.PassThroughOff">마우스 통과를 껐습니다</sys:String>
+    <sys:String x:Key="S.Tray.PinPassThroughOff">고정 이미지 통과 해제</sys:String>
+
+    <sys:String x:Key="S.Settings.PinSelection">캡처 중 선택 영역 고정</sys:String>
+    <sys:String x:Key="S.Settings.PinSelectionHint">캡처 중에 선택 영역을 화면에 고정합니다</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleButton">가운데 버튼</sys:String>
+
 </ResourceDictionary>

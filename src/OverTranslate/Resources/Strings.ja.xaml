@@ -702,4 +702,56 @@
     <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">停止中にショートカットを押すとブロック選択を開始し、選択中にもう一度押すと翻訳を開始します。翻訳中は一時停止／再開できます。</sys:String>
     <sys:String x:Key="S.Shell.RealtimeTranslate">リアルタイム翻訳</sys:String>
 
+
+    <!-- Snipaste-style additions: gestures, pinning, mosaic / blur / numbers -->
+    <sys:String x:Key="S.Toolbar.DoubleClickFinish">ダブルクリックで完了</sys:String>
+    <sys:String x:Key="S.Toolbar.DoubleClickFinishTip">選択範囲内をダブルクリックすると、スクリーンショットをコピーして終了します</sys:String>
+    <sys:String x:Key="S.Toolbar.RightClickCancel">右クリックでキャンセル</sys:String>
+    <sys:String x:Key="S.Toolbar.RightClickCancelTip">右クリックでそのまま終了します</sys:String>
+    <sys:String x:Key="S.Toolbar.Pin">ピン留め</sys:String>
+    <sys:String x:Key="S.Toolbar.PinHint">選択範囲を画面の最前面にピン留めして終了します</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkey">ピン留め（クリップボード）</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkeyHint">クリップボードの画像やテキストを[[画面にピン留め]]</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkeyNote">ドラッグで移動、ホイールで拡大縮小、Ctrl+ホイールで透明度を変更。ダブルクリックか Esc で閉じ、右クリックでその他の操作。</sys:String>
+    <sys:String x:Key="S.Pin.Title">ピン留め</sys:String>
+    <sys:String x:Key="S.Pin.Copy">コピー</sys:String>
+    <sys:String x:Key="S.Pin.SaveAs">名前を付けて保存…</sys:String>
+    <sys:String x:Key="S.Pin.ActualSize">原寸</sys:String>
+    <sys:String x:Key="S.Pin.Opacity">透明度</sys:String>
+    <sys:String x:Key="S.Pin.Close">閉じる</sys:String>
+    <sys:String x:Key="S.Pin.CloseAll">すべてのピンを閉じる</sys:String>
+    <sys:String x:Key="S.Pin.ClipboardEmpty">クリップボードにピン留めできる画像やテキストがありません。</sys:String>
+    <sys:String x:Key="S.Annotate.Mosaic">モザイク</sys:String>
+    <sys:String x:Key="S.Annotate.Blur">ぼかし</sys:String>
+    <sys:String x:Key="S.Annotate.Number">番号</sys:String>
+    <sys:String x:Key="S.Annotate.Intensity">強さ</sys:String>
+    <sys:String x:Key="S.Annotate.Light">弱</sys:String>
+    <sys:String x:Key="S.Annotate.Heavy">強</sys:String>
+
+    <sys:String x:Key="S.Settings.PinOps">ピン留めの操作</sys:String>
+    <sys:String x:Key="S.Settings.PinZoom">拡大縮小：</sys:String>
+    <sys:String x:Key="S.Settings.PinOpacity">透明度：</sys:String>
+    <sys:String x:Key="S.Settings.PinClose">閉じる：</sys:String>
+    <sys:String x:Key="S.Settings.PinReset">リセット：</sys:String>
+    <sys:String x:Key="S.Settings.PinOr">または</sys:String>
+    <sys:String x:Key="S.Settings.PinNone">なし</sys:String>
+    <sys:String x:Key="S.Settings.PinWheel">マウスホイール</sys:String>
+    <sys:String x:Key="S.Settings.PinLeftDouble">左ダブルクリック</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleClick">中クリック</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleDouble">中ダブルクリック</sys:String>
+    <sys:String x:Key="S.Settings.PinConflictNote">* 重複した場合は上の行が優先されます。Esc でいつでも閉じられます。</sys:String>
+
+    <sys:String x:Key="S.Settings.OcrFold">OCR 設定</sys:String>
+    <sys:String x:Key="S.Settings.OcrFoldTitle">文字認識（OCR）</sys:String>
+    <sys:String x:Key="S.Settings.OcrFoldHint">認識モデル、検出サイズ、実行デバイス</sys:String>
+
+    <sys:String x:Key="S.Pin.PassThrough">マウス透過</sys:String>
+    <sys:String x:Key="S.Pin.PassThroughOn">マウス透過をオンにしました。ピンの上でピン留めショートカットを押すか、トレイメニューで解除できます</sys:String>
+    <sys:String x:Key="S.Pin.PassThroughOff">マウス透過をオフにしました</sys:String>
+    <sys:String x:Key="S.Tray.PinPassThroughOff">ピンの透過を解除</sys:String>
+
+    <sys:String x:Key="S.Settings.PinSelection">キャプチャ中に選択範囲をピン留め</sys:String>
+    <sys:String x:Key="S.Settings.PinSelectionHint">キャプチャ中に選択範囲を画面にピン留めします</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleButton">中ボタン</sys:String>
+
 </ResourceDictionary>

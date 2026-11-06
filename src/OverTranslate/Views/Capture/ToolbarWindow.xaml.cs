@@ -376,6 +376,12 @@ public partial class ToolbarWindow : Window
     private void CopyShotBtn_Click(object sender, RoutedEventArgs e)
         => CopyScreenshotRequested?.Invoke(this, EventArgs.Empty);
 
+    /// <summary>Raised by 貼圖: pin the selection to the screen and end the capture.</summary>
+    public event EventHandler? PinRequested;
+
+    private void PinBtn_Click(object sender, RoutedEventArgs e)
+        => PinRequested?.Invoke(this, EventArgs.Empty);
+
     private void AnnotateBtn_Click(object sender, RoutedEventArgs e)
         => AnnotateModeChanged?.Invoke(this, IsAnnotating);
 
@@ -739,7 +745,17 @@ public partial class ToolbarWindow : Window
         AutoTranslateSwitch.IsChecked = SettingsService.Instance.Current.AutoTranslateAfterSelection;
         SaveScreenshotSwitch.IsChecked = SettingsService.Instance.Current.SaveScreenshotToDisk;
         CloseAfterCopySwitch.IsChecked = SettingsService.Instance.Current.Capture.CloseAfterCopy;
+        DoubleClickFinishSwitch.IsChecked = SettingsService.Instance.Current.Capture.DoubleClickToFinish;
+        RightClickCancelSwitch.IsChecked = SettingsService.Instance.Current.Capture.RightClickToCancel;
         _syncingCapture = false;
+    }
+
+    private void GestureSwitch_Changed(object sender, RoutedEventArgs e)
+    {
+        if (_syncingCapture) return;
+        SettingsService.Instance.UpdateCaptureOptions(
+            doubleClickToFinish: DoubleClickFinishSwitch.IsChecked == true,
+            rightClickToCancel: RightClickCancelSwitch.IsChecked == true);
     }
 
     private void AutoTranslateSwitch_Changed(object sender, RoutedEventArgs e)

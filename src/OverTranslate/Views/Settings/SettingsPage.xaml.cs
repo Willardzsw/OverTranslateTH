@@ -160,7 +160,21 @@ public partial class SettingsPage : UserControl
                 AdvertisedInShell: false,
                 RealtimePauseHotkeyEnabledCheckBox,
                 (s, on) => s.RealtimePauseHotkeyEnabled = on),
+            new HotkeyField(
+                HotkeyAction.Pin,
+                "S.Settings.PinHotkey",
+                PinHotkeyBox,
+                PinElevatedNote,
+                s => s.PinClipboardHotkeyDisplay,
+                s => HotkeyBindings.TriggerFor(s, HotkeyAction.Pin),
+                ApplyPinTrigger,
+                AdvertisedInShell: false,
+                PinHotkeyEnabledCheckBox,
+                (s, on) => s.PinClipboardHotkeyEnabled = on),
         ];
+
+        PinOpsPanel.Saved += (_, _) => FlashSaved();
+        PinSelectionRow.Saved += (_, _) => FlashSaved();
 
         _hotkeyGamepadRecordTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(45) };
         _hotkeyGamepadRecordTimer.Tick += (_, _) => PollRecordingGamepad();
@@ -275,16 +289,35 @@ public partial class SettingsPage : UserControl
 
     // ── Persistence ──────────────────────────────────────────────────────────
 
-    private int _quickTranslateFoldVersion;
+    /// <summary>Which animation each fold is on, so a stale one finishing does not undo a newer one.</summary>
+    private readonly Dictionary<Border, int> _foldVersions = [];
 
-    private void QuickTranslateSettings_Toggled(object sender, RoutedEventArgs e)
+    /// <summary>The 貼圖操作, OCR 設定, 翻譯服務設定 and 進階設定 folds: the same open/close as 翻譯設定.</summary>
+    private void CardFold_Toggled(object sender, RoutedEventArgs e)
     {
-        if (QuickTranslateSettingsFold is null) return;
+        var (fold, body, chevron) = sender switch
+        {
+            _ when ReferenceEquals(sender, PinOpsToggle)      => (PinOpsFold, (FrameworkElement)PinOpsBody, (FrameworkElement?)null),
+            _ when ReferenceEquals(sender, OcrSettingsToggle) => (OcrSettingsFold, OcrSettingsBody, null),
+            _ when ReferenceEquals(sender, ServicesToggle)    => (ServicesFold, ServicesBody, ServicesChevron),
+            _ when ReferenceEquals(sender, AdvancedToggle)    => (AdvancedFold, AdvancedBody, AdvancedChevron),
+            _ => ((Border?)null, (FrameworkElement?)null, (FrameworkElement?)null),
+        };
+        if (fold is null || body is null || sender is not System.Windows.Controls.Primitives.ToggleButton toggle) return;
 
-        var expanded = QuickTranslateSettingsToggle.IsChecked == true;
-        var version = ++_quickTranslateFoldVersion;
-        var fold = QuickTranslateSettingsFold;
-        var body = QuickTranslateSettingsBody;
+        var expanded = toggle.IsChecked == true;
+        if (chevron?.RenderTransform is RotateTransform turn)
+            turn.Angle = expanded ? 180 : 0;
+        AnimateFold(expanded, fold, body);
+    }
+
+    /// <summary>
+    /// Opens or shuts a fold: its height grows to the body's and the body fades in, or the reverse.
+    /// Shared by every fold on the page.
+    /// </summary>
+    private void AnimateFold(bool expanded, Border fold, FrameworkElement body)
+    {
+        var version = _foldVersions[fold] = _foldVersions.GetValueOrDefault(fold) + 1;
         var fromHeight = fold.Visibility == Visibility.Collapsed ? 0 : fold.ActualHeight;
         if (expanded) fold.Visibility = Visibility.Visible;
 
@@ -316,10 +349,16 @@ public partial class SettingsPage : UserControl
         };
         height.Completed += (_, _) =>
         {
-            if (version == _quickTranslateFoldVersion) Finish();
+            if (_foldVersions.GetValueOrDefault(fold) == version) Finish();
         };
         fold.BeginAnimation(HeightProperty, height);
         body.BeginAnimation(OpacityProperty, new DoubleAnimation(expanded ? 1 : 0, duration));
+    }
+
+    private void QuickTranslateSettings_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (QuickTranslateSettingsFold is null) return;
+        AnimateFold(QuickTranslateSettingsToggle.IsChecked == true, QuickTranslateSettingsFold, QuickTranslateSettingsBody);
     }
 
     private void QuickTranslateLanguage_Changed(object sender, SelectionChangedEventArgs e)
@@ -1442,6 +1481,22 @@ public partial class SettingsPage : UserControl
         else if (trigger.Kind == ShortcutInputKind.Gamepad)
         {
             s.QuickLookupHotkeyGamepadButton = trigger.GamepadButton;
+        }
+    }
+
+    private static void ApplyPinTrigger(AppSettings s, ShortcutTrigger trigger, string display)
+    {
+        s.PinClipboardHotkeyInputKind = trigger.Kind;
+        s.PinClipboardHotkeyDisplay = display;
+        if (trigger.Kind == ShortcutInputKind.Keyboard)
+        {
+            s.PinClipboardHotkeyModifiers = trigger.Modifiers;
+            s.PinClipboardHotkeyVirtualKey = trigger.VirtualKey;
+            s.PinClipboardHotkeyGamepadButton = GamepadShortcutButton.None;
+        }
+        else if (trigger.Kind == ShortcutInputKind.Gamepad)
+        {
+            s.PinClipboardHotkeyGamepadButton = trigger.GamepadButton;
         }
     }
 

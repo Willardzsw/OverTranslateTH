@@ -31,7 +31,7 @@
     <StartupObject>OverTranslate.App</StartupObject>
     <Product>OverTranslateTH</Product>
     <AssemblyTitle>OverTranslateTH</AssemblyTitle>
-    <Version>1.0.0</Version>
+    <Version>1.1.5</Version>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <!-- WFAC010 tells WinForms apps to declare DPI awareness through Application.SetHighDpiMode.
          This is a WPF app that only references WinForms types; ApplicationConfiguration.Initialize

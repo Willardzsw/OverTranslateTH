@@ -311,17 +311,23 @@ public class SettingsService
     public event EventHandler? CaptureOptionsChanged;
 
     public void UpdateCaptureOptions(
-        bool? autoTranslate = null, bool? saveScreenshot = null, bool? closeAfterCopy = null)
+        bool? autoTranslate = null, bool? saveScreenshot = null, bool? closeAfterCopy = null,
+        bool? doubleClickToFinish = null, bool? rightClickToCancel = null)
     {
         var current = Current;
         var auto = autoTranslate ?? current.AutoTranslateAfterSelection;
         var save = saveScreenshot ?? current.SaveScreenshotToDisk;
         var close = closeAfterCopy ?? current.Capture.CloseAfterCopy;
+        var doubleClick = doubleClickToFinish ?? current.Capture.DoubleClickToFinish;
+        var rightClick = rightClickToCancel ?? current.Capture.RightClickToCancel;
         if (auto == current.AutoTranslateAfterSelection && save == current.SaveScreenshotToDisk &&
-            close == current.Capture.CloseAfterCopy) return;
+            close == current.Capture.CloseAfterCopy && doubleClick == current.Capture.DoubleClickToFinish &&
+            rightClick == current.Capture.RightClickToCancel) return;
         current.AutoTranslateAfterSelection = auto;
         current.SaveScreenshotToDisk = save;
         current.Capture.CloseAfterCopy = close;
+        current.Capture.DoubleClickToFinish = doubleClick;
+        current.Capture.RightClickToCancel = rightClick;
         Save();
         CaptureOptionsChanged?.Invoke(this, EventArgs.Empty);
     }

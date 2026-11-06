@@ -18,6 +18,16 @@ public partial class TrayMenuWindow : Window
     public event EventHandler? OpenTranslationRequested;
     public event EventHandler? OpenSettingsRequested;
     public event EventHandler? ExitRequested;
+    public event EventHandler? PinPassThroughOffRequested;
+
+    public void SetPinPassThroughVisible(bool visible) =>
+        PinPassThroughBtn.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+
+    private void PinPassThroughBtn_Click(object sender, RoutedEventArgs e)
+    {
+        PinPassThroughOffRequested?.Invoke(this, EventArgs.Empty);
+        Dismiss();
+    }
 
     private readonly System.Drawing.Point _cursorPhys;
     private bool _dismissed;

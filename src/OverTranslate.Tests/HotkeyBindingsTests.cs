@@ -20,6 +20,7 @@ public class HotkeyBindingsTests
                 HotkeyAction.RealtimePause,
                 HotkeyAction.QuickLookup,
                 HotkeyAction.QuickTranslate,
+                HotkeyAction.Pin,
             ],
             active.Select(binding => binding.Action));
     }

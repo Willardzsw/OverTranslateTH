@@ -4,6 +4,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using OverTranslate.Models;
 using Brushes = System.Windows.Media.Brushes;
+using Color = System.Windows.Media.Color;
 using Image = System.Windows.Controls.Image;
 using Pen = System.Windows.Media.Pen;
 using Point = System.Windows.Point;
@@ -54,6 +55,33 @@ public sealed class InkSurface
 
     /// <summary>The picture itself, for whatever has to include it without going through the tree.</summary>
     public ImageSource? Source => _bitmap;
+
+    /// <summary>
+    /// The frozen capture the marks are drawn over, at the same scale as this surface and with its
+    /// pixel (0,0) at DIP (0,0) - what the mosaic and blur marks are made from. Null until set.
+    /// </summary>
+    public BitmapSource? Backdrop
+    {
+        get => _backdrop;
+        set
+        {
+            if (ReferenceEquals(_backdrop, value)) return;
+            _backdrop = value is null || value.Format == PixelFormats.Bgra32 || value.Format == PixelFormats.Pbgra32
+                ? value
+                : Frozen(new FormatConvertedBitmap(value, PixelFormats.Bgra32, null, 0));
+            _regionCache = new();
+        }
+    }
+
+    private BitmapSource? _backdrop;
+
+    /// <summary>
+    /// The reworked patch for each mosaic / blur mark, made once: undo repaints every mark from the
+    /// list, and blurring a large box again on every press of undo would make it stutter.
+    /// </summary>
+    private System.Runtime.CompilerServices.ConditionalWeakTable<AnnotationStroke, RegionPatch> _regionCache = new();
+
+    internal sealed record RegionPatch(BitmapSource Image, Rect Dip);
 
     /// <summary>Where the picture sits, in the overlay's own DIP coordinates.</summary>
     public Rect Bounds => _bounds;
@@ -271,6 +299,32 @@ public sealed class InkSurface
                 // marks still darken where they cross, as two passes of a real highlighter do.
                 dc.PushOpacity(Math.Clamp(stroke.Opacity, 0, 1));
 
+                if (stroke.IsRegion)
+                {
+                    if (RegionFor(stroke) is { } region) dc.DrawImage(region.Image, region.Dip);
+                    dc.Pop();
+                    continue;
+                }
+
+                if (stroke.Tool == AnnotationTool.Number)
+                {
+                    if (stroke.Points.Count > 0 && stroke.Text is { } number)
+                    {
+                        var centre = stroke.Points[0];
+                        double r = stroke.NumberRadius;
+                        var edge = new Pen(new SolidColorBrush(Color.FromArgb(0xE0, 0xFF, 0xFF, 0xFF)), Math.Max(1, r * 0.1));
+                        dc.DrawEllipse(new SolidColorBrush(stroke.Color), edge, centre, r, r);
+
+                        var label = AnnotationStroke.NumberLayout(number, r * 2, stroke.Color, _scale);
+                        dc.DrawText(label, new Point(
+                            centre.X - label.WidthIncludingTrailingWhitespace / 2,
+                            centre.Y - label.Height / 2));
+                    }
+
+                    dc.Pop();
+                    continue;
+                }
+
                 if (stroke.Tool == AnnotationTool.Text)
                 {
                     if (stroke.Text is { } text && stroke.TextStyle is { } style && stroke.Points.Count > 0)
@@ -407,6 +461,135 @@ public sealed class InkSurface
         if (x < 0 || y < 0 || x >= _width || y >= _height) return 0;
 
         return _pixels[(y * _width + x) * 4 + 3] / 255.0;
+    }
+
+    private RegionPatch? RegionFor(AnnotationStroke stroke)
+    {
+        if (_backdrop is null || stroke.Points.Count < 2) return null;
+        if (_regionCache.TryGetValue(stroke, out var cached)) return cached;
+
+        var patch = MakeRegion(_backdrop, stroke.RegionRect, _scale, stroke.Tool, stroke.Thickness);
+        if (patch is not null) _regionCache.AddOrUpdate(stroke, patch);
+        return patch;
+    }
+
+    /// <summary>
+    /// Cuts the box out of the capture and pixelates or blurs it, in whole pixels of the capture.
+    /// </summary>
+    /// <param name="strength">The block size (mosaic) or blur radius (blur), in DIP.</param>
+    internal static RegionPatch? MakeRegion(BitmapSource backdrop, Rect dip, double scale, AnnotationTool tool, double strength)
+    {
+        int x0 = Math.Max(0, (int)Math.Floor(dip.X * scale));
+        int y0 = Math.Max(0, (int)Math.Floor(dip.Y * scale));
+        int x1 = Math.Min(backdrop.PixelWidth,  (int)Math.Ceiling(dip.Right  * scale));
+        int y1 = Math.Min(backdrop.PixelHeight, (int)Math.Ceiling(dip.Bottom * scale));
+        int w = x1 - x0, h = y1 - y0;
+        if (w <= 0 || h <= 0) return null;
+
+        var pixels = new byte[w * h * 4];
+        backdrop.CopyPixels(new Int32Rect(x0, y0, w, h), pixels, w * 4, 0);
+
+        int amount = Math.Max(1, (int)Math.Round(strength * scale));
+        if (tool == AnnotationTool.Mosaic) Pixelate(pixels, w, h, Math.Max(2, amount));
+        else BoxBlur(pixels, w, h, amount);
+
+        // Opaque: the capture is, and a patch with holes would let the bubbles show through it.
+        for (int i = 3; i < pixels.Length; i += 4) pixels[i] = 255;
+
+        var image = BitmapSource.Create(w, h, 96, 96, PixelFormats.Bgra32, null, pixels, w * 4);
+        image.Freeze();
+        return new RegionPatch(image, new Rect(x0 / scale, y0 / scale, w / scale, h / scale));
+    }
+
+    /// <summary>Each block becomes the average of its pixels.</summary>
+    internal static void Pixelate(byte[] pixels, int width, int height, int block)
+    {
+        for (int by = 0; by < height; by += block)
+        {
+            int bh = Math.Min(block, height - by);
+            for (int bx = 0; bx < width; bx += block)
+            {
+                int bw = Math.Min(block, width - bx);
+                long b = 0, g = 0, r = 0;
+                for (int y = by; y < by + bh; y++)
+                {
+                    int row = (y * width + bx) * 4;
+                    for (int x = 0; x < bw; x++, row += 4)
+                    {
+                        b += pixels[row]; g += pixels[row + 1]; r += pixels[row + 2];
+                    }
+                }
+
+                int n = bw * bh;
+                byte ab = (byte)(b / n), ag = (byte)(g / n), ar = (byte)(r / n);
+                for (int y = by; y < by + bh; y++)
+                {
+                    int row = (y * width + bx) * 4;
+                    for (int x = 0; x < bw; x++, row += 4)
+                    {
+                        pixels[row] = ab; pixels[row + 1] = ag; pixels[row + 2] = ar;
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Three passes of a box blur each way, which is close enough to a Gaussian to read as one, at a
+    /// cost that does not grow with the radius.
+    /// </summary>
+    internal static void BoxBlur(byte[] pixels, int width, int height, int radius)
+    {
+        int box = Math.Max(1, (int)Math.Round(radius / 1.7));
+        var scratch = new byte[pixels.Length];
+        for (int pass = 0; pass < 3; pass++)
+        {
+            BlurLine(pixels, scratch, width, height, box, horizontal: true);
+            BlurLine(scratch, pixels, width, height, box, horizontal: false);
+        }
+    }
+
+    private static void BlurLine(byte[] from, byte[] into, int width, int height, int radius, bool horizontal)
+    {
+        int lines = horizontal ? height : width;
+        int length = horizontal ? width : height;
+        int window = radius * 2 + 1;
+
+        for (int line = 0; line < lines; line++)
+        {
+            int Offset(int i)
+            {
+                i = Math.Clamp(i, 0, length - 1);
+                return (horizontal ? line * width + i : i * width + line) * 4;
+            }
+
+            int sb = 0, sg = 0, sr = 0;
+            for (int i = -radius; i <= radius; i++)
+            {
+                int o = Offset(i);
+                sb += from[o]; sg += from[o + 1]; sr += from[o + 2];
+            }
+
+            for (int i = 0; i < length; i++)
+            {
+                int o = Offset(i);
+                into[o]     = (byte)(sb / window);
+                into[o + 1] = (byte)(sg / window);
+                into[o + 2] = (byte)(sr / window);
+                into[o + 3] = 255;
+
+                int add = Offset(i + radius + 1), drop = Offset(i - radius);
+                sb += from[add]     - from[drop];
+                sg += from[add + 1] - from[drop + 1];
+                sr += from[add + 2] - from[drop + 2];
+            }
+        }
+    }
+
+    private static BitmapSource Frozen(BitmapSource source)
+    {
+        source.Freeze();
+        return source;
     }
 
     private static PenLineCap Cap(AnnotationTool tool) =>

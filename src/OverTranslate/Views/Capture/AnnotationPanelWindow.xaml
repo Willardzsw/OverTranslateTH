@@ -243,6 +243,59 @@
                             </StackPanel>
                         </ToggleButton>
 
+                        <!-- 馬賽克 and 模糊: a box dragged out over something that must not be read,
+                             reworked from the capture under it. -->
+                        <ToggleButton x:Name="MosaicTool"
+                                      Style="{StaticResource ToolbarStackToggleButton}"
+                                      Click="ToolBtn_Click">
+                            <StackPanel>
+                                <Grid Style="{StaticResource ToolbarActionIcon}">
+                                  <Grid Style="{StaticResource ToolbarActionDrawing}">
+                                    <Path Style="{StaticResource ToolbarToolStroke}"
+                                          Data="M2.2,2.2 H15.8 V15.8 H2.2 Z"/>
+                                    <Path Fill="{DynamicResource ToolbarHighlighterInk}"
+                                          Data="M2.2,2.2 H6.7 V6.7 H2.2 Z M11.3,2.2 H15.8 V6.7 H11.3 Z M6.7,6.7 H11.3 V11.3 H6.7 Z
+                                                M2.2,11.3 H6.7 V15.8 H2.2 Z M11.3,11.3 H15.8 V15.8 H11.3 Z"/>
+                                  </Grid>
+                                </Grid>
+                                <TextBlock Text="{DynamicResource S.Annotate.Mosaic}"/>
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <ToggleButton x:Name="BlurTool"
+                                      Style="{StaticResource ToolbarStackToggleButton}"
+                                      Click="ToolBtn_Click">
+                            <StackPanel>
+                                <Grid Style="{StaticResource ToolbarActionIcon}">
+                                  <Grid Style="{StaticResource ToolbarActionDrawing}">
+                                    <!-- A drop, soft-edged: three rings fading out. -->
+                                    <Path Style="{StaticResource ToolbarToolStroke}"
+                                          Data="M9,1.8 C9,1.8 3.6,8 3.6,11.2 A5.4,5.4 0 0 0 14.4,11.2 C14.4,8 9,1.8 9,1.8 Z"/>
+                                    <Path Style="{StaticResource ToolbarToolStroke}" Opacity="0.55"
+                                          Data="M6.4,11.4 A2.6,2.6 0 0 0 9,14"/>
+                                  </Grid>
+                                </Grid>
+                                <TextBlock Text="{DynamicResource S.Annotate.Blur}"/>
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <!-- 序號: a numbered disc per click, 1, 2, 3... -->
+                        <ToggleButton x:Name="NumberTool"
+                                      Style="{StaticResource ToolbarStackToggleButton}"
+                                      Click="ToolBtn_Click">
+                            <StackPanel>
+                                <Grid Style="{StaticResource ToolbarActionIcon}">
+                                  <Grid Style="{StaticResource ToolbarActionDrawing}">
+                                    <Path Style="{StaticResource ToolbarToolStroke}"
+                                          Data="M1.8,9 A7.2,7.2 0 1 1 16.2,9 A7.2,7.2 0 1 1 1.8,9 Z"/>
+                                    <Path Style="{StaticResource ToolbarToolStroke}"
+                                          Data="M7.4,6.4 L9.4,4.9 V13.1 M7.4,13.1 H11.2"/>
+                                  </Grid>
+                                </Grid>
+                                <TextBlock Text="{DynamicResource S.Annotate.Number}"/>
+                            </StackPanel>
+                        </ToggleButton>
+
                         <ToggleButton x:Name="EraserTool"
                                       Style="{StaticResource ToolbarStackToggleButton}"
                                       Click="ToolBtn_Click">

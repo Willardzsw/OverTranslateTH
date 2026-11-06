@@ -36,6 +36,9 @@ public class GlobalHotkey : IDisposable
     /// <summary>The shortcut that replaces the selection with its translation.</summary>
     public const int QuickTranslateId = 9006;
 
+    /// <summary>The 貼圖 shortcut (F3 by default): pins the clipboard under the pointer.</summary>
+    public const int PinId = 9007;
+
     public GlobalHotkey(int id) : this(id, RegisterHotKey, UnregisterHotKey) { }
 
     internal GlobalHotkey(int id, Func<IntPtr, int, uint, uint, bool> register,

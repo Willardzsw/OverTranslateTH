@@ -292,7 +292,8 @@ public partial class OverlayWindow
 
         if (_shapeStart is { } start)
         {
-            _wetLayer.SetThickness(thickness, null);
+            // A mosaic or blur box is previewed as a thin outline whatever its strength.
+            if (!AnnotationStroke.IsRegionTool(_annotationTool)) _wetLayer.SetThickness(thickness, null);
             _wetLayer.ReshapeTo(start, _shapeEnd);
         }
         else if (_wetPoints is { } points)
@@ -360,7 +361,8 @@ public partial class OverlayWindow
         // A crosshair for the shapes: what they need from the pointer is the exact corner to start
         // from, and the pen's nib hides the very pixel it is on.
         AnnotationSurface.Cursor = erasing ? Cursors.None
-            : AnnotationStroke.IsShapeTool(_annotationTool) ? Cursors.Cross
+            : AnnotationStroke.IsShapeTool(_annotationTool) || AnnotationStroke.IsRegionTool(_annotationTool)
+              || _annotationTool == AnnotationTool.Number ? Cursors.Cross
             : _annotationTool == AnnotationTool.Text ? Cursors.IBeam
             : Cursors.Pen;
         if (!erasing) HideEraserRing();
@@ -403,8 +405,25 @@ public partial class OverlayWindow
             return;
         }
 
+        if (_annotationTool == AnnotationTool.Number)
+        {
+            PlaceNumber(e.GetPosition(AnnotationInputCanvas));
+            return;
+        }
+
         AnnotationSurface.CaptureMouse();
         var point = e.GetPosition(AnnotationInputCanvas);
+
+        if (AnnotationStroke.IsRegionTool(_annotationTool))
+        {
+            // Dragged out like a box; outlined while dragging, reworked from the capture on release.
+            _shapeStart = point;
+            _shapeEnd   = point;
+            _wetLayer.BeginShape(Color.FromArgb(0xD0, 0x80, 0x80, 0x80), 1.5, AnnotationTool.Rectangle, point);
+            AnnotationCanvas.Children.Add(_wetLayer);
+            UpdateWheelTaking();
+            return;
+        }
 
         if (_annotationTool == AnnotationTool.Eraser)
         {
@@ -571,6 +590,36 @@ public partial class OverlayWindow
         _ink.Lay(drawn);
         CommitStrokes([.. CurrentStrokes, drawn], alreadyPainted: true);
     }
+
+    /// <summary>
+    /// Puts down the next 序號 disc: one more than the discs already showing, so undoing one hands its
+    /// number to the next.
+    /// </summary>
+    private void PlaceNumber(Point point)
+    {
+        int next = CurrentStrokes.Count(s => s.Tool == AnnotationTool.Number) + 1;
+        var disc = new AnnotationStroke
+        {
+            Tool      = AnnotationTool.Number,
+            Color     = _annotationColor,
+            Thickness = _annotationThickness,
+            Opacity   = 1,
+            Points    = [point],
+            Text      = next.ToString(System.Globalization.CultureInfo.InvariantCulture),
+        };
+
+        EnsureInkSurface();
+        _ink.Lay(disc);
+        CommitStrokes([.. CurrentStrokes, disc], alreadyPainted: true);
+    }
+
+    /// <summary>
+    /// The frozen capture under the marks, for 馬賽克 and 模糊 to be made from. Its pixel (0,0) must be
+    /// this window's DIP (0,0), at this window's scale — which the capture window's own picture is,
+    /// both windows being pinned to the same desktop bounds.
+    /// </summary>
+    public void SetAnnotationBackdrop(System.Windows.Media.Imaging.BitmapSource? backdrop) =>
+        _ink.Backdrop = backdrop;
 
     /// <summary>
     /// Drops whatever is half-drawn without committing it.

@@ -494,6 +494,24 @@
                                 </Grid>
                         </Button>
 
+                        <!-- 貼圖: the selection as the user sees it, pinned to the screen as a
+                             floating always-on-top picture, and the capture ended. See PinWindow. -->
+                        <Button x:Name="PinBtn"
+                                Style="{StaticResource ToolbarIconActionButton}"
+                                AutomationProperties.Name="{DynamicResource S.Toolbar.Pin}"
+                                Click="PinBtn_Click">
+                                <Grid Style="{StaticResource ToolbarActionIcon}" Margin="0">
+                                  <Grid Style="{StaticResource ToolbarActionDrawing}">
+                                    <!-- A push pin leaning right: head, collar and point. -->
+                                    <Path Style="{StaticResource ToolbarActionStroke}"
+                                          Data="M10.6,1.8 L16.2,7.4 L14.6,8.2 L11.4,11.4 L11.6,14.4 L10.2,15.8
+                                                L2.2,7.8 L3.6,6.4 L6.6,6.6 L9.8,3.4 Z"/>
+                                    <Path Style="{StaticResource ToolbarActionStroke}"
+                                          Data="M6.2,11.8 L1.8,16.2"/>
+                                  </Grid>
+                                </Grid>
+                        </Button>
+
                         <!-- Open translation window. Named for what it opens rather than for the opening:
                              every button on this bar does something when pressed, so 開啟 was a word spent
                              on the one thing the user already knows, and it cost the bar the width of two
@@ -578,6 +596,18 @@
                                               Content="{DynamicResource S.Toolbar.CloseAfterCopy}"
                                               ToolTip="{DynamicResource S.Toolbar.CloseAfterCopyTip}"
                                               Checked="CloseAfterCopySwitch_Changed" Unchecked="CloseAfterCopySwitch_Changed"/>
+                                    <!-- Snipaste-style gestures on the box. See CaptureSettings.DoubleClickToFinish
+                                         and RightClickToCancel. -->
+                                    <CheckBox x:Name="DoubleClickFinishSwitch" Style="{StaticResource ToolbarMenuToggle}"
+                                              Tag="&#xE73E;"
+                                              Content="{DynamicResource S.Toolbar.DoubleClickFinish}"
+                                              ToolTip="{DynamicResource S.Toolbar.DoubleClickFinishTip}"
+                                              Checked="GestureSwitch_Changed" Unchecked="GestureSwitch_Changed"/>
+                                    <CheckBox x:Name="RightClickCancelSwitch" Style="{StaticResource ToolbarMenuToggle}"
+                                              Tag="&#xE711;"
+                                              Content="{DynamicResource S.Toolbar.RightClickCancel}"
+                                              ToolTip="{DynamicResource S.Toolbar.RightClickCancelTip}"
+                                              Checked="GestureSwitch_Changed" Unchecked="GestureSwitch_Changed"/>
                                     <!-- Where to change the folder, not the folder itself. A folder picker
                                          or an Explorer window opened from this bar would land under the
                                          capture overlay, which is full screen and topmost; and the notice

@@ -80,6 +80,20 @@
                     </StackPanel>
                 </Button>
 
+                <!-- Only while a pin lets clicks through: the way back for a pin that cannot be clicked. -->
+                <Button x:Name="PinPassThroughBtn"
+                        Style="{StaticResource TrayMenuItem}"
+                        Visibility="Collapsed"
+                        Click="PinPassThroughBtn_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                   FontSize="14" Text="&#xE718;"
+                                   Width="22" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource AppTextSecondary}"/>
+                        <TextBlock Text="{DynamicResource S.Tray.PinPassThroughOff}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
                 <!-- 設定 -->
                 <Button x:Name="SettingsBtn"
                         Style="{StaticResource TrayMenuItem}"

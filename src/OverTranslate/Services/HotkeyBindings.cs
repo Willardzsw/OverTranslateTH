@@ -10,6 +10,7 @@ public enum HotkeyAction
     RealtimePause,
     QuickLookup,
     QuickTranslate,
+    Pin,
 }
 
 /// <summary>
@@ -134,6 +135,11 @@ public static class HotkeyBindings
             settings.QuickTranslateHotkeyModifiers,
             settings.QuickTranslateHotkeyVirtualKey,
             settings.QuickTranslateHotkeyGamepadButton),
+        HotkeyAction.Pin => BuildTrigger(
+            settings.PinClipboardHotkeyInputKind,
+            settings.PinClipboardHotkeyModifiers,
+            settings.PinClipboardHotkeyVirtualKey,
+            settings.PinClipboardHotkeyGamepadButton),
         _ => throw new ArgumentOutOfRangeException(nameof(action), action, null),
     };
 
@@ -210,6 +216,9 @@ public static class HotkeyBindings
             (HotkeyAction.QuickTranslate,
                 TriggerFor(settings, HotkeyAction.QuickTranslate),
                 settings.QuickTranslateHotkeyEnabled),
+            (HotkeyAction.Pin,
+                TriggerFor(settings, HotkeyAction.Pin),
+                settings.PinClipboardHotkeyEnabled),
         };
 
         var claimed = new Dictionary<ShortcutTrigger, HotkeyAction>();

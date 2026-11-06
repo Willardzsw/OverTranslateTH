@@ -691,4 +691,56 @@
     <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">Если перевод не запущен, первое нажатие выбирает области, второе запускает перевод; во время перевода — пауза и продолжение.</sys:String>
     <sys:String x:Key="S.Shell.RealtimeTranslate">Реальное время</sys:String>
 
+
+    <!-- Snipaste-style additions: gestures, pinning, mosaic / blur / numbers -->
+    <sys:String x:Key="S.Toolbar.DoubleClickFinish">Двойной щелчок — готово</sys:String>
+    <sys:String x:Key="S.Toolbar.DoubleClickFinishTip">Двойной щелчок внутри выделения копирует снимок и завершает захват</sys:String>
+    <sys:String x:Key="S.Toolbar.RightClickCancel">Правый щелчок — отмена</sys:String>
+    <sys:String x:Key="S.Toolbar.RightClickCancelTip">Правый щелчок сразу завершает захват</sys:String>
+    <sys:String x:Key="S.Toolbar.Pin">Закрепить</sys:String>
+    <sys:String x:Key="S.Toolbar.PinHint">Закрепить выделение поверх экрана и завершить захват</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkey">Закрепить буфер обмена</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkeyHint">[[Закрепляет изображение или текст]] из буфера обмена на экране</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkeyNote">Перетаскивайте, чтобы переместить; колесо масштабирует, Ctrl+колесо меняет прозрачность; двойной щелчок или Esc закрывает, правый щелчок — другие действия.</sys:String>
+    <sys:String x:Key="S.Pin.Title">Закреплённое</sys:String>
+    <sys:String x:Key="S.Pin.Copy">Копировать</sys:String>
+    <sys:String x:Key="S.Pin.SaveAs">Сохранить как…</sys:String>
+    <sys:String x:Key="S.Pin.ActualSize">Исходный размер</sys:String>
+    <sys:String x:Key="S.Pin.Opacity">Прозрачность</sys:String>
+    <sys:String x:Key="S.Pin.Close">Закрыть</sys:String>
+    <sys:String x:Key="S.Pin.CloseAll">Закрыть все</sys:String>
+    <sys:String x:Key="S.Pin.ClipboardEmpty">В буфере обмена нет изображения или текста для закрепления.</sys:String>
+    <sys:String x:Key="S.Annotate.Mosaic">Мозаика</sys:String>
+    <sys:String x:Key="S.Annotate.Blur">Размытие</sys:String>
+    <sys:String x:Key="S.Annotate.Number">Номер</sys:String>
+    <sys:String x:Key="S.Annotate.Intensity">Сила</sys:String>
+    <sys:String x:Key="S.Annotate.Light">Слабо</sys:String>
+    <sys:String x:Key="S.Annotate.Heavy">Сильно</sys:String>
+
+    <sys:String x:Key="S.Settings.PinOps">Управление закреплёнными</sys:String>
+    <sys:String x:Key="S.Settings.PinZoom">Масштаб:</sys:String>
+    <sys:String x:Key="S.Settings.PinOpacity">Прозрачность:</sys:String>
+    <sys:String x:Key="S.Settings.PinClose">Закрыть:</sys:String>
+    <sys:String x:Key="S.Settings.PinReset">Сброс:</sys:String>
+    <sys:String x:Key="S.Settings.PinOr">или</sys:String>
+    <sys:String x:Key="S.Settings.PinNone">Нет</sys:String>
+    <sys:String x:Key="S.Settings.PinWheel">Колесо мыши</sys:String>
+    <sys:String x:Key="S.Settings.PinLeftDouble">Двойной щелчок левой</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleClick">Щелчок средней</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleDouble">Двойной щелчок средней</sys:String>
+    <sys:String x:Key="S.Settings.PinConflictNote">* При совпадении действует верхняя строка. Esc всегда закрывает.</sys:String>
+
+    <sys:String x:Key="S.Settings.OcrFold">Настройки OCR</sys:String>
+    <sys:String x:Key="S.Settings.OcrFoldTitle">Распознавание текста (OCR)</sys:String>
+    <sys:String x:Key="S.Settings.OcrFoldHint">Модель распознавания, размер детектора и устройство</sys:String>
+
+    <sys:String x:Key="S.Pin.PassThrough">Пропускать щелчки</sys:String>
+    <sys:String x:Key="S.Pin.PassThroughOn">Щелчки проходят насквозь. Чтобы отключить, наведите на изображение и нажмите сочетание закрепления или используйте меню в трее</sys:String>
+    <sys:String x:Key="S.Pin.PassThroughOff">Щелчки снова принимаются</sys:String>
+    <sys:String x:Key="S.Tray.PinPassThroughOff">Отключить сквозные щелчки</sys:String>
+
+    <sys:String x:Key="S.Settings.PinSelection">Закрепить выделение при захвате</sys:String>
+    <sys:String x:Key="S.Settings.PinSelectionHint">Закрепляет выделенную область на экране во время захвата</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleButton">Средняя кнопка</sys:String>
+
 </ResourceDictionary>

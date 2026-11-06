@@ -81,6 +81,13 @@ public partial class AnnotationPanelWindow : Window
         // can see under the pointer, and a radius would be half of the thing they are looking at.
         AnnotationTool.Eraser      => (14, 64),
 
+        // A block size and a blur radius: what decides whether the words underneath still read.
+        AnnotationTool.Mosaic      => (4, 24),
+        AnnotationTool.Blur        => (2, 20),
+
+        // The disc's diameter.
+        AnnotationTool.Number      => (16, 48),
+
         _                          => (2, 13),
     };
 
@@ -135,6 +142,9 @@ public partial class AnnotationPanelWindow : Window
             AnnotationTool.Highlighter => _prefs.HighlighterThickness,
             AnnotationTool.Eraser      => _prefs.EraserSize,
             AnnotationTool.Pen         => _prefs.PenThickness,
+            AnnotationTool.Mosaic      => _prefs.MosaicStrength,
+            AnnotationTool.Blur        => _prefs.BlurStrength,
+            AnnotationTool.Number      => _prefs.NumberSize,
             _                          => _prefs.ShapeThickness,
         }, 0, 1);
         set
@@ -144,6 +154,9 @@ public partial class AnnotationPanelWindow : Window
                 case AnnotationTool.Highlighter: _prefs.HighlighterThickness = value; break;
                 case AnnotationTool.Eraser:      _prefs.EraserSize           = value; break;
                 case AnnotationTool.Pen:         _prefs.PenThickness         = value; break;
+                case AnnotationTool.Mosaic:      _prefs.MosaicStrength       = value; break;
+                case AnnotationTool.Blur:        _prefs.BlurStrength         = value; break;
+                case AnnotationTool.Number:      _prefs.NumberSize           = value; break;
                 default:                         _prefs.ShapeThickness       = value; break;
             }
         }
@@ -173,7 +186,7 @@ public partial class AnnotationPanelWindow : Window
     /// </remarks>
     private static double CurveFor(AnnotationTool tool) => tool switch
     {
-        AnnotationTool.Eraser      => 1,
+        AnnotationTool.Eraser or AnnotationTool.Mosaic or AnnotationTool.Blur or AnnotationTool.Number => 1,
         AnnotationTool.Highlighter => MiddleAt(0.4),
         _                          => MiddleAt((6.0 - 2) / (13 - 2)),
     };
@@ -463,6 +476,9 @@ public partial class AnnotationPanelWindow : Window
             _ when ReferenceEquals(sender, HighlighterTool) => AnnotationTool.Highlighter,
             _ when ReferenceEquals(sender, EraserTool)      => AnnotationTool.Eraser,
             _ when ReferenceEquals(sender, TextTool)        => AnnotationTool.Text,
+            _ when ReferenceEquals(sender, MosaicTool)      => AnnotationTool.Mosaic,
+            _ when ReferenceEquals(sender, BlurTool)        => AnnotationTool.Blur,
+            _ when ReferenceEquals(sender, NumberTool)      => AnnotationTool.Number,
             _                                               => AnnotationTool.Pen,
         };
 
@@ -662,6 +678,9 @@ public partial class AnnotationPanelWindow : Window
         HighlighterTool.IsChecked = Tool == AnnotationTool.Highlighter;
         EraserTool.IsChecked      = Tool == AnnotationTool.Eraser;
         TextTool.IsChecked        = Tool == AnnotationTool.Text;
+        MosaicTool.IsChecked      = Tool == AnnotationTool.Mosaic;
+        BlurTool.IsChecked        = Tool == AnnotationTool.Blur;
+        NumberTool.IsChecked      = Tool == AnnotationTool.Number;
         ShapeTool.IsChecked       = shape;
         LineTool.IsChecked        = Tool == AnnotationTool.Line;
         ArrowTool.IsChecked       = Tool == AnnotationTool.Arrow;
@@ -682,8 +701,10 @@ public partial class AnnotationPanelWindow : Window
 
         // The eraser takes a colour from nothing and gives one to nothing. Left enabled it would be
         // eight buttons that quietly do not apply to what is in hand.
-        Palette.IsEnabled = Tool != AnnotationTool.Eraser;
-        Palette.Opacity   = Tool == AnnotationTool.Eraser ? 0.35 : 1.0;
+        // 馬賽克 and 模糊 are made from the picture under them, so they have no colour either.
+        bool colourless = Tool is AnnotationTool.Eraser or AnnotationTool.Mosaic or AnnotationTool.Blur;
+        Palette.IsEnabled = !colourless;
+        Palette.Opacity   = colourless ? 0.35 : 1.0;
 
         // Taken away rather than greyed out, unlike the palette. A dimmed control says "not right
         // now", which is true of the swatches — put the pen back in hand and they apply again to the
@@ -707,10 +728,11 @@ public partial class AnnotationPanelWindow : Window
         // 粗細 is how wide a mark is. The eraser makes no mark: what its slider sets is how much of
         // the picture the circle covers, and calling that 粗細 would be asking the user to translate
         // it every time they pick the tool up.
-        bool erasing = Tool == AnnotationTool.Eraser;
-        ThicknessTitle.Text    = LocalizationService.Get(erasing ? "S.Annotate.Size"  : "S.Annotate.Thickness");
-        ThicknessMinLabel.Text = LocalizationService.Get(erasing ? "S.Annotate.Small" : "S.Annotate.Thin");
-        ThicknessMaxLabel.Text = LocalizationService.Get(erasing ? "S.Annotate.Large" : "S.Annotate.Thick");
+        bool sized   = Tool is AnnotationTool.Eraser or AnnotationTool.Number;
+        bool reworks = Tool is AnnotationTool.Mosaic or AnnotationTool.Blur;
+        ThicknessTitle.Text    = LocalizationService.Get(reworks ? "S.Annotate.Intensity" : sized ? "S.Annotate.Size"  : "S.Annotate.Thickness");
+        ThicknessMinLabel.Text = LocalizationService.Get(reworks ? "S.Annotate.Light"     : sized ? "S.Annotate.Small" : "S.Annotate.Thin");
+        ThicknessMaxLabel.Text = LocalizationService.Get(reworks ? "S.Annotate.Heavy"     : sized ? "S.Annotate.Large" : "S.Annotate.Thick");
         System.Windows.Automation.AutomationProperties.SetName(ThicknessSlider, ThicknessTitle.Text);
 
         // Each tool's own width, so the slider jumps to it when the tool changes.

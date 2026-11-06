@@ -700,4 +700,56 @@ same settings, the same seed usually gives the same output.</sys:String>
     <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">When it is not running, press the shortcut to select blocks, then press it again to start translating; while translating, it pauses and resumes.</sys:String>
     <sys:String x:Key="S.Shell.RealtimeTranslate">Realtime</sys:String>
 
+
+    <!-- Snipaste-style additions: gestures, pinning, mosaic / blur / numbers -->
+    <sys:String x:Key="S.Toolbar.DoubleClickFinish">Double-click to finish</sys:String>
+    <sys:String x:Key="S.Toolbar.DoubleClickFinishTip">Double-click inside the selection to copy the screenshot and end the capture</sys:String>
+    <sys:String x:Key="S.Toolbar.RightClickCancel">Right-click to cancel</sys:String>
+    <sys:String x:Key="S.Toolbar.RightClickCancelTip">A right-click ends the capture straight away</sys:String>
+    <sys:String x:Key="S.Toolbar.Pin">Pin</sys:String>
+    <sys:String x:Key="S.Toolbar.PinHint">Pin the selection on top of the screen and end the capture</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkey">Pin clipboard</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkeyHint">[[Pins the picture or text]] on the clipboard to the screen</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkeyNote">Drag a pin to move it; the wheel zooms and Ctrl+wheel changes its opacity; double-click or Esc closes it, and right-click has more. Change these with Pin controls on the right.</sys:String>
+    <sys:String x:Key="S.Pin.Title">Pin</sys:String>
+    <sys:String x:Key="S.Pin.Copy">Copy</sys:String>
+    <sys:String x:Key="S.Pin.SaveAs">Save as…</sys:String>
+    <sys:String x:Key="S.Pin.ActualSize">Actual size</sys:String>
+    <sys:String x:Key="S.Pin.Opacity">Opacity</sys:String>
+    <sys:String x:Key="S.Pin.Close">Close</sys:String>
+    <sys:String x:Key="S.Pin.CloseAll">Close all pins</sys:String>
+    <sys:String x:Key="S.Pin.ClipboardEmpty">There is no picture or text on the clipboard to pin.</sys:String>
+    <sys:String x:Key="S.Annotate.Mosaic">Mosaic</sys:String>
+    <sys:String x:Key="S.Annotate.Blur">Blur</sys:String>
+    <sys:String x:Key="S.Annotate.Number">Number</sys:String>
+    <sys:String x:Key="S.Annotate.Intensity">Strength</sys:String>
+    <sys:String x:Key="S.Annotate.Light">Light</sys:String>
+    <sys:String x:Key="S.Annotate.Heavy">Heavy</sys:String>
+
+    <sys:String x:Key="S.Settings.PinOps">Pin controls</sys:String>
+    <sys:String x:Key="S.Settings.PinZoom">Zoom:</sys:String>
+    <sys:String x:Key="S.Settings.PinOpacity">Opacity:</sys:String>
+    <sys:String x:Key="S.Settings.PinClose">Close:</sys:String>
+    <sys:String x:Key="S.Settings.PinReset">Reset:</sys:String>
+    <sys:String x:Key="S.Settings.PinOr">or</sys:String>
+    <sys:String x:Key="S.Settings.PinNone">None</sys:String>
+    <sys:String x:Key="S.Settings.PinWheel">Mouse wheel</sys:String>
+    <sys:String x:Key="S.Settings.PinLeftDouble">Left double-click</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleClick">Middle click</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleDouble">Middle double-click</sys:String>
+    <sys:String x:Key="S.Settings.PinConflictNote">* Where two clash, the higher row wins. Esc always closes a pin.</sys:String>
+
+    <sys:String x:Key="S.Settings.OcrFold">OCR settings</sys:String>
+    <sys:String x:Key="S.Settings.OcrFoldTitle">Text recognition (OCR)</sys:String>
+    <sys:String x:Key="S.Settings.OcrFoldHint">Recognition model, detection size and device</sys:String>
+
+    <sys:String x:Key="S.Pin.PassThrough">Click-through</sys:String>
+    <sys:String x:Key="S.Pin.PassThroughOn">Click-through on. Point at the pin and press the pin shortcut, or use the tray menu, to turn it off</sys:String>
+    <sys:String x:Key="S.Pin.PassThroughOff">Click-through off</sys:String>
+    <sys:String x:Key="S.Tray.PinPassThroughOff">Stop pin click-through</sys:String>
+
+    <sys:String x:Key="S.Settings.PinSelection">Pin selection while capturing</sys:String>
+    <sys:String x:Key="S.Settings.PinSelectionHint">Pins the selected area to the screen during a capture</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleButton">Middle button</sys:String>
+
 </ResourceDictionary>

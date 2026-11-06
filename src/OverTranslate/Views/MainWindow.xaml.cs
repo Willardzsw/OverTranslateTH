@@ -28,6 +28,7 @@ public partial class MainWindow : Window
     private GlobalHotkey? _realtimePauseHotkey;
     private GlobalHotkey? _quickLookupHotkey;
     private GlobalHotkey? _quickTranslateHotkey;
+    private GlobalHotkey? _pinHotkey;
     private GlobalAuxiliaryHotkeys? _auxiliaryHotkeys;
     private OverlayWindow? _overlayWindow;
     private ScreenCaptureWindow? _captureWindow;
@@ -187,6 +188,9 @@ public partial class MainWindow : Window
         _quickTranslateHotkey = new GlobalHotkey(GlobalHotkey.QuickTranslateId);
         _quickTranslateHotkey.HotkeyPressed += OnQuickTranslateHotkeyPressed;
 
+        _pinHotkey = new GlobalHotkey(GlobalHotkey.PinId);
+        _pinHotkey.HotkeyPressed += OnPinHotkeyPressed;
+
         var hooks = new Dictionary<HotkeyAction, GlobalHotkey>
         {
             [HotkeyAction.Capture] = _hotkey,
@@ -194,6 +198,7 @@ public partial class MainWindow : Window
             [HotkeyAction.RealtimePause] = _realtimePauseHotkey,
             [HotkeyAction.QuickLookup] = _quickLookupHotkey,
             [HotkeyAction.QuickTranslate] = _quickTranslateHotkey,
+            [HotkeyAction.Pin] = _pinHotkey,
         };
 
         var resolved = HotkeyBindings.Resolve(settings);
@@ -261,6 +266,9 @@ public partial class MainWindow : Window
             case HotkeyAction.QuickTranslate:
                 RunQuickTranslate(copiedSince);
                 break;
+            case HotkeyAction.Pin:
+                OnPinHotkeyPressed(this, EventArgs.Empty);
+                break;
         }
     }
 
@@ -311,6 +319,7 @@ public partial class MainWindow : Window
         _realtimePauseHotkey?.Unregister();
         _quickLookupHotkey?.Unregister();
         _quickTranslateHotkey?.Unregister();
+        _pinHotkey?.Unregister();
         _auxiliaryHotkeys?.Dispose();
         _auxiliaryHotkeys = null;
         RegisterHotkey();
@@ -725,6 +734,20 @@ public partial class MainWindow : Window
                 PlaceAnnotationPanel();
             };
 
+            // 雙擊完成 and 右鍵取消 (Snipaste-style). Each checks its own switch before raising.
+            captureWindow.FinishRequested += (_, _) =>
+            {
+                if (ReferenceEquals(_captureWindow, captureWindow)) CopyScreenshot(forceClose: true);
+            };
+            captureWindow.PinRequested += (_, _) =>
+            {
+                if (ReferenceEquals(_captureWindow, captureWindow)) PinSelection();
+            };
+            captureWindow.CancelRequested += (_, _) =>
+            {
+                if (ReferenceEquals(_captureWindow, captureWindow)) CloseAll("right click");
+            };
+
             captureWindow.Show();
 
             // Diagnostic: where the dim window physically landed and at what scale, versus the
@@ -825,6 +848,7 @@ public partial class MainWindow : Window
         toolbar.OpenWindowRequested     += OnOpenWindowRequested;
         toolbar.CopyTextRequested       += OnCopyTextRequested;
         toolbar.CopyScreenshotRequested += OnCopyScreenshotRequested;
+        toolbar.PinRequested            += (_, _) => PinSelection();
         toolbar.CloseAllRequested       += (_, _) => CloseAll("toolbar close");
         toolbar.BubblesVisibilityChanged += (_, visible) => _overlayWindow?.SetBubblesVisible(visible);
         toolbar.SpeakToggleRequested    += OnSpeakToggleRequested;
@@ -883,6 +907,7 @@ public partial class MainWindow : Window
             backdrop);
         if (_captureWindow != null)
             _overlayWindow.Owner = _captureWindow;
+        _overlayWindow.SetAnnotationBackdrop(_captureWindow?.ScreenshotSource);
         // This runs when the overlay closes on its own (Esc via the keyboard hook). Same fault
         // tolerance as CloseAll: a throwing toolbar Close() must not strand the capture window's
         // full-screen dim layer, which is the one window the user cannot get rid of.
@@ -1378,12 +1403,17 @@ public partial class MainWindow : Window
     // capture (so the selection border/handles are never included), and the translation bubbles
     // (when present) are rendered on top. The loading indicator is excluded because the bubble
     // layers are empty while processing, so RenderBubblesForSelection returns null then.
-    private void OnCopyScreenshotRequested(object? sender, EventArgs e)
+    private void OnCopyScreenshotRequested(object? sender, EventArgs e) => CopyScreenshot(forceClose: false);
+
+    /// <summary>
+    /// 貼圖: the selection as the user sees it, pinned where it was taken from, and the capture ended.
+    /// </summary>
+    private void PinSelection()
     {
         try
         {
-            var background = _captureWindow?.CreateSelectionImage();
-            if (background is null)
+            var image = ComposeSelectionImage();
+            if (image is null)
             {
                 ShowNotice(
                     LocalizationService.Get("S.Main.CopyFailedTitle"),
@@ -1391,38 +1421,120 @@ public partial class MainWindow : Window
                 return;
             }
 
-            int w = background.PixelWidth;
-            int h = background.PixelHeight;
+            int x = (int)Math.Round(_lastSelPhysLeft), y = (int)Math.Round(_lastSelPhysTop);
+            CloseAll("pin");
+            Views.Pin.PinWindow.Pin(image, x, y);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Pinning the selection failed");
+        }
+    }
 
-            var bubbles = _overlayWindow?.RenderOverlayForSelection(
-                _lastSelPhysLeft, _lastSelPhysTop, w, h);
+    /// <summary>
+    /// The global 貼圖 shortcut (F3 by default): pins whatever is on the clipboard under the pointer,
+    /// the way Snipaste's F3 does. Pinning the selection during a capture is a capture gesture of its
+    /// own — see CaptureSettings.PinSelectionTrigger.
+    /// </summary>
+    private void OnPinHotkeyPressed(object? sender, EventArgs e) => Dispatcher.Invoke(() =>
+    {
+        // Over a pin that lets clicks through, the shortcut gives it its clicks back — the one way
+        // to reach a pin that cannot be clicked, short of the tray menu.
+        if (Views.Pin.PinWindow.TryDisablePassThroughUnderPointer()) return;
 
-            System.Windows.Media.Imaging.BitmapSource result = background;
-            if (bubbles is not null)
+        try
+        {
+            var cursor = System.Windows.Forms.Cursor.Position;
+            System.Windows.Media.Imaging.BitmapSource? image = null;
+
+            if (System.Windows.Clipboard.ContainsImage())
+                image = System.Windows.Clipboard.GetImage();
+            else if (System.Windows.Clipboard.ContainsText() &&
+                     System.Windows.Clipboard.GetText() is { Length: > 0 } text &&
+                     !string.IsNullOrWhiteSpace(text))
+                image = Views.Pin.PinWindow.RenderText(
+                    text.Length > 4000 ? text[..4000] : text,
+                    ScreenGeometry.ScaleAt(cursor.X, cursor.Y));
+
+            if (image is null)
             {
-                var dv = new System.Windows.Media.DrawingVisual();
-                using (var dc = dv.RenderOpen())
-                {
-                    var bounds = new System.Windows.Rect(0, 0, w, h);
-                    dc.DrawImage(background, bounds);
-                    dc.DrawImage(bubbles, bounds);
-                }
-                var composed = new System.Windows.Media.Imaging.RenderTargetBitmap(
-                    w, h, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
-                composed.Render(dv);
-                composed.Freeze();
-                result = composed;
+                ShowTrayNotification(
+                    LocalizationService.Get("S.Pin.Title"),
+                    LocalizationService.Get("S.Pin.ClipboardEmpty"));
+                return;
+            }
+
+            Views.Pin.PinWindow.Pin(image, cursor.X, cursor.Y);
+        }
+        catch (Exception ex)
+        {
+            // The clipboard is shared with every other application and can be locked for a moment.
+            Log.Warn(ex, "Pinning the clipboard failed");
+            ShowTrayNotification(
+                LocalizationService.Get("S.Pin.Title"),
+                LocalizationService.Get("S.Pin.ClipboardEmpty"));
+        }
+    });
+
+    /// <summary>
+    /// The selection as the user sees it — the clean capture, with the bubbles and the marks on top
+    /// and none of the editing chrome — or null when there is no usable selection.
+    /// </summary>
+    private System.Windows.Media.Imaging.BitmapSource? ComposeSelectionImage()
+    {
+        var background = _captureWindow?.CreateSelectionImage();
+        if (background is null) return null;
+
+        int w = background.PixelWidth;
+        int h = background.PixelHeight;
+
+        // Any 文字 box still open is laid down first, so the picture has the words that are showing.
+        _overlayWindow?.FinishText();
+        var bubbles = _overlayWindow?.RenderOverlayForSelection(
+            _lastSelPhysLeft, _lastSelPhysTop, w, h);
+        if (bubbles is null) return background;
+
+        var dv = new System.Windows.Media.DrawingVisual();
+        using (var dc = dv.RenderOpen())
+        {
+            var bounds = new System.Windows.Rect(0, 0, w, h);
+            dc.DrawImage(background, bounds);
+            dc.DrawImage(bubbles, bounds);
+        }
+        var composed = new System.Windows.Media.Imaging.RenderTargetBitmap(
+            w, h, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+        composed.Render(dv);
+        composed.Freeze();
+        return composed;
+    }
+
+    /// <param name="forceClose">
+    /// True for the double-click finish, which always ends the capture once the picture is safely
+    /// copied (and saved, when saving is on) whatever 截圖後自動關閉 says.
+    /// </param>
+    private void CopyScreenshot(bool forceClose)
+    {
+        try
+        {
+            var result = ComposeSelectionImage();
+            if (result is null)
+            {
+                ShowNotice(
+                    LocalizationService.Get("S.Main.CopyFailedTitle"),
+                    LocalizationService.Get("S.Main.NoImageBody"));
+                return;
             }
 
             System.Windows.Clipboard.SetImage(result);
             _toolbarWindow?.ShowScreenshotCopied();
 
             var settings = SettingsService.Instance.Current;
+            bool closeAfter = forceClose || settings.Capture.CloseAfterCopy;
             if (!settings.SaveScreenshotToDisk)
             {
                 // 截圖後自動關閉 (#323): the copy is the whole of what was asked for, and the notice
                 // would only flash on a toolbar that is about to go.
-                if (settings.Capture.CloseAfterCopy)
+                if (closeAfter)
                 {
                     CloseAll("copy and close");
                     return;
@@ -1441,7 +1553,7 @@ public partial class MainWindow : Window
 
                 // Closed only once the file is written. A failed save below keeps the capture up,
                 // since its notice is the only place the user would learn the file is not there.
-                if (settings.Capture.CloseAfterCopy)
+                if (closeAfter)
                 {
                     CloseAll("copy and close");
                     return;
@@ -1825,6 +1937,8 @@ public partial class MainWindow : Window
         _trayMenu.OpenTranslationRequested += (_, _) => OnTrayLeftClick();
         _trayMenu.SetRealtimeRunning(Views.Realtime.RealtimeSessionController.Instance.IsActive);
         _trayMenu.OpenSettingsRequested    += (_, _) => OpenSettings();
+        _trayMenu.SetPinPassThroughVisible(Views.Pin.PinWindow.AnyPassThrough);
+        _trayMenu.PinPassThroughOffRequested += (_, _) => Views.Pin.PinWindow.DisableAllPassThrough();
         _trayMenu.ExitRequested            += (_, _) => ExitApp();
         _trayMenu.Closed                   += (_, _) => _trayMenu = null;
         _trayMenu.Show();
@@ -1869,6 +1983,7 @@ public partial class MainWindow : Window
         _realtimePauseHotkey?.Dispose();
         _quickLookupHotkey?.Dispose();
         _quickTranslateHotkey?.Dispose();
+        _pinHotkey?.Dispose();
         _auxiliaryHotkeys?.Dispose();
         _auxiliaryHotkeys = null;
         if (_notifyIcon != null)

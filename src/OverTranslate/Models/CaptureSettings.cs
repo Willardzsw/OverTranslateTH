@@ -44,6 +44,25 @@ public class CaptureSettings
     /// </remarks>
     public bool CloseAfterCopy { get; set; } = false;
 
+    /// <summary>
+    /// Whether a double-click inside a settled selection copies the picture and ends the capture,
+    /// the way Snipaste finishes one. Only while the box is still editable: once translation has
+    /// started the capture is click-through by design.
+    /// </summary>
+    public bool DoubleClickToFinish { get; set; } = true;
+
+    /// <summary>
+    /// Whether a right-click on the capture ends it, the same as Esc. Only while the box is still
+    /// editable, for the same reason as <see cref="DoubleClickToFinish"/>.
+    /// </summary>
+    public bool RightClickToCancel { get; set; } = true;
+
+    /// <summary>
+    /// What pins the selection while a capture is up (貼圖 for the box rather than the clipboard).
+    /// The middle button by default.
+    /// </summary>
+    public PinSelectionTrigger PinSelectionTrigger { get; set; } = PinSelectionTrigger.MiddleClick;
+
     /// <summary>Whether 偵錯輔助 in the 設定 menu was left unfolded.</summary>
     /// <remarks>
     /// Folded by default: the boxes are for reporting a problem, and unfolded they took half the
@@ -84,6 +103,15 @@ public class CaptureAnnotationSettings
 
     public double HighlighterOpacity { get; set; } = 0.5;
 
+    /// <summary>馬賽克's block size, as a slider position.</summary>
+    public double MosaicStrength { get; set; } = 0.5;
+
+    /// <summary>模糊's radius, as a slider position.</summary>
+    public double BlurStrength { get; set; } = 0.5;
+
+    /// <summary>序號's disc size, as a slider position.</summary>
+    public double NumberSize { get; set; } = 0.5;
+
     /// <summary>What 形狀 gives when pressed. Anything but one of the three shapes reads as Rectangle.</summary>
     public AnnotationTool Shape { get; set; } = AnnotationTool.Rectangle;
 
@@ -110,4 +138,14 @@ public class CaptureAnnotationSettings
 
     /// <summary>A quarter of a 4K screen's height; at 1080p one line is already half the screen.</summary>
     public const int MaxTextSize = 500;
+}
+
+/// <summary>What pins the selection during a capture. Stored by name.</summary>
+[System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+public enum PinSelectionTrigger
+{
+    None,
+    MiddleClick,
+    CtrlT,
+    CtrlP,
 }

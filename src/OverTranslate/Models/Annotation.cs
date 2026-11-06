@@ -39,6 +39,21 @@ public enum AnnotationTool
 
     /// <summary>Words typed where the user clicked (#362).</summary>
     Text,
+
+    /// <summary>The box the drag spans, pixelated from the capture underneath.</summary>
+    /// <remarks><see cref="AnnotationStroke.Thickness"/> is the block size, in DIP.</remarks>
+    Mosaic,
+
+    /// <summary>The box the drag spans, blurred from the capture underneath.</summary>
+    /// <remarks><see cref="AnnotationStroke.Thickness"/> is the blur radius, in DIP.</remarks>
+    Blur,
+
+    /// <summary>
+    /// A numbered disc where the user clicked: 1, 2, 3… in the order they were placed. Its
+    /// <see cref="AnnotationStroke.Thickness"/> is the disc's diameter and <see cref="AnnotationStroke.Text"/>
+    /// the number.
+    /// </summary>
+    Number,
 }
 
 /// <summary>How a 文字 mark is set: one style for the whole of it, never per character.</summary>
@@ -137,6 +152,43 @@ public sealed class AnnotationStroke
 
     public static bool IsShapeTool(AnnotationTool tool) =>
         tool is AnnotationTool.Line or AnnotationTool.Arrow or AnnotationTool.Rectangle or AnnotationTool.Ellipse;
+
+    /// <summary>Whether the tool covers a dragged-out box with the capture underneath, reworked.</summary>
+    /// <remarks>
+    /// Dragged out like a shape and kept as the same two corners, but painted from the picture under
+    /// it rather than stroked — see <c>InkSurface</c>.
+    /// </remarks>
+    public static bool IsRegionTool(AnnotationTool tool) =>
+        tool is AnnotationTool.Mosaic or AnnotationTool.Blur;
+
+    public bool IsRegion => IsRegionTool(Tool);
+
+    /// <summary>The box a 馬賽克 or 模糊 mark covers.</summary>
+    public Rect RegionRect => Points.Count >= 2 ? new Rect(Points[0], Points[1]) : Rect.Empty;
+
+    /// <summary>A 序號 disc's radius.</summary>
+    public double NumberRadius => Math.Max(4, Thickness / 2);
+
+    /// <summary>
+    /// Lays out a 序號 disc's number: bold, sized to sit inside the disc, in black or white
+    /// depending on which reads against <paramref name="disc"/>.
+    /// </summary>
+    public static FormattedText NumberLayout(string number, double diameter, Color disc, double pixelsPerDip)
+    {
+        double luminance = (0.299 * disc.R + 0.587 * disc.G + 0.114 * disc.B) / 255;
+        var ink = luminance > 0.6 ? System.Windows.Media.Colors.Black : System.Windows.Media.Colors.White;
+        double size = diameter * (number.Length > 2 ? 0.38 : number.Length > 1 ? 0.48 : 0.58);
+        var family = System.Windows.Application.Current?.TryFindResource("AppFont") as System.Windows.Media.FontFamily
+            ?? new System.Windows.Media.FontFamily("Segoe UI");
+        return new FormattedText(
+            number,
+            System.Globalization.CultureInfo.InvariantCulture,
+            System.Windows.FlowDirection.LeftToRight,
+            new Typeface(family, FontStyles.Normal, FontWeights.Bold, FontStretches.Normal),
+            Math.Max(4, size),
+            new SolidColorBrush(ink),
+            pixelsPerDip);
+    }
 
     /// <summary>The outline a shape tool draws for a drag from <paramref name="start"/> to <paramref name="end"/>.</summary>
     /// <param name="thickness">The nib, which only an arrow needs: its head is sized from it.</param>
@@ -279,6 +331,19 @@ public sealed class AnnotationStroke
     {
         if (TextBounds() is { } text) return text;
 
+        if (IsRegion && Points.Count >= 2)
+        {
+            var region = RegionRect;
+            region.Inflate(1, 1);
+            return region;
+        }
+
+        if (Tool == AnnotationTool.Number && Points.Count > 0)
+        {
+            double r = NumberRadius + 2;
+            return new Rect(Points[0].X - r, Points[0].Y - r, r * 2, r * 2);
+        }
+
         {
             double minX = double.MaxValue, minY = double.MaxValue;
             double maxX = double.MinValue, maxY = double.MinValue;
@@ -394,6 +459,16 @@ public sealed class AnnotationStroke
             text.Inflate(radius, radius);
             return text.Contains(point);
         }
+
+        if (IsRegion && Points.Count >= 2)
+        {
+            var region = RegionRect;
+            region.Inflate(radius, radius);
+            return region.Contains(point);
+        }
+
+        if (Tool == AnnotationTool.Number && Points.Count > 0)
+            return Math.Sqrt(DistanceSquared(Points[0], point)) <= NumberRadius + radius;
 
         if (Tool == AnnotationTool.Arrow && Points.Count == 2)
         {
