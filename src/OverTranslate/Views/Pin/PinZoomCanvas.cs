@@ -13,7 +13,7 @@ using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 namespace OverTranslate.Views.Pin;
 
 /// <summary>
-/// A transparent window over the pin's whole monitor that shows the pin while it is being zoomed.
+/// A transparent window over the whole desktop that shows the pin while it is being zoomed.
 /// </summary>
 /// <remarks>
 /// <para>Why it exists: the pin is a transparent (layered) window, and moving and resizing one at
@@ -91,16 +91,27 @@ internal sealed class PinZoomCanvas : Window
     }
 
     /// <summary>Shows the picture with its top-left at a physical point, at a physical size.</summary>
+    /// <remarks>
+    /// The four edges are snapped to whole pixels first and the size taken between them. Rounding the
+    /// position and the size separately let the right and bottom edges land a pixel either way on
+    /// alternate notches — a wobble along the edge even with the window itself standing still.
+    /// </remarks>
     public void Present(double picX, double picY, double widthPx, double heightPx, double opacity, double zoom)
     {
+        int left   = (int)Math.Round(picX - _monitor.Left);
+        int top    = (int)Math.Round(picY - _monitor.Top);
+        int right  = (int)Math.Round(picX - _monitor.Left + widthPx);
+        int bottom = (int)Math.Round(picY - _monitor.Top + heightPx);
+
         var surface = Chrome.Surface;
-        Canvas.SetLeft(surface, (picX - _monitor.Left) / _dpi);
-        Canvas.SetTop(surface, (picY - _monitor.Top) / _dpi);
-        surface.Width = Math.Max(1, widthPx / _dpi);
-        surface.Height = Math.Max(1, heightPx / _dpi);
+        Canvas.SetLeft(surface, left / _dpi);
+        Canvas.SetTop(surface, top / _dpi);
+        surface.Width = Math.Max(1, right - left) / _dpi;
+        surface.Height = Math.Max(1, bottom - top) / _dpi;
         surface.Opacity = opacity;
         Chrome.SetScaling(zoom);
     }
+
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)
     {

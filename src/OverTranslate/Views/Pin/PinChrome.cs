@@ -13,23 +13,20 @@ using VerticalAlignment = System.Windows.VerticalAlignment;
 namespace OverTranslate.Views.Pin;
 
 /// <summary>
-/// What a pin looks like: the picture, a thin accent frame, the shadow, and the badge that shows
-/// the zoom or opacity. Built here for both the pin and its zoom canvas, because the hand-over
-/// between the two is only invisible while they draw exactly the same thing.
+/// What a pin looks like: the picture, the shadow, and the badge that shows the zoom or opacity.
+/// No frame, and nothing that changes under the pointer: a pin is just the picture. Built here for
+/// both the pin and its zoom canvas, because the hand-over between the two is only invisible while
+/// they draw exactly the same thing.
 /// </summary>
 internal sealed class PinChrome
 {
     public Grid Surface { get; }
     public Image View { get; }
-    public Border Frame { get; }
     public TextBlock Badge { get; }
 
     public PinChrome(BitmapSource image)
     {
         View = new Image { Source = image, Stretch = Stretch.Fill, SnapsToDevicePixels = true };
-
-        Frame = new Border { BorderThickness = new Thickness(1), IsHitTestVisible = false };
-        SetFrameColour(passThrough: false);
 
         Badge = new TextBlock
         {
@@ -51,13 +48,8 @@ internal sealed class PinChrome
             Effect = new DropShadowEffect { BlurRadius = 14, ShadowDepth = 0, Opacity = 0.45, Color = Colors.Black },
         };
         Surface.Children.Add(View);
-        Surface.Children.Add(Frame);
         Surface.Children.Add(Badge);
     }
-
-    /// <summary>The accent edge normally; a grey one while the pin lets clicks through.</summary>
-    public void SetFrameColour(bool passThrough) =>
-        Frame.SetResourceReference(Border.BorderBrushProperty, passThrough ? "AppTextSecondary" : "AppAccent");
 
     public void SetBadge(string? text)
     {

@@ -15,7 +15,6 @@ using Cursors = System.Windows.Input.Cursors;
 using Image = System.Windows.Controls.Image;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MenuItem = System.Windows.Controls.MenuItem;
-using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Point = System.Windows.Point;
 using Separator = System.Windows.Controls.Separator;
 
@@ -25,8 +24,8 @@ namespace OverTranslate.Views.Pin;
 /// 貼圖: a picture pinned to the screen, always on top, until the user closes it (Snipaste-style).
 /// </summary>
 /// <remarks>
-/// <para>Drag to move. The wheel zooms around the pointer, Ctrl+wheel changes how see-through it
-/// is. Double-click or Esc closes it; Ctrl+C copies it; the right-click menu has the rest.</para>
+/// <para>Drag to move. The wheel zooms around the picture's centre, Ctrl+wheel changes how
+/// see-through it is. Double-click or Esc closes it; Ctrl+C copies it; the right-click menu has the rest.</para>
 ///
 /// <para>Shown at the picture's own pixel size on whichever monitor it sits on, so a pinned capture
 /// lands exactly over the place it was taken from and is as sharp as the screen was. The window is
@@ -147,8 +146,6 @@ public sealed class PinWindow : Window
         if (_passThrough == on) return;
         _passThrough = on;
         WindowStyles.SetClickThrough(this, on);
-        _chrome.SetFrameColour(on);
-        _canvas?.Chrome.SetFrameColour(on);
         if (on) ShowBadge(LocalizationService.Get("S.Pin.PassThroughOn"), TimeSpan.FromSeconds(4));
         else ShowBadge(LocalizationService.Get("S.Pin.PassThroughOff"));
     }
@@ -314,23 +311,18 @@ public sealed class PinWindow : Window
         _chrome.SetScaling(_zoom);
     }
 
-    /// <param name="aroundPointer">Keep the spot under the pointer where it is, as the wheel does.</param>
-    private void SetZoom(double zoom, bool aroundPointer)
+    /// <summary>Zooms around the picture's centre, which stays where it is.</summary>
+    private void SetZoom(double zoom)
     {
         zoom = Math.Clamp(zoom, MinZoom, MaxZoom);
         if (Math.Abs(zoom - _zoom) < 1e-9) return;
 
         double oldW = PicturePixelWidth, oldH = PicturePixelHeight;
+        double centreX = _picX + oldW / 2, centreY = _picY + oldH / 2;
+        double oldZoom = _zoom;
         _zoom = zoom;
-
-        if (aroundPointer)
-        {
-            var cursor = System.Windows.Forms.Cursor.Position;
-            double fx = Math.Clamp((cursor.X - _picX) / oldW, 0, 1);
-            double fy = Math.Clamp((cursor.Y - _picY) / oldH, 0, 1);
-            _picX = cursor.X - fx * PicturePixelWidth;
-            _picY = cursor.Y - fy * PicturePixelHeight;
-        }
+        _picX = centreX - PicturePixelWidth / 2;
+        _picY = centreY - PicturePixelHeight / 2;
 
         ShowZoomed();
         ShowBadge($"{Math.Round(_zoom * 100)}%");
@@ -347,7 +339,8 @@ public sealed class PinWindow : Window
 
     private void ShowZoomed()
     {
-        if (!TryZoomOnCanvas()) Place();
+        if (TryZoomOnCanvas()) return;
+        Place();
     }
 
     private bool TryZoomOnCanvas()
@@ -357,12 +350,13 @@ public sealed class PinWindow : Window
 
         if (_canvas is null)
         {
-            var centre = new System.Drawing.Point(
-                (int)(_picX + PicturePixelWidth / 2), (int)(_picY + PicturePixelHeight / 2));
-            var monitor = System.Windows.Forms.Screen.FromPoint(centre).Bounds;
+            // The whole desktop, not the pin's monitor: a drag that starts on the canvas (right after
+            // a zoom) can carry the picture onto another monitor, and a one-monitor canvas showed
+            // nothing there until the button came up. One scale across all of it, like the capture
+            // window, so the picture stays pixel for pixel on every monitor.
+            var desktop = ScreenGeometry.VirtualDesktopBounds();
 
-            var canvas = new PinZoomCanvas(_image, monitor);
-            canvas.Chrome.SetFrameColour(_passThrough);
+            var canvas = new PinZoomCanvas(_image, desktop);
             _canvas = canvas;
             canvas.Ready += (_, _) =>
             {
@@ -506,7 +500,7 @@ public sealed class PinWindow : Window
     {
         if (!TakeBack(canvas)) return;
         int notches = Math.Sign(e.Delta);
-        if (notches != 0) Step(PinGestures.ForWheel(Gestures, Keyboard.Modifiers), notches, aroundPointer: true);
+        if (notches != 0) Step(PinGestures.ForWheel(Gestures, Keyboard.Modifiers), notches);
     }
 
     private void OnCanvasPressed(PinZoomCanvas canvas, MouseButtonEventArgs e)
@@ -567,17 +561,20 @@ public sealed class PinWindow : Window
     private void ResetPin()
     {
         Opacity = 1;
-        if (Math.Abs(_zoom - 1) > 1e-9) SetZoom(1, aroundPointer: false);
+        if (Math.Abs(_zoom - 1) > 1e-9) SetZoom(1);
         else ShowBadge("100%");
     }
 
-    /// <summary>Shows a short note on the pin (and its canvas) for a moment.</summary>
+    /// <summary>
+    /// Shows a short note on the pin (and its canvas): gone 0.3 s after the last change unless a
+    /// longer time is asked for, so a zoom or fade says its percentage and then gets out of the way.
+    /// </summary>
     private void ShowBadge(string text, TimeSpan? duration = null)
     {
         _chrome.SetBadge(text);
         _canvas?.Chrome.SetBadge(text);
         _badgeTimer.Stop();
-        _badgeTimer.Interval = duration ?? TimeSpan.FromMilliseconds(900);
+        _badgeTimer.Interval = duration ?? TimeSpan.FromMilliseconds(300);
         _badgeTimer.Start();
     }
 
@@ -595,10 +592,10 @@ public sealed class PinWindow : Window
     }
 
     /// <summary>A zoom or opacity step, up or down.</summary>
-    private void Step(PinAction? action, int direction, bool aroundPointer)
+    private void Step(PinAction? action, int direction)
     {
         if (action == PinAction.Zoom)
-            SetZoom(_zoom * (direction > 0 ? 1.1 : 1 / 1.1), aroundPointer);
+            SetZoom(_zoom * (direction > 0 ? 1.1 : 1 / 1.1));
         else if (action == PinAction.Opacity)
             SetPinOpacity(Opacity + direction * 0.1);
     }
@@ -633,7 +630,7 @@ public sealed class PinWindow : Window
         int notches = Math.Sign(e.Delta);
         if (notches == 0) return;
 
-        Step(PinGestures.ForWheel(Gestures, Keyboard.Modifiers), notches, aroundPointer: true);
+        Step(PinGestures.ForWheel(Gestures, Keyboard.Modifiers), notches);
         e.Handled = true;
     }
 
@@ -657,10 +654,10 @@ public sealed class PinWindow : Window
                 ResetPin();
                 break;
             case Key.OemPlus or Key.Add:
-                Step(PinGestures.ForPlusMinus(Gestures, Keyboard.Modifiers), +1, aroundPointer: false);
+                Step(PinGestures.ForPlusMinus(Gestures, Keyboard.Modifiers), +1);
                 break;
             case Key.OemMinus or Key.Subtract:
-                Step(PinGestures.ForPlusMinus(Gestures, Keyboard.Modifiers), -1, aroundPointer: false);
+                Step(PinGestures.ForPlusMinus(Gestures, Keyboard.Modifiers), -1);
                 break;
             case Key.Left:  Nudge(-1, 0); break;
             case Key.Right: Nudge(+1, 0); break;
@@ -765,18 +762,6 @@ public sealed class PinWindow : Window
         {
             Topmost = true;
         }
-    }
-
-    protected override void OnMouseEnter(MouseEventArgs e)
-    {
-        base.OnMouseEnter(e);
-        _chrome.Frame.BorderThickness = new Thickness(2);
-    }
-
-    protected override void OnMouseLeave(MouseEventArgs e)
-    {
-        base.OnMouseLeave(e);
-        _chrome.Frame.BorderThickness = new Thickness(1);
     }
 
     /// <summary>
