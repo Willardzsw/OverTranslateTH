@@ -94,6 +94,28 @@ public partial class ScreenCaptureWindow : Window
 
     public Task<bool> WaitForSelectionAsync() => _selectionTcs.Task;
 
+    private System.Drawing.Rectangle? _preset;
+
+    /// <summary>
+    /// Starts the capture with the box already drawn over <paramref name="physical"/> — a pinned
+    /// picture being edited or translated — so it goes straight to the toolbar. Call before Show.
+    /// </summary>
+    public void PresetSelection(System.Drawing.Rectangle physical) => _preset = physical;
+
+    /// <summary>Puts the preset box up as if it had just been dragged out. Needs the window's scale.</summary>
+    private void ApplyPreset(System.Drawing.Rectangle r)
+    {
+        _selectionWpfRect = new Rect(
+            (r.Left - _physBounds.Left) / _dpiX, (r.Top - _physBounds.Top) / _dpiY,
+            r.Width / _dpiX, r.Height / _dpiY);
+        _hasSelection = true;
+        HintHost.Visibility = Visibility.Collapsed;
+        SelectionRect.StrokeDashArray = null;
+        UpdateSelectionMetadata();
+        UpdateSelectionVisuals();
+        _selectionTcs.TrySetResult(true);
+    }
+
     /// <summary>
     /// Raised with the new selection, in physical pixels, whenever the user moves or resizes a
     /// settled box — so the toolbar anchored to it can follow rather than sit next to where the box
@@ -190,6 +212,8 @@ public partial class ScreenCaptureWindow : Window
         // OnContentRendered so their reveal animation would not play against a hidden window; with
         // no animation left, deferring only adds work between the first frame and the reveal.)
         HintHost.ItemsSource = BuildHintSpots();
+
+        if (_preset is { } preset) ApplyPreset(preset);
     }
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

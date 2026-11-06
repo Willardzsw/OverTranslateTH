@@ -754,4 +754,6 @@
     <sys:String x:Key="S.Settings.PinSelectionHint">キャプチャ中に選択範囲を画面にピン留めします</sys:String>
     <sys:String x:Key="S.Settings.PinMiddleButton">中ボタン</sys:String>
 
+    <sys:String x:Key="S.Pin.Edit">編集 / 翻訳</sys:String>
+
 </ResourceDictionary>

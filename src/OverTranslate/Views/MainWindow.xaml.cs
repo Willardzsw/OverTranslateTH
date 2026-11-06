@@ -99,6 +99,7 @@ public partial class MainWindow : Window
         _tts.StateChanged += (_, _) => _toolbarWindow?.SetSpeaking(_tts.IsActive);
 
         InitNotifyIcon();
+        Views.Pin.PinWindow.EditRequested += pin => Dispatcher.Invoke(() => _ = EditPinAsync(pin));
         RegisterHotkey();
         ShowStartupBalloon();
 
@@ -650,8 +651,74 @@ public partial class MainWindow : Window
     // anything and so have nothing to put back.
     private Window? _shellHiddenForCapture;
 
+    /// <summary>The pin hidden while it is open in the capture toolbar, to show again afterwards.</summary>
+    private Views.Pin.PinWindow? _pinBeingEdited;
+
+    /// <summary>
+    /// 編輯 / 翻譯 on a pin: the pin opened in the ordinary capture toolbar, with the box already
+    /// on it, so it can be translated, marked up, copied or pinned again like any capture.
+    /// </summary>
+    /// <remarks>
+    /// The desktop is frozen with the pin out of the way and its own picture laid back in where it
+    /// was showing, at the size it was showing — opaque whatever the pin's opacity, and without
+    /// its shadow — so the box frames exactly the picture.
+    /// </remarks>
+    private async Task EditPinAsync(Views.Pin.PinWindow pin)
+    {
+        if (HasActiveSession || _captureWindow is not null) return;
+
+        Bitmap frozen;
+        System.Drawing.Rectangle box;
+        try
+        {
+            pin.FinishZoomNow();
+            box = pin.PictureBounds;
+            WindowScreenPresence.HideAndWaitForScreen(pin);
+
+            var desktop = ScreenGeometry.VirtualDesktopBounds();
+            frozen = new Bitmap(desktop.Width, desktop.Height);
+            using (var g = Graphics.FromImage(frozen))
+            {
+                g.CopyFromScreen(desktop.Left, desktop.Top, 0, 0, desktop.Size, CopyPixelOperation.SourceCopy);
+                using var picture = BitmapInterop.ToGdiBitmap(pin.Image);
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                g.DrawImage(picture, new System.Drawing.Rectangle(
+                    box.Left - desktop.Left, box.Top - desktop.Top, box.Width, box.Height));
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Could not open the pin for editing");
+            pin.Show();
+            return;
+        }
+
+        _pinBeingEdited = pin;
+        try
+        {
+            await RunCaptureSessionAsync("pin-edit", frozen, box);
+        }
+        finally
+        {
+            // A session that never got going has nothing that would put the pin back.
+            if (!HasActiveSession) RestorePinAfterCapture();
+        }
+    }
+
+    private void RestorePinAfterCapture()
+    {
+        var pin = _pinBeingEdited;
+        _pinBeingEdited = null;
+        if (pin is null || !pin.IsLoaded) return;
+        try { pin.Show(); }
+        catch (Exception ex) { Log.Warn(ex, "Could not show the pin again after editing it"); }
+    }
+
     private void RestoreShellAfterCapture()
     {
+        RestorePinAfterCapture();
+
         var shell = _shellHiddenForCapture;
         _shellHiddenForCapture = null;
         // Already visible when the toolbar's 開啟翻譯視窗 carried the result into it, which shows
@@ -671,10 +738,17 @@ public partial class MainWindow : Window
         }
     }
 
-    private async Task RunCaptureSessionAsync(string origin = "hotkey")
+    /// <param name="frozen">
+    /// The desktop to capture from, already taken — a pin being edited supplies its own, with the
+    /// pinned picture laid into it. Null takes the screen as it is now.
+    /// </param>
+    /// <param name="preset">A box to start with, in physical pixels, instead of one to drag out.</param>
+    private async Task RunCaptureSessionAsync(
+        string origin = "hotkey", Bitmap? frozen = null, System.Drawing.Rectangle? preset = null)
     {
         if (HasActiveSession)
         {
+            frozen?.Dispose();
             CloseAll($"{origin} toggle");
             return;
         }
@@ -684,10 +758,17 @@ public partial class MainWindow : Window
         try
         {
             screenBounds = ScreenGeometry.VirtualDesktopBounds();
-            screenshot = new Bitmap(screenBounds.Width, screenBounds.Height);
-            using var g = Graphics.FromImage(screenshot);
-            g.CopyFromScreen(screenBounds.Left, screenBounds.Top, 0, 0,
-                screenBounds.Size, CopyPixelOperation.SourceCopy);
+            if (frozen is not null)
+            {
+                screenshot = frozen;
+            }
+            else
+            {
+                screenshot = new Bitmap(screenBounds.Width, screenBounds.Height);
+                using var g = Graphics.FromImage(screenshot);
+                g.CopyFromScreen(screenBounds.Left, screenBounds.Top, 0, 0,
+                    screenBounds.Size, CopyPixelOperation.SourceCopy);
+            }
         }
         catch (Exception ex)
         {
@@ -706,6 +787,7 @@ public partial class MainWindow : Window
         {
             Log.Info("Capture session starting, origin={Origin}, bounds={Bounds}", origin, screenBounds);
             var captureWindow = new ScreenCaptureWindow(screenshot, screenBounds);
+            if (preset is { } box) captureWindow.PresetSelection(box);
             _captureWindow = captureWindow;
 
             // The box stays adjustable until translation starts, so the toolbar anchored to it has to
@@ -1445,18 +1527,20 @@ public partial class MainWindow : Window
         try
         {
             var cursor = System.Windows.Forms.Cursor.Position;
-            System.Windows.Media.Imaging.BitmapSource? image = null;
-
-            if (System.Windows.Clipboard.ContainsImage())
-                image = System.Windows.Clipboard.GetImage();
-            else if (System.Windows.Clipboard.ContainsText() &&
-                     System.Windows.Clipboard.GetText() is { Length: > 0 } text &&
-                     !string.IsNullOrWhiteSpace(text))
-                image = Views.Pin.PinWindow.RenderText(
+            // Pictures first — a copied picture, picture files, the PNG chat apps and browsers copy —
+            // then text drawn as a card. Several files become several pins, stepped down and right.
+            IReadOnlyList<System.Windows.Media.Imaging.BitmapSource> pictures = Views.Pin.ClipboardPictures.Read();
+            if (pictures.Count == 0 &&
+                System.Windows.Clipboard.ContainsText() &&
+                System.Windows.Clipboard.GetText() is { } text &&
+                !string.IsNullOrWhiteSpace(text))
+            {
+                pictures = [Views.Pin.PinWindow.RenderText(
                     text.Length > 4000 ? text[..4000] : text,
-                    ScreenGeometry.ScaleAt(cursor.X, cursor.Y));
+                    ScreenGeometry.ScaleAt(cursor.X, cursor.Y))];
+            }
 
-            if (image is null)
+            if (pictures.Count == 0)
             {
                 ShowTrayNotification(
                     LocalizationService.Get("S.Pin.Title"),
@@ -1464,7 +1548,9 @@ public partial class MainWindow : Window
                 return;
             }
 
-            Views.Pin.PinWindow.Pin(image, cursor.X, cursor.Y);
+            int step = (int)Math.Round(28 * ScreenGeometry.ScaleAt(cursor.X, cursor.Y));
+            for (int i = 0; i < pictures.Count; i++)
+                Views.Pin.PinWindow.Pin(pictures[i], cursor.X + i * step, cursor.Y + i * step);
         }
         catch (Exception ex)
         {

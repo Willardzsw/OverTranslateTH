@@ -754,4 +754,6 @@
     <sys:String x:Key="S.Settings.PinSelectionHint">캡처 중에 선택 영역을 화면에 고정합니다</sys:String>
     <sys:String x:Key="S.Settings.PinMiddleButton">가운데 버튼</sys:String>
 
+    <sys:String x:Key="S.Pin.Edit">편집 / 번역</sys:String>
+
 </ResourceDictionary>

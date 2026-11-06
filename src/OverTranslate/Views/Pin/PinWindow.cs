@@ -12,7 +12,6 @@ using Brushes = System.Windows.Media.Brushes;
 using Color = System.Windows.Media.Color;
 using ContextMenu = System.Windows.Controls.ContextMenu;
 using Cursors = System.Windows.Input.Cursors;
-using Image = System.Windows.Controls.Image;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MenuItem = System.Windows.Controls.MenuItem;
 using Point = System.Windows.Point;
@@ -102,6 +101,34 @@ public sealed class PinWindow : Window
         pin.Show();
         Log.Info("Pinned a {Width}x{Height} picture at {X},{Y}", image.PixelWidth, image.PixelHeight, physX, physY);
         return pin;
+    }
+
+    /// <summary>Raised by 編輯 / 翻譯: open this pin in the capture toolbar.</summary>
+    public static event Action<PinWindow>? EditRequested;
+
+    /// <summary>The picture as pinned, at its own size.</summary>
+    public BitmapSource Image => _image;
+
+    /// <summary>Where the picture is showing, at the size it is showing, in physical pixels.</summary>
+    public System.Drawing.Rectangle PictureBounds => new(
+        (int)Math.Round(_picX), (int)Math.Round(_picY),
+        (int)Math.Round(PicturePixelWidth), (int)Math.Round(PicturePixelHeight));
+
+    /// <summary>Ends a zoom at once: the pin back in charge, at its final size, nothing pending.</summary>
+    public void FinishZoomNow()
+    {
+        _zoomIdle?.Stop();
+        _canvasDragging = false;
+        var handingBack = _handingBack;
+        StopHandBack();
+        handingBack?.Close();
+        if (_canvas is { } canvas)
+        {
+            _canvas = null;
+            canvas.Close();
+            Place();
+        }
+        if (_selfCloaked) CloakSelf(false);
     }
 
     public static void CloseAll()
@@ -682,6 +709,8 @@ public sealed class PinWindow : Window
     {
         var menu = new ContextMenu();
 
+        menu.Items.Add(Item("S.Pin.Edit", null, () => EditRequested?.Invoke(this)));
+        menu.Items.Add(new Separator());
         menu.Items.Add(Item("S.Pin.Copy", "Ctrl+C", Copy));
         menu.Items.Add(Item("S.Pin.SaveAs", "Ctrl+S", SaveAs));
         menu.Items.Add(new Separator());

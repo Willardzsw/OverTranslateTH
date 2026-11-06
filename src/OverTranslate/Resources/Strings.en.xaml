@@ -752,4 +752,6 @@ same settings, the same seed usually gives the same output.</sys:String>
     <sys:String x:Key="S.Settings.PinSelectionHint">Pins the selected area to the screen during a capture</sys:String>
     <sys:String x:Key="S.Settings.PinMiddleButton">Middle button</sys:String>
 
+    <sys:String x:Key="S.Pin.Edit">Edit / Translate</sys:String>
+
 </ResourceDictionary>

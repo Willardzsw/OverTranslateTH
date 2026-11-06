@@ -773,4 +773,6 @@
     <sys:String x:Key="S.Settings.PinSelectionHint">截圖時用它把框選範圍貼在螢幕上</sys:String>
     <sys:String x:Key="S.Settings.PinMiddleButton">滑鼠中鍵</sys:String>
 
+    <sys:String x:Key="S.Pin.Edit">編輯 / 翻譯</sys:String>
+
 </ResourceDictionary>

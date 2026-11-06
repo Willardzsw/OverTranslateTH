@@ -743,4 +743,6 @@
     <sys:String x:Key="S.Settings.PinSelectionHint">Закрепляет выделенную область на экране во время захвата</sys:String>
     <sys:String x:Key="S.Settings.PinMiddleButton">Средняя кнопка</sys:String>
 
+    <sys:String x:Key="S.Pin.Edit">Изменить / перевести</sys:String>
+
 </ResourceDictionary>

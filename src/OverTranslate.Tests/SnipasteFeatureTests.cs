@@ -89,6 +89,23 @@ public class SnipasteFeatureTests
     }
 
     [Fact]
+    public void PictureSurvivesTheTripToGdiAndBack()
+    {
+        // 2x1: opaque red, then half-transparent blue (premultiplied-free BGRA).
+        byte[] pixels = [0, 0, 255, 255, 255, 0, 0, 128];
+        var source = BitmapSource.Create(2, 1, 96, 96, PixelFormats.Bgra32, null, pixels, 8);
+
+        using var gdi = BitmapInterop.ToGdiBitmap(source);
+        Assert.Equal(System.Drawing.Color.FromArgb(255, 255, 0, 0), gdi.GetPixel(0, 0));
+        Assert.Equal(System.Drawing.Color.FromArgb(128, 0, 0, 255), gdi.GetPixel(1, 0));
+
+        var back = BitmapInterop.ToBitmapSource(gdi);
+        var round = new byte[8];
+        back.CopyPixels(round, 8, 0);
+        Assert.Equal(pixels, round);
+    }
+
+    [Fact]
     public void PixelateAveragesEachBlock()
     {
         // 4x2 picture: left 2x2 block black and white, right 2x2 block all red.

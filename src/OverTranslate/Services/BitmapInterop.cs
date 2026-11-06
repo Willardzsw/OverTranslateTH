@@ -26,6 +26,26 @@ internal static class BitmapInterop
     /// The pixels are copied during Create, so the source bitmap may be disposed straight after —
     /// and the result is frozen, so it can cross to another thread or outlive the grab it came from.
     /// </remarks>
+    /// <summary>A GDI+ copy of a WPF picture, 32-bit with alpha. The caller disposes it.</summary>
+    public static Bitmap ToGdiBitmap(BitmapSource source)
+    {
+        var bgra = source.Format == PixelFormats.Bgra32
+            ? source
+            : new FormatConvertedBitmap(source, PixelFormats.Bgra32, null, 0);
+        var bitmap = new Bitmap(bgra.PixelWidth, bgra.PixelHeight, GdiPixelFormat.Format32bppArgb);
+        var locked = bitmap.LockBits(
+            new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, GdiPixelFormat.Format32bppArgb);
+        try
+        {
+            bgra.CopyPixels(System.Windows.Int32Rect.Empty, locked.Scan0, Math.Abs(locked.Stride) * bitmap.Height, locked.Stride);
+        }
+        finally
+        {
+            bitmap.UnlockBits(locked);
+        }
+        return bitmap;
+    }
+
     public static BitmapSource ToBitmapSource(Bitmap bitmap, double dpi = 96)
     {
         var locked = bitmap.LockBits(
