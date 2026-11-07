@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TextTack 贴译 — Windows 截图 OCR 翻译、贴图、便利贴（支持泰语 OCR）</title>
+<meta name="description" content="TextTack 贴译是免费开源的 Windows 屏幕翻译工具：截图 OCR 翻译、实时翻译、截图贴图、便利贴，本地泰语 OCR。Free open-source Windows screenshot OCR translator with Thai OCR.">
+<link rel="canonical" href="https://willardzsw.github.io/TextTack/">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TextTack 贴译 — Windows 截图 OCR 翻译工具">
+<meta property="og:description" content="截图 OCR 翻译、实时翻译、贴图、便利贴，支持本地泰语 OCR。免费开源，MIT 许可。">
+<meta property="og:url" content="https://willardzsw.github.io/TextTack/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "TextTack",
+  "alternateName": ["贴译", "TextTack 贴译"],
+  "operatingSystem": "Windows 10, Windows 11",
+  "applicationCategory": "UtilitiesApplication",
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "downloadUrl": "https://github.com/Willardzsw/TextTack/releases/latest",
+  "codeRepository": "https://github.com/Willardzsw/TextTack",
+  "url": "https://willardzsw.github.io/TextTack/"
+}
+</script>
+<style>
+  :root { --accent: #E0602C; --accent-dark: #B8401F; --text: #2B2420; --muted: #6E625A; --bg: #FFFBF6; --card: #FFFFFF; --line: #F0E4D8; }
+  @media (prefers-color-scheme: dark) {
+    :root { --text: #F3ECE6; --muted: #B8ABA0; --bg: #1C1815; --card: #262019; --line: #3A3028; --accent-dark: #F48E2C; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.7 "Segoe UI", "Microsoft YaHei", "Leelawadee UI", system-ui, sans-serif; color: var(--text); background: var(--bg); }
+  main { max-width: 860px; margin: 0 auto; padding: 56px 24px 40px; }
+  header { text-align: center; }
+  header img { width: 112px; height: 112px; }
+  h1 { font-size: 40px; margin: 16px 0 4px; letter-spacing: .5px; }
+  h1 small { font-size: 26px; color: var(--muted); font-weight: 600; margin-left: 8px; }
+  .tagline { font-size: 18px; color: var(--muted); margin: 0 0 28px; }
+  .buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 11px 22px; border-radius: 10px; text-decoration: none; font-weight: 600; }
+  .btn.primary { background: linear-gradient(135deg, #F48E2C, #D63E2C); color: #fff; }
+  .btn.secondary { border: 1.5px solid var(--line); color: var(--text); background: var(--card); }
+  .note { font-size: 13px; color: var(--muted); margin-top: 12px; }
+  h2 { font-size: 22px; margin: 48px 0 14px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .card h3 { margin: 0 0 4px; font-size: 16px; color: var(--accent-dark); }
+  .card p { margin: 0; font-size: 14.5px; color: var(--muted); }
+  section.lang { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 4px 22px 14px; margin-top: 18px; }
+  section.lang h2 { margin-top: 18px; }
+  ul { padding-left: 20px; }
+  a { color: var(--accent-dark); }
+  footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); text-align: center; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="icon.svg" alt="TextTack 图标">
+    <h1>TextTack<small>贴译</small></h1>
+    <p class="tagline">Windows 截图 OCR 翻译、贴图、便利贴，支持本地泰语 OCR</p>
+    <div class="buttons">
+      <a class="btn primary" href="https://github.com/Willardzsw/TextTack/releases/latest">下载最新版</a>
+      <a class="btn secondary" href="https://github.com/Willardzsw/TextTack">GitHub 源码</a>
+    </div>
+    <p class="note">免费开源 · Windows 10/11 x64 · 不用另装 .NET · 有安装版和便携版</p>
+  </header>
+
+  <h2>主要功能</h2>
+  <div class="grid">
+    <div class="card"><h3>截图翻译</h3><p>框选屏幕区域，本地识别文字后翻译，可复制原文或译文。</p></div>
+    <div class="card"><h3>实时翻译</h3><p>框选区域后持续识别并翻译，快捷键启动和暂停。</p></div>
+    <div class="card"><h3>泰语 OCR</h3><p>PP-OCRv5 泰语识别模型，在本机运行，图片不用上传。</p></div>
+    <div class="card"><h3>截图与贴图</h3><p>截图标记（马赛克、模糊、序号等），把选区或剪贴板图片贴在屏幕最上层。</p></div>
+    <div class="card"><h3>便利贴</h3><p>复制文字或图片后按 F2，在指针处贴一张可编辑的便利贴，重启后自动恢复。</p></div>
+    <div class="card"><h3>鼠标增强</h3><p>按住组合键滚轮调窗口透明度、横向滚动，拖动调整窗口大小。</p></div>
+    <div class="card"><h3>文字翻译</h3><p>支持多种翻译服务，包括 OpenAI 兼容接口，密钥由你自己填写。</p></div>
+    <div class="card"><h3>七种界面语言</h3><p>简体中文、繁体中文、英语、日语、韩语、俄语、泰语。</p></div>
+  </div>
+
+  <section class="lang" lang="th">
+    <h2>ภาษาไทย</h2>
+    <p>TextTack เป็นโปรแกรมแปลหน้าจอสำหรับ Windows แบบโอเพนซอร์สและใช้ฟรี รองรับ OCR ภาษาไทยที่ทำงานบนเครื่องของคุณเอง</p>
+    <ul>
+      <li>แคปหน้าจอแล้วอ่านข้อความและแปลทันที</li>
+      <li>แปลแบบเรียลไทม์ในพื้นที่ที่เลือก</li>
+      <li>ปักภาพไว้บนหน้าจอ และโน้ตแปะ (กด F2)</li>
+      <li>หน้าจอโปรแกรมมีภาษาไทย</li>
+    </ul>
+  </section>
+
+  <section class="lang" lang="en">
+    <h2>English</h2>
+    <p>TextTack is a free, open-source screen translator for Windows. Select an area of the screen to recognize text locally (including Thai OCR) and translate it; pin screenshots on top of other windows; and keep editable sticky notes. Windows 10/11 x64, MIT licensed.</p>
+  </section>
+
+  <h2>关于</h2>
+  <p>TextTack 基于 <a href="https://github.com/Hon-Lu/OverTranslate">Hon-Lu/OverTranslate</a> 修改，沿用 MIT 许可，不是原项目的官方版本。OCR 在本地完成；要翻译的文字会发给你自己选择的翻译服务，详见<a href="https://github.com/Willardzsw/TextTack/blob/feature/thai-ocr/PRIVACY.md">隐私说明</a>。程序没有代码签名，Windows 可能提示“未知发布者”。问题请提交到 <a href="https://github.com/Willardzsw/TextTack/issues">Issues</a>。</p>
+
+  <footer>TextTack 贴译 · 基于 OverTranslate（© 2026 Hon-Lu，MIT 许可）</footer>
+</main>
+</body>
+</html>
