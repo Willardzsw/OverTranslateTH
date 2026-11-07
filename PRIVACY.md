@@ -38,4 +38,4 @@ API 密钥和其他设置保存在程序旁边的 `profile-thai` 文件夹，只
 
 ## 联系方式
 
-有关本说明的问题，请提交到[本仓库的 Issues](https://github.com/Willardzsw/OverTranslateTH/issues)。
+有关本说明的问题，请提交到[本仓库的 Issues](https://github.com/Willardzsw/TextTack/issues)。

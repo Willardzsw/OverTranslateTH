@@ -11,7 +11,7 @@ namespace OverTranslate.Services;
 /// </remarks>
 public static class DocumentationLinks
 {
-    private const string Blob = "https://github.com/Willardzsw/OverTranslateTH/blob/feature/thai-ocr/";
+    private const string Blob = "https://github.com/Willardzsw/TextTack/blob/feature/thai-ocr/";
 
     /// <summary>
     /// Paths under the repository root, for the languages the guide is written in.

@@ -6,7 +6,7 @@
 
 <p align="center">带泰语 OCR 的 Windows 屏幕翻译工具</p>
 
-> 这是基于 [OverTranslate](https://github.com/Hon-Lu/OverTranslate) 修改的独立版本，并非官方发布，也与原作者无关。使用中的问题请提交到[本仓库的 Issues](https://github.com/Willardzsw/OverTranslateTH/issues)，不要反馈给原项目。
+> 这是基于 [OverTranslate](https://github.com/Hon-Lu/OverTranslate) 修改的独立版本，并非官方发布，也与原作者无关。使用中的问题请提交到[本仓库的 Issues](https://github.com/Willardzsw/TextTack/issues)，不要反馈给原项目。
 
 ## 主要功能
 
@@ -26,7 +26,7 @@
 
 ## 下载和运行
 
-到 [Releases](https://github.com/Willardzsw/OverTranslateTH/releases/latest) 下载，需要 Windows 10/11 x64，不用另装 .NET：
+到 [Releases](https://github.com/Willardzsw/TextTack/releases/latest) 下载，需要 Windows 10/11 x64，不用另装 .NET：
 
 - **安装版** `TextTack-<版本>-win-x64-Setup.exe`：装到当前用户目录，不需要管理员权限。
 - **便携版** `TextTack-<版本>-win-x64-Portable.zip`：解压后运行 `TextTack.exe`。请解压到可写的文件夹，不要放进 `Program Files`。
@@ -36,8 +36,8 @@
 从源码构建需要 .NET 8 SDK：
 
 ```powershell
-git clone https://github.com/Willardzsw/OverTranslateTH.git
-cd OverTranslateTH
+git clone https://github.com/Willardzsw/TextTack.git
+cd TextTack
 dotnet build src\OverTranslate\OverTranslate.csproj -c Release
 .\Start-Thai.cmd
 ```

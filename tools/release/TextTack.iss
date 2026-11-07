@@ -12,8 +12,8 @@ AppName=TextTack
 AppVersion={#AppVersion}
 AppVerName=TextTack {#AppVersion}
 AppPublisher=Willardzsw
-AppPublisherURL=https://github.com/Willardzsw/OverTranslateTH
-AppSupportURL=https://github.com/Willardzsw/OverTranslateTH/issues
+AppPublisherURL=https://github.com/Willardzsw/TextTack
+AppSupportURL=https://github.com/Willardzsw/TextTack/issues
 ; Per user: settings are written beside the executable, which Program Files would refuse.
 PrivilegesRequired=lowest
 DefaultDirName={localappdata}\Programs\TextTack
