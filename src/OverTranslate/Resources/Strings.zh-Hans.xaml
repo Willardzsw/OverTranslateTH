@@ -652,6 +652,10 @@
     <sys:String x:Key="S.Toolbar.DebugAssistOn">{0} 项开启</sys:String>
     <sys:String x:Key="S.Toolbar.CloseAfterCopy">截图后自动关闭</sys:String>
     <sys:String x:Key="S.Toolbar.CloseAfterCopyTip">点击“截图”复制到剪贴板后，直接结束截图翻译</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyText">复制文字后自动关闭</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTextTip">点击“复制文字”复制到剪贴板后，直接结束截图翻译</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTranslation">复制译文后自动关闭</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTranslationTip">点击“复制译文”复制到剪贴板后，直接结束截图翻译</sys:String>
     <sys:String x:Key="S.Toolbar.MoreGeneral">常规</sys:String>
     <sys:String x:Key="S.Toolbar.AutoTranslate">自动翻译</sys:String>
     <sys:String x:Key="S.Toolbar.SaveScreenshot">保存截图</sys:String>

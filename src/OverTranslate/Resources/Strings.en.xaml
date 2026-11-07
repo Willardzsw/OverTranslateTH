@@ -654,6 +654,10 @@ same settings, the same seed usually gives the same output.</sys:String>
     <sys:String x:Key="S.Toolbar.DebugAssistOn">{0} on</sys:String>
     <sys:String x:Key="S.Toolbar.CloseAfterCopy">Close after screenshot</sys:String>
     <sys:String x:Key="S.Toolbar.CloseAfterCopyTip">Ends the capture once "Screenshot" has copied it to the clipboard</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyText">Close after copying text</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTextTip">Ends the capture once "Copy text" has put the text on the clipboard</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTranslation">Close after copying translation</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTranslationTip">Ends the capture once "Copy translation" has put it on the clipboard</sys:String>
     <sys:String x:Key="S.Toolbar.MoreGeneral">General</sys:String>
     <sys:String x:Key="S.Toolbar.AutoTranslate">Auto-translate</sys:String>
     <sys:String x:Key="S.Toolbar.SaveScreenshot">Save screenshots</sys:String>

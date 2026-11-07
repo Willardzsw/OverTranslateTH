@@ -649,6 +649,10 @@
     <sys:String x:Key="S.Toolbar.DebugAssistOn">เปิด {0} รายการ</sys:String>
     <sys:String x:Key="S.Toolbar.CloseAfterCopy">ปิดหลังจับภาพ</sys:String>
     <sys:String x:Key="S.Toolbar.CloseAfterCopyTip">จบการจับภาพเมื่อ "ภาพหน้าจอ" คัดลอกไปยังคลิปบอร์ดแล้ว</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyText">ปิดหลังคัดลอกข้อความ</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTextTip">จบการจับภาพเมื่อ "คัดลอกข้อความ" คัดลอกไปยังคลิปบอร์ดแล้ว</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTranslation">ปิดหลังคัดลอกคำแปล</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTranslationTip">จบการจับภาพเมื่อ "คัดลอกคำแปล" คัดลอกไปยังคลิปบอร์ดแล้ว</sys:String>
     <sys:String x:Key="S.Toolbar.MoreGeneral">ทั่วไป</sys:String>
     <sys:String x:Key="S.Toolbar.AutoTranslate">แปลอัตโนมัติ</sys:String>
     <sys:String x:Key="S.Toolbar.SaveScreenshot">บันทึกภาพหน้าจอ</sys:String>

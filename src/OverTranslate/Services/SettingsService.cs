@@ -332,7 +332,8 @@ public class SettingsService
 
     public void UpdateCaptureOptions(
         bool? autoTranslate = null, bool? saveScreenshot = null, bool? closeAfterCopy = null,
-        bool? doubleClickToFinish = null, bool? rightClickToCancel = null)
+        bool? doubleClickToFinish = null, bool? rightClickToCancel = null,
+        bool? closeAfterCopyText = null, bool? closeAfterCopyTranslation = null)
     {
         var current = Current;
         var auto = autoTranslate ?? current.AutoTranslateAfterSelection;
@@ -340,14 +341,20 @@ public class SettingsService
         var close = closeAfterCopy ?? current.Capture.CloseAfterCopy;
         var doubleClick = doubleClickToFinish ?? current.Capture.DoubleClickToFinish;
         var rightClick = rightClickToCancel ?? current.Capture.RightClickToCancel;
+        var closeText = closeAfterCopyText ?? current.Capture.CloseAfterCopyText;
+        var closeTranslation = closeAfterCopyTranslation ?? current.Capture.CloseAfterCopyTranslation;
         if (auto == current.AutoTranslateAfterSelection && save == current.SaveScreenshotToDisk &&
             close == current.Capture.CloseAfterCopy && doubleClick == current.Capture.DoubleClickToFinish &&
-            rightClick == current.Capture.RightClickToCancel) return;
+            rightClick == current.Capture.RightClickToCancel &&
+            closeText == current.Capture.CloseAfterCopyText &&
+            closeTranslation == current.Capture.CloseAfterCopyTranslation) return;
         current.AutoTranslateAfterSelection = auto;
         current.SaveScreenshotToDisk = save;
         current.Capture.CloseAfterCopy = close;
         current.Capture.DoubleClickToFinish = doubleClick;
         current.Capture.RightClickToCancel = rightClick;
+        current.Capture.CloseAfterCopyText = closeText;
+        current.Capture.CloseAfterCopyTranslation = closeTranslation;
         Save();
         CaptureOptionsChanged?.Invoke(this, EventArgs.Empty);
     }

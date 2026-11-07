@@ -45,6 +45,17 @@ public class CaptureSettings
     public bool CloseAfterCopy { get; set; } = false;
 
     /// <summary>
+    /// 複製文字後自動關閉: ends the capture once 複製文字 has put the recognised text on the
+    /// clipboard. Its own switch, beside the picture's and the translation's, because each is a
+    /// different habit. Only after a copy that worked — a failed one keeps the capture up so its
+    /// notice can be read.
+    /// </summary>
+    public bool CloseAfterCopyText { get; set; } = false;
+
+    /// <summary>複製譯文後自動關閉: the same, for 複製譯文. See <see cref="CloseAfterCopyText"/>.</summary>
+    public bool CloseAfterCopyTranslation { get; set; } = false;
+
+    /// <summary>
     /// Whether a double-click inside a settled selection copies the picture and ends the capture,
     /// the way Snipaste finishes one. Only while the box is still editable: once translation has
     /// started the capture is click-through by design.

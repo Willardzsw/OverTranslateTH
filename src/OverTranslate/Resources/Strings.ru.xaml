@@ -645,6 +645,10 @@
     <sys:String x:Key="S.Toolbar.DebugAssistOn">Включено: {0}</sys:String>
     <sys:String x:Key="S.Toolbar.CloseAfterCopy">Закрывать после снимка</sys:String>
     <sys:String x:Key="S.Toolbar.CloseAfterCopyTip">Завершает снимок экрана, как только «Снимок» скопирует его в буфер обмена</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyText">Закрывать после копирования текста</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTextTip">Завершает захват, когда «Копировать текст» скопировал текст в буфер обмена</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTranslation">Закрывать после копирования перевода</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTranslationTip">Завершает захват, когда «Копировать перевод» скопировал его в буфер обмена</sys:String>
     <sys:String x:Key="S.Toolbar.MoreGeneral">Общие</sys:String>
     <sys:String x:Key="S.Toolbar.AutoTranslate">Автоперевод</sys:String>
     <sys:String x:Key="S.Toolbar.SaveScreenshot">Сохранять снимки</sys:String>

@@ -656,6 +656,10 @@
     <sys:String x:Key="S.Toolbar.DebugAssistOn">{0} 件オン</sys:String>
     <sys:String x:Key="S.Toolbar.CloseAfterCopy">スクリーンショット後に閉じる</sys:String>
     <sys:String x:Key="S.Toolbar.CloseAfterCopyTip">「スクリーンショット」でクリップボードにコピーしたら、そのまま終了します</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyText">テキストのコピー後に閉じる</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTextTip">「テキストをコピー」でクリップボードにコピーしたら、そのまま終了します</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTranslation">訳文のコピー後に閉じる</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTranslationTip">「訳文をコピー」でクリップボードにコピーしたら、そのまま終了します</sys:String>
     <sys:String x:Key="S.Toolbar.MoreGeneral">一般</sys:String>
     <sys:String x:Key="S.Toolbar.AutoTranslate">自動翻訳</sys:String>
     <sys:String x:Key="S.Toolbar.SaveScreenshot">スクリーンショットを保存</sys:String>

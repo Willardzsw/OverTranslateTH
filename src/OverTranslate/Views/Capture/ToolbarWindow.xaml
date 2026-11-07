@@ -571,6 +571,9 @@
                             <Border x:Name="MorePanel" MinWidth="280" Background="{DynamicResource ToolbarBg}"
                                     BorderBrush="{DynamicResource ToolbarBorder}" BorderThickness="1" CornerRadius="12"
                                     Padding="6" PreviewKeyDown="MorePopup_KeyDown">
+                                <!-- Scrolls only when there is not room for all of it beside the bar: PlaceMoreMenu caps its
+                                     height to the space on the roomier side, so the menu never jumps away from the bar. -->
+                                <ScrollViewer x:Name="MoreScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                                 <StackPanel>
                                     <StackPanel.Resources>
                                         <Style x:Key="MoreSectionHeader" TargetType="TextBlock">
@@ -596,6 +599,18 @@
                                               Content="{DynamicResource S.Toolbar.CloseAfterCopy}"
                                               ToolTip="{DynamicResource S.Toolbar.CloseAfterCopyTip}"
                                               Checked="CloseAfterCopySwitch_Changed" Unchecked="CloseAfterCopySwitch_Changed"/>
+                                    <!-- The same for the two text copies, each its own habit. See
+                                         CaptureSettings.CloseAfterCopyText / CloseAfterCopyTranslation. -->
+                                    <CheckBox x:Name="CloseAfterCopyTextSwitch" Style="{StaticResource ToolbarMenuToggle}"
+                                              Tag="&#xE8D2;"
+                                              Content="{DynamicResource S.Toolbar.CloseAfterCopyText}"
+                                              ToolTip="{DynamicResource S.Toolbar.CloseAfterCopyTextTip}"
+                                              Checked="CloseAfterCopyTextSwitch_Changed" Unchecked="CloseAfterCopyTextSwitch_Changed"/>
+                                    <CheckBox x:Name="CloseAfterCopyTranslationSwitch" Style="{StaticResource ToolbarMenuToggle}"
+                                              Tag="&#xF2B7;"
+                                              Content="{DynamicResource S.Toolbar.CloseAfterCopyTranslation}"
+                                              ToolTip="{DynamicResource S.Toolbar.CloseAfterCopyTranslationTip}"
+                                              Checked="CloseAfterCopyTextSwitch_Changed" Unchecked="CloseAfterCopyTextSwitch_Changed"/>
                                     <!-- Snipaste-style gestures on the box. See CaptureSettings.DoubleClickToFinish
                                          and RightClickToCancel. -->
                                     <CheckBox x:Name="DoubleClickFinishSwitch" Style="{StaticResource ToolbarMenuToggle}"
@@ -716,6 +731,7 @@
                                     </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
+                                </ScrollViewer>
                             </Border>
                         </Popup>
 

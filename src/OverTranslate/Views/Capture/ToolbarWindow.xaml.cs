@@ -745,6 +745,8 @@ public partial class ToolbarWindow : Window
         AutoTranslateSwitch.IsChecked = SettingsService.Instance.Current.AutoTranslateAfterSelection;
         SaveScreenshotSwitch.IsChecked = SettingsService.Instance.Current.SaveScreenshotToDisk;
         CloseAfterCopySwitch.IsChecked = SettingsService.Instance.Current.Capture.CloseAfterCopy;
+        CloseAfterCopyTextSwitch.IsChecked = SettingsService.Instance.Current.Capture.CloseAfterCopyText;
+        CloseAfterCopyTranslationSwitch.IsChecked = SettingsService.Instance.Current.Capture.CloseAfterCopyTranslation;
         DoubleClickFinishSwitch.IsChecked = SettingsService.Instance.Current.Capture.DoubleClickToFinish;
         RightClickCancelSwitch.IsChecked = SettingsService.Instance.Current.Capture.RightClickToCancel;
         _syncingCapture = false;
@@ -773,6 +775,14 @@ public partial class ToolbarWindow : Window
         if (!_syncingCapture) SettingsService.Instance.UpdateCaptureOptions(closeAfterCopy: CloseAfterCopySwitch.IsChecked == true);
     }
 
+    private void CloseAfterCopyTextSwitch_Changed(object sender, RoutedEventArgs e)
+    {
+        if (_syncingCapture) return;
+        SettingsService.Instance.UpdateCaptureOptions(
+            closeAfterCopyText: CloseAfterCopyTextSwitch.IsChecked == true,
+            closeAfterCopyTranslation: CloseAfterCopyTranslationSwitch.IsChecked == true);
+    }
+
     private void MoreBtn_Click(object sender, RoutedEventArgs e)
     {
         if (_ignoreMoreClick) { _ignoreMoreClick = false; return; }
@@ -782,7 +792,48 @@ public partial class ToolbarWindow : Window
         // which depends on the language.
         MorePanel.Measure(new System.Windows.Size(double.PositiveInfinity, double.PositiveInfinity));
         MorePopup.HorizontalOffset = Math.Max(0, buttonRight - MorePanel.DesiredSize.Width);
+        if (!MorePopup.IsOpen) PlaceMoreMenu();
         MorePopup.IsOpen = !MorePopup.IsOpen;
+    }
+
+    /// <summary>
+    /// Below the bar when the whole menu fits there, above it when it fits there instead, and
+    /// otherwise on the roomier side with its height capped so it scrolls.
+    /// </summary>
+    /// <remarks>
+    /// Left to WPF, a menu taller than the room below the bar was moved to wherever it fitted on
+    /// the monitor — which, once the menu grew by two switches, could be well away from the bar it
+    /// came out of. Deciding here keeps it against the bar in every case.
+    /// </remarks>
+    private void PlaceMoreMenu()
+    {
+        const double Gap = 6, ScreenMargin = 8;
+        MoreScroll.MaxHeight = double.PositiveInfinity;
+        MorePanel.Measure(new System.Windows.Size(double.PositiveInfinity, double.PositiveInfinity));
+        double wanted = MorePanel.DesiredSize.Height;
+
+        double below = double.PositiveInfinity, above = 0;
+        try
+        {
+            var top = BarSurface.PointToScreen(new System.Windows.Point(0, 0));
+            var bottom = BarSurface.PointToScreen(new System.Windows.Point(0, BarSurface.ActualHeight));
+            var work = System.Windows.Forms.Screen.FromPoint(new System.Drawing.Point((int)top.X, (int)top.Y)).WorkingArea;
+            double scale = ScreenGeometry.ScaleAt((int)top.X, (int)top.Y);
+            below = (work.Bottom - bottom.Y) / scale - Gap - ScreenMargin;
+            above = (top.Y - work.Top) / scale - Gap - ScreenMargin;
+        }
+        catch (InvalidOperationException) { /* not shown yet: let WPF place it below */ }
+
+        bool useAbove = wanted > below && (wanted <= above || above > below);
+        MorePopup.Placement = useAbove
+            ? System.Windows.Controls.Primitives.PlacementMode.Top
+            : System.Windows.Controls.Primitives.PlacementMode.Bottom;
+        MorePopup.VerticalOffset = useAbove ? -Gap : Gap;
+
+        double room = useAbove ? above : below;
+        // Padding and border of MorePanel sit outside the scrolling part.
+        double chrome = MorePanel.Padding.Top + MorePanel.Padding.Bottom + MorePanel.BorderThickness.Top + MorePanel.BorderThickness.Bottom;
+        if (wanted > room && room > 120) MoreScroll.MaxHeight = room - chrome;
     }
 
     private void DebugScope_Changed(object sender, RoutedEventArgs e)
@@ -801,6 +852,7 @@ public partial class ToolbarWindow : Window
         MorePanel.UpdateLayout();
         var buttonRight = MoreBtn.TranslatePoint(new System.Windows.Point(MoreBtn.ActualWidth, 0), BarSurface).X;
         MorePopup.HorizontalOffset = Math.Max(0, buttonRight - MorePanel.ActualWidth);
+        PlaceMoreMenu();
     }
 
     private void MorePopup_Closed(object? sender, EventArgs e)

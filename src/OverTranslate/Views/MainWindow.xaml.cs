@@ -1486,6 +1486,17 @@ public partial class MainWindow : Window
         }
 
         System.Windows.Clipboard.SetText(payload);
+
+        // 複製文字 / 複製譯文後自動關閉: the copy is what was asked for, and the notice would only
+        // flash on a toolbar about to go — as 截圖後自動關閉 does. Reached only once the text is on
+        // the clipboard; a failure above or a throw from SetText keeps the capture up.
+        var capture = SettingsService.Instance.Current.Capture;
+        if (kind == CopyTextKind.Translation ? capture.CloseAfterCopyTranslation : capture.CloseAfterCopyText)
+        {
+            CloseAll(kind == CopyTextKind.Translation ? "copy translation and close" : "copy text and close");
+            return;
+        }
+
         ShowNotice(
             LocalizationService.Get("S.Main.CopiedTitle"),
             LocalizationService.Get(
