@@ -93,6 +93,7 @@ public class ThaiOcrTests
     {
         Assert.Equal(System.IO.Path.Combine(AppContext.BaseDirectory, "profile-thai"), AppDataPaths.Root);
         Assert.Equal(System.IO.Path.Combine(AppDataPaths.Root, "assets"), AppDataPaths.DefaultAssetsRoot);
-        Assert.Equal("OverTranslate-Thai-Dev", StartupService.AppName);
+        Assert.Equal("TTTools", StartupService.AppName);
+        Assert.Equal("OverTranslate-Thai-Dev", StartupService.LegacyAppName);
     }
 }

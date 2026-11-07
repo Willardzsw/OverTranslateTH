@@ -35,6 +35,7 @@
     <sys:String x:Key="S.Tray.OpenWindow">Open translation window</sys:String>
     <sys:String x:Key="S.Tray.RealtimeWindow">Realtime window</sys:String>
     <sys:String x:Key="S.Tray.Settings">Settings</sys:String>
+    <sys:String x:Key="S.Tray.Toggles">Feature switches</sys:String>
     <sys:String x:Key="S.Tray.Exit">Exit</sys:String>
 
     <!-- ── About ── -->
@@ -224,7 +225,7 @@ Actually used this time: {2}</sys:String>
     <sys:String x:Key="S.Secret.Hide">Hide</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslateTH is still running</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">TT Tools is still running</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">Minimised to the system tray. Press {0} to start a screen capture translation.</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">your shortcut</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">No API key</sys:String>
@@ -738,6 +739,70 @@ same settings, the same seed usually gives the same output.</sys:String>
     <sys:String x:Key="S.Settings.PinMiddleClick">Middle click</sys:String>
     <sys:String x:Key="S.Settings.PinMiddleDouble">Middle double-click</sys:String>
     <sys:String x:Key="S.Settings.PinConflictNote">* Where two clash, the higher row wins. Esc always closes a pin.</sys:String>
+    <sys:String x:Key="S.Settings.MouseEnhance">Mouse enhancements</sys:String>
+    <sys:String x:Key="S.Settings.MouseEnhanceHint">Fade, scroll sideways and resize windows with held keys and the mouse.</sys:String>
+    <sys:String x:Key="S.Settings.MouseOps">Mouse settings</sys:String>
+    <sys:String x:Key="S.Settings.MouseWheelGesture">Wheel</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenuFold">Menu settings</sys:String>
+    <sys:String x:Key="S.Note.Title">Sticky note</sys:String>
+    <sys:String x:Key="S.Note.Recognising">Reading the picture…</sys:String>
+    <sys:String x:Key="S.Note.NothingRead">No text found in the picture; opened a blank note.</sys:String>
+    <sys:String x:Key="S.Note.ReadFailed">Reading the picture failed: {0}</sys:String>
+    <sys:String x:Key="S.Note.Edit">Edit</sys:String>
+    <sys:String x:Key="S.Note.Topmost">Keep on top</sys:String>
+    <sys:String x:Key="S.Note.Unpin">Don't keep on top</sys:String>
+    <sys:String x:Key="S.Note.Delete">Delete</sys:String>
+    <sys:String x:Key="S.Note.Save">Save (Ctrl+Enter)</sys:String>
+    <sys:String x:Key="S.Note.Cancel">Cancel (Esc)</sys:String>
+    <sys:String x:Key="S.Note.CopyText">Copy text</sys:String>
+    <sys:String x:Key="S.Note.PassThrough">Click-through</sys:String>
+    <sys:String x:Key="S.Note.Resize">Resize</sys:String>
+    <sys:String x:Key="S.Note.AutoSize">Automatic size</sys:String>
+    <sys:String x:Key="S.Note.Empty">(empty)</sys:String>
+    <sys:String x:Key="S.Note.Opacity">Opacity</sys:String>
+    <sys:String x:Key="S.Settings.NoteOpacity">Default opacity</sys:String>
+    <sys:String x:Key="S.Note.ReadTimeout">Reading took longer than 30 seconds and was stopped.</sys:String>
+    <sys:String x:Key="S.Notes.Title">Sticky notes</sys:String>
+    <sys:String x:Key="S.Notes.Subtitle">Every note on the desktop, newest save first.</sys:String>
+    <sys:String x:Key="S.Notes.New">New note</sys:String>
+    <sys:String x:Key="S.Notes.Empty">No notes yet. Copy some text or a picture and press the sticky-note shortcut (F2 by default), or click New note.</sys:String>
+    <sys:String x:Key="S.Notes.StateTopmost">on top</sys:String>
+    <sys:String x:Key="S.Notes.StatePassThrough">click-through</sys:String>
+    <sys:String x:Key="S.Notes.Locate">Locate (move to the middle of the screen)</sys:String>
+    <sys:String x:Key="S.Notes.PassThroughOn">Turn click-through on</sys:String>
+    <sys:String x:Key="S.Notes.PassThroughOff">Turn click-through off</sys:String>
+    <sys:String x:Key="S.Shell.StickyNotes">Sticky notes</sys:String>
+    <sys:String x:Key="S.Tray.NotePassThroughOff">Turn off note click-through</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteHotkey">Sticky note</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteHotkeyHint">Copy text or a picture, then press it to put a note under the pointer; pictures are read into text first</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteNote">Double-click a note to edit, ✓ to save; right-click to keep on top, change opacity, click through or resize. With click-through on, clicks pass through the note: point at it and press the sticky-note shortcut, or use the tray menu or the Sticky notes page, to turn it off.</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteOps">Note settings</sys:String>
+    <sys:String x:Key="S.Settings.NoteOcrLanguage">Picture language</sys:String>
+    <sys:String x:Key="S.Settings.NoteWidth">Default width</sys:String>
+    <sys:String x:Key="S.Settings.NoteFontSize">Font size</sys:String>
+    <sys:String x:Key="S.Settings.NotePaperColor">Paper colour</sys:String>
+    <sys:String x:Key="S.Settings.NoteTapeColor">Tape colour</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveTitle">Archive</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchive">Write saved notes to a log file</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveChoose">Choose folder</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveOpen">Open folder</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveHint">Each save adds one line: number, date and time, text (line breaks as ↵). Never deleted.</sys:String>
+    <sys:String x:Key="S.Settings.NoteCustomColor">Custom…</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeStep">Step</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeMinimum">Minimum</sys:String>
+    <sys:String x:Key="S.Settings.MouseFade">Window transparency</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeHint">Hold the keys and turn the wheel to fade the window under the pointer: up for more solid, down for more transparent.</sys:String>
+    <sys:String x:Key="S.Settings.MouseScroll">Horizontal scroll</sys:String>
+    <sys:String x:Key="S.Settings.MouseScrollHint">Hold the keys and turn the wheel to scroll sideways in whatever is under the pointer.</sys:String>
+    <sys:String x:Key="S.Settings.MouseScrollReverse">Reverse</sys:String>
+    <sys:String x:Key="S.Settings.MouseResize">Resize windows</sys:String>
+    <sys:String x:Key="S.Settings.MouseResizeHint">Hold the keys and drag inside a window to move its nearest edge or corner; from the middle, the bottom-right corner.</sys:String>
+    <sys:String x:Key="S.Settings.MouseRightDrag">Right-drag</sys:String>
+    <sys:String x:Key="S.Settings.MouseMiddleDrag">Middle-drag</sys:String>
+    <sys:String x:Key="S.Settings.MouseLeftDrag">Left-drag</sys:String>
+    <sys:String x:Key="S.Settings.MouseNote">If both wheel tools use the same keys, transparency wins. Programs run as administrator are not affected. Faded windows are restored when this app exits.</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenu">Tray menu</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenuHint">Ticked switches appear in the tray icon's right-click menu, where one click turns them on or off.</sys:String>
 
     <sys:String x:Key="S.Settings.OcrFold">OCR settings</sys:String>
     <sys:String x:Key="S.Settings.OcrFoldTitle">Text recognition (OCR)</sys:String>

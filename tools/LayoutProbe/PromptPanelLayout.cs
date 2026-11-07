@@ -32,7 +32,7 @@ internal static class PromptPanelLayout
         {
             Application.Current.Resources.MergedDictionaries[0] = new ResourceDictionary
             {
-                Source = new Uri($"pack://application:,,,/OverTranslate;component/Themes/{theme}Theme.xaml")
+                Source = new Uri($"pack://application:,,,/TTTools;component/Themes/{theme}Theme.xaml")
             };
 
             SaveLibrary(theme, outputDirectory);

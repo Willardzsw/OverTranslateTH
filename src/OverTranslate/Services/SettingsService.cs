@@ -154,6 +154,9 @@ public class SettingsService
         }
     }
 
+    /// <summary>What a position-numbered GPU choice becomes. Replaceable by tests.</summary>
+    internal static Func<string> LegacyGpuReplacement = Ocr.OcrExecution.PreferredGpu;
+
     private static AppSettings ParseDocument(string json)
     {
         var settings = new AppSettings();
@@ -170,6 +173,10 @@ public class SettingsService
         settings.OcrModels.DetectorSize = Ocr.OcrModelCatalog.DetectorSize(settings.OcrModels);
         settings.OcrModels.RecognizerSize = Ocr.OcrModelCatalog.RecognizerSize(settings.OcrModels);
         settings.OcrModels.Device = Ocr.OcrModelCatalog.Device(settings.OcrModels);
+        // The old position-numbered GPU choice, which pointed at whichever card Windows listed
+        // there that boot: replaced once by the strongest GPU's name.
+        if (Ocr.OcrModelCatalog.IsLegacyIndex(settings.OcrModels.Device))
+            settings.OcrModels.Device = LegacyGpuReplacement();
 
         // 替換翻譯's languages (QuickTranslate, its name before #277). The grouped section wins.
         // Older files used flat QuickTranslate* keys, and before that shared the text-translation
@@ -309,6 +316,19 @@ public class SettingsService
     /// what the other just wrote.
     /// </summary>
     public event EventHandler? CaptureOptionsChanged;
+
+    /// <summary>
+    /// A feature switch was flipped from the tray menu, so an open settings page shows it.
+    /// </summary>
+    public event EventHandler? FeatureTogglesChanged;
+
+    /// <summary>Sets one feature switch, saves, and tells whoever shows it.</summary>
+    public void SetFeatureToggle(OverTranslate.Models.FeatureToggle toggle, bool on)
+    {
+        OverTranslate.Models.FeatureToggles.Set(Current, toggle, on);
+        Save();
+        FeatureTogglesChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     public void UpdateCaptureOptions(
         bool? autoTranslate = null, bool? saveScreenshot = null, bool? closeAfterCopy = null,

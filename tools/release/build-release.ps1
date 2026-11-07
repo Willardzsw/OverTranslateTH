@@ -13,7 +13,7 @@ if (-not $version) { throw "No Version in $project" }
 if (-not (Test-Path $Iscc)) { throw "Inno Setup compiler not found: $Iscc" }
 
 $work = Join-Path $root "artifacts\release"
-$stage = Join-Path $work "stage\OverTranslateTH"
+$stage = Join-Path $work "stage\TTTools"
 $out = Join-Path $work "out"
 if (Test-Path $work) { Remove-Item $work -Recurse -Force }
 New-Item -ItemType Directory -Force $out | Out-Null
@@ -27,15 +27,15 @@ $bad = Get-ChildItem $stage -Recurse -Force | Where-Object {
     $_.Name -in @("profile-thai", "appsettings.json") -or $_.Name -like "appsettings.before-*" -or $_.Extension -eq ".pdb"
 }
 if ($bad) { throw "Refusing to package: $($bad.FullName -join ', ')" }
-foreach ($required in "OverTranslate.exe", "hostfxr.dll", "LICENSE.txt", "THIRD-PARTY-NOTICES.txt",
+foreach ($required in "TTTools.exe", "hostfxr.dll", "LICENSE.txt", "THIRD-PARTY-NOTICES.txt",
     "icons\app.ico", "ocrmodels\onnx\thai\rec.onnx", "ocrmodels\onnx\thai\dict.txt", "ocrmodels\onnx\thai\provenance.json") {
     if (-not (Test-Path (Join-Path $stage $required))) { throw "Missing from package: $required" }
 }
 
-$zip = Join-Path $out "OverTranslateTH-$version-win-x64-Portable.zip"
+$zip = Join-Path $out "TTTools-$version-win-x64-Portable.zip"
 Compress-Archive -Path $stage -DestinationPath $zip -CompressionLevel Optimal
 
-& $Iscc "/DAppVersion=$version" "/DSourceDir=$stage" "/O$out" "/Q" (Join-Path $PSScriptRoot "OverTranslateTH.iss")
+& $Iscc "/DAppVersion=$version" "/DSourceDir=$stage" "/O$out" "/Q" (Join-Path $PSScriptRoot "TTTools.iss")
 if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
 
 Get-ChildItem $out -File | Where-Object Name -ne "SHA256SUMS.txt" | ForEach-Object {

@@ -11,6 +11,7 @@ public enum HotkeyAction
     QuickLookup,
     QuickTranslate,
     Pin,
+    StickyNote,
 }
 
 /// <summary>
@@ -140,6 +141,11 @@ public static class HotkeyBindings
             settings.PinClipboardHotkeyModifiers,
             settings.PinClipboardHotkeyVirtualKey,
             settings.PinClipboardHotkeyGamepadButton),
+        HotkeyAction.StickyNote => BuildTrigger(
+            settings.StickyNoteHotkeyInputKind,
+            settings.StickyNoteHotkeyModifiers,
+            settings.StickyNoteHotkeyVirtualKey,
+            settings.StickyNoteHotkeyGamepadButton),
         _ => throw new ArgumentOutOfRangeException(nameof(action), action, null),
     };
 
@@ -203,7 +209,7 @@ public static class HotkeyBindings
         // Declaration order IS the priority order; nothing else encodes it.
         var declared = new (HotkeyAction Action, ShortcutTrigger Trigger, bool Enabled)[]
         {
-            (HotkeyAction.Capture, TriggerFor(settings, HotkeyAction.Capture), true),
+            (HotkeyAction.Capture, TriggerFor(settings, HotkeyAction.Capture), settings.CaptureHotkeyEnabled),
             (HotkeyAction.TranslationWindow,
                 TriggerFor(settings, HotkeyAction.TranslationWindow),
                 settings.TranslationWindowHotkeyEnabled),
@@ -219,6 +225,9 @@ public static class HotkeyBindings
             (HotkeyAction.Pin,
                 TriggerFor(settings, HotkeyAction.Pin),
                 settings.PinClipboardHotkeyEnabled),
+            (HotkeyAction.StickyNote,
+                TriggerFor(settings, HotkeyAction.StickyNote),
+                settings.StickyNoteHotkeyEnabled),
         };
 
         var claimed = new Dictionary<ShortcutTrigger, HotkeyAction>();

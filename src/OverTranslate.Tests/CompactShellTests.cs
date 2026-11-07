@@ -11,11 +11,11 @@ public class CompactShellTests
     private static readonly XNamespace X = "http://schemas.microsoft.com/winfx/2006/xaml";
 
     [Fact]
-    public void MainNavigationHasTextRealtimeAndSettings()
+    public void MainNavigationHasTextRealtimeStickyNotesAndSettings()
     {
         var doc = Read("Views/Shell/ShellWindow.xaml");
         var panel = doc.Descendants().Single(e => (string?)e.Attribute(X + "Name") == "NavPanel");
-        Assert.Equal(new[] { "TranslationNav", "RealtimeNav", "SettingsNav" }, panel.Elements().Select(e => (string?)e.Attribute(X + "Name")));
+        Assert.Equal(new[] { "TranslationNav", "RealtimeNav", "StickyNotesNav", "SettingsNav" }, panel.Elements().Select(e => (string?)e.Attribute(X + "Name")));
         Assert.DoesNotContain(doc.Descendants(), e => (string?)e.Attribute(X + "Name") is "CaptureBtn" or "QuickLookupBtn");
     }
 

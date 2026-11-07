@@ -95,7 +95,7 @@ public class LocalizationServiceTests
     public void EveryLanguageIsNamedInItself()
     {
         Assert.Equal(
-            new[] { "繁體中文", "简体中文", "English", "日本語", "한국어", "Русский" },
+            new[] { "繁體中文", "简体中文", "English", "日本語", "한국어", "Русский", "ไทย" },
             LocalizationService.Options.Select(o => o.Display));
     }
 }

@@ -21,6 +21,7 @@ public class HotkeyBindingsTests
                 HotkeyAction.QuickLookup,
                 HotkeyAction.QuickTranslate,
                 HotkeyAction.Pin,
+                HotkeyAction.StickyNote,
             ],
             active.Select(binding => binding.Action));
     }
@@ -127,12 +128,13 @@ public class HotkeyBindingsTests
     }
 
     [Fact]
-    public void CaptureCannotBeSwitchedOff()
+    public void CaptureIsOnByDefault_AndCanBeSwitchedOff()
     {
-        // There is no setting for it — see AppSettings.TranslationWindowHotkeyEnabled for why — so
-        // this pins that the resolver never reports it as anything but enabled.
         Assert.True(HotkeyBindings.Resolve(new AppSettings())
             .Single(binding => binding.Action == HotkeyAction.Capture).Enabled);
+
+        var off = new AppSettings { CaptureHotkeyEnabled = false };
+        Assert.DoesNotContain(HotkeyBindings.Active(off), binding => binding.Action == HotkeyAction.Capture);
     }
 
     [Fact]

@@ -37,8 +37,8 @@ internal static class CompactOcrLayout
                 settings.Theme = theme;
                 settings.UiLanguage = lang;
                 var resources = Application.Current.Resources.MergedDictionaries;
-                resources[0] = new ResourceDictionary { Source = new Uri($"pack://application:,,,/OverTranslate;component/Themes/{theme}Theme.xaml") };
-                resources[2] = new ResourceDictionary { Source = new Uri($"pack://application:,,,/OverTranslate;component/Resources/Strings.{lang}.xaml") };
+                resources[0] = new ResourceDictionary { Source = new Uri($"pack://application:,,,/TTTools;component/Themes/{theme}Theme.xaml") };
+                resources[2] = new ResourceDictionary { Source = new Uri($"pack://application:,,,/TTTools;component/Resources/Strings.{lang}.xaml") };
                 foreach (var choice in new[] { OcrModelCatalog.ByLanguage, OcrModelCatalog.Thai })
                 foreach (var scale in new[] { "default", "medium" })
                 {

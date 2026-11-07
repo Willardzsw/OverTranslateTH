@@ -58,6 +58,12 @@ public class AppSettings
     public bool TranslationWindowHotkeyEnabled { get; set; } = true;
 
     /// <summary>
+    /// Whether the capture shortcut is registered. Only the shortcut: the capture button on the
+    /// translation page and the tray still start a capture with it off. User-requested switch.
+    /// </summary>
+    public bool CaptureHotkeyEnabled { get; set; } = true;
+
+    /// <summary>
     /// Pauses and resumes a running realtime session. Ctrl+Alt+S by default.
     /// </summary>
     /// <remarks>
@@ -172,6 +178,23 @@ public class AppSettings
     /// <inheritdoc cref="TranslationWindowHotkeyEnabled"/>
     public bool PinClipboardHotkeyEnabled { get; set; } = true;
 
+    /// <summary>
+    /// 便利貼's shortcut: makes a note from the clipboard — its text, or the text read from a copied
+    /// picture — under the pointer. F2 by default. RegisterHotKey takes F2 from every program (rename in Explorer, edit cell in Excel); the user chose it knowing that.
+    /// </summary>
+    public uint StickyNoteHotkeyModifiers { get; set; } = 0;
+
+    /// <inheritdoc cref="StickyNoteHotkeyModifiers"/>
+    public uint StickyNoteHotkeyVirtualKey { get; set; } = 0x71;
+
+    /// <inheritdoc cref="StickyNoteHotkeyModifiers"/>
+    public string StickyNoteHotkeyDisplay { get; set; } = "F2";
+    public ShortcutInputKind StickyNoteHotkeyInputKind { get; set; } = ShortcutInputKind.Keyboard;
+    public GamepadShortcutButton StickyNoteHotkeyGamepadButton { get; set; } = GamepadShortcutButton.None;
+
+    /// <inheritdoc cref="TranslationWindowHotkeyEnabled"/>
+    public bool StickyNoteHotkeyEnabled { get; set; } = true;
+
     public string SourceLanguage { get; set; } = LanguageData.DefaultOcrSourceLanguage;
     public string TargetLanguage { get; set; } = "ZH-HANT";
     public TranslationProvider Provider { get; set; } = TranslationProvider.Microsoft;
@@ -275,6 +298,15 @@ public class AppSettings
 
     /// <summary>貼圖操作: how a pinned picture is zoomed, faded, closed and reset.</summary>
     public PinSettings Pin { get; set; } = new();
+
+    /// <summary>鼠標增強: fade, scroll sideways and resize windows with modifier + mouse.</summary>
+    public MouseEnhanceSettings MouseEnhance { get; set; } = new();
+
+    /// <summary>便利貼: how new notes look, the picture-reading language, and the archive log.</summary>
+    public StickyNoteSettings StickyNote { get; set; } = new();
+
+    /// <summary>Which feature switches the tray icon's right-click menu shows.</summary>
+    public TrayMenuSettings TrayMenu { get; set; } = new();
 
     /// <summary>What 取詞翻譯 keeps between lookups, grouped.</summary>
     public QuickLookupSettings QuickLookup { get; set; } = new();

@@ -29,6 +29,7 @@ public partial class MainWindow : Window
     private GlobalHotkey? _quickLookupHotkey;
     private GlobalHotkey? _quickTranslateHotkey;
     private GlobalHotkey? _pinHotkey;
+    private GlobalHotkey? _stickyNoteHotkey;
     private GlobalAuxiliaryHotkeys? _auxiliaryHotkeys;
     private OverlayWindow? _overlayWindow;
     private ScreenCaptureWindow? _captureWindow;
@@ -101,6 +102,11 @@ public partial class MainWindow : Window
         InitNotifyIcon();
         Views.Pin.PinWindow.EditRequested += pin => Dispatcher.Invoke(() => _ = EditPinAsync(pin));
         RegisterHotkey();
+        MouseEnhanceService.Instance.Apply(SettingsService.Instance.Current.MouseEnhance);
+        StartupService.MigrateLegacyEntry();
+        Views.StickyNote.StickyNoteManager.RestoreAll();
+        Views.StickyNote.StickyNoteManager.WarmUp();
+        TopmostKeeper.Start(() => _captureWindow is not null);
         ShowStartupBalloon();
 
         // The one thing about a realtime session that has to reach the user outside this
@@ -113,7 +119,8 @@ public partial class MainWindow : Window
         // subtitles — see OnQuickLookupHotkeyPressed, which is the half that keeps a new one out.
         RealtimeSessionController.Instance.StateChanged += OnRealtimeStateChanged;
 
-        OpenShell();
+        // Starts in the tray, as the startup notice says. The window opens from the tray, a
+        // shortcut, or launching the program again while it runs.
     }
 
     private void OnRealtimeStateChanged(object? sender, EventArgs e) =>
@@ -134,7 +141,7 @@ public partial class MainWindow : Window
         _notifyIcon = new NotifyIcon
         {
             Icon = AppIconService.CreateTrayIcon(),
-            Text = "OverTranslateTH",
+            Text = "TT Tools",
             Visible = true
         };
 
@@ -192,6 +199,9 @@ public partial class MainWindow : Window
         _pinHotkey = new GlobalHotkey(GlobalHotkey.PinId);
         _pinHotkey.HotkeyPressed += OnPinHotkeyPressed;
 
+        _stickyNoteHotkey = new GlobalHotkey(GlobalHotkey.StickyNoteId);
+        _stickyNoteHotkey.HotkeyPressed += OnStickyNoteHotkeyPressed;
+
         var hooks = new Dictionary<HotkeyAction, GlobalHotkey>
         {
             [HotkeyAction.Capture] = _hotkey,
@@ -200,6 +210,7 @@ public partial class MainWindow : Window
             [HotkeyAction.QuickLookup] = _quickLookupHotkey,
             [HotkeyAction.QuickTranslate] = _quickTranslateHotkey,
             [HotkeyAction.Pin] = _pinHotkey,
+            [HotkeyAction.StickyNote] = _stickyNoteHotkey,
         };
 
         var resolved = HotkeyBindings.Resolve(settings);
@@ -270,6 +281,9 @@ public partial class MainWindow : Window
             case HotkeyAction.Pin:
                 OnPinHotkeyPressed(this, EventArgs.Empty);
                 break;
+            case HotkeyAction.StickyNote:
+                OnStickyNoteHotkeyPressed(this, EventArgs.Empty);
+                break;
         }
     }
 
@@ -321,6 +335,7 @@ public partial class MainWindow : Window
         _quickLookupHotkey?.Unregister();
         _quickTranslateHotkey?.Unregister();
         _pinHotkey?.Unregister();
+        _stickyNoteHotkey?.Unregister();
         _auxiliaryHotkeys?.Dispose();
         _auxiliaryHotkeys = null;
         RegisterHotkey();
@@ -1518,6 +1533,17 @@ public partial class MainWindow : Window
     /// the way Snipaste's F3 does. Pinning the selection during a capture is a capture gesture of its
     /// own — see CaptureSettings.PinSelectionTrigger.
     /// </summary>
+    /// <summary>
+    /// 便利貼: over a note that lets clicks through, gives it its clicks back; otherwise makes a note
+    /// from the clipboard under the pointer.
+    /// </summary>
+    private void OnStickyNoteHotkeyPressed(object? sender, EventArgs e) => Dispatcher.Invoke(() =>
+    {
+        if (Views.StickyNote.StickyNoteManager.TryDisablePassThroughUnderPointer()) return;
+        _ = Views.StickyNote.StickyNoteManager.CreateFromClipboardAsync(
+            message => ShowTrayNotification(LocalizationService.Get("S.Note.Title"), message));
+    });
+
     private void OnPinHotkeyPressed(object? sender, EventArgs e) => Dispatcher.Invoke(() =>
     {
         // Over a pin that lets clicks through, the shortcut gives it its clicks back — the one way
@@ -2016,6 +2042,17 @@ public partial class MainWindow : Window
 
     private static void OpenSettings() => ShellWindow.ShowOrActivate(ShellPage.Settings);
 
+    /// <summary>A switch flipped from the tray menu: save it and put it into effect at once.</summary>
+    private void OnTrayFeatureToggle(OverTranslate.Models.FeatureToggle toggle, bool on)
+    {
+        SettingsService.Instance.SetFeatureToggle(toggle, on);
+        if (OverTranslate.Models.FeatureToggles.IsMouse(toggle))
+            MouseEnhanceService.Instance.Apply(SettingsService.Instance.Current.MouseEnhance);
+        else
+            ReRegisterHotkey();
+        ShellWindow.Current?.RefreshHotkeyHints();
+    }
+
     private void ShowTrayMenu()
     {
         if (_trayMenu != null) return;
@@ -2025,7 +2062,13 @@ public partial class MainWindow : Window
         _trayMenu.OpenSettingsRequested    += (_, _) => OpenSettings();
         _trayMenu.SetPinPassThroughVisible(Views.Pin.PinWindow.AnyPassThrough);
         _trayMenu.PinPassThroughOffRequested += (_, _) => Views.Pin.PinWindow.DisableAllPassThrough();
+        _trayMenu.SetNotePassThroughVisible(Views.StickyNote.StickyNoteManager.AnyPassThrough);
+        _trayMenu.NotePassThroughOffRequested += (_, _) => Views.StickyNote.StickyNoteManager.DisableAllPassThrough();
         _trayMenu.ExitRequested            += (_, _) => ExitApp();
+        var current = SettingsService.Instance.Current;
+        _trayMenu.SetFeatureToggles(OverTranslate.Models.FeatureToggles.Shown(current)
+            .Select(t => (t, OverTranslate.Models.FeatureToggles.Get(current, t))));
+        _trayMenu.FeatureToggleRequested   += OnTrayFeatureToggle;
         _trayMenu.Closed                   += (_, _) => _trayMenu = null;
         _trayMenu.Show();
     }
@@ -2070,8 +2113,11 @@ public partial class MainWindow : Window
         _quickLookupHotkey?.Dispose();
         _quickTranslateHotkey?.Dispose();
         _pinHotkey?.Dispose();
+        _stickyNoteHotkey?.Dispose();
+        Views.StickyNote.StickyNoteManager.Shutdown();
         _auxiliaryHotkeys?.Dispose();
         _auxiliaryHotkeys = null;
+        MouseEnhanceService.Instance.Dispose();
         if (_notifyIcon != null)
         {
             _notifyIcon.Visible = false;

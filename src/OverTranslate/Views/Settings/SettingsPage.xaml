@@ -625,9 +625,8 @@
                             </Popup>
                         </Grid>
 
-                        <!-- Capture has no on/off tick at all: this is the feature the application
-                             is for. Its last column is empty and still here, so the three rows'
-                             shortcut boxes end at the same place — see SharedSizeGroup. -->
+                        <!-- Capture: its switch turns off only the shortcut; the capture button
+                             on the translation page still works. -->
                         <Border Style="{StaticResource HotkeyRow}">
                             <StackPanel>
                                 <Grid>
@@ -658,8 +657,11 @@
                                     </Border>
 
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
-                                        <TextBlock Text="{DynamicResource S.Settings.CaptureHotkey}"
-                                                   Style="{StaticResource OptionTitle}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{DynamicResource S.Settings.CaptureHotkey}"
+                                                       Style="{StaticResource OptionTitle}"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
                                         <TextBlock controls:HighlightedText.Source="{DynamicResource S.Settings.CaptureHotkeyHint}"
                                                    Style="{StaticResource OptionDescription}"
                                                    TextTrimming="CharacterEllipsis"
@@ -673,6 +675,16 @@
                                              PreviewKeyUp="HotkeyBox_PreviewKeyUp"
                                              GotFocus="HotkeyBox_GotFocus"
                                              LostFocus="HotkeyBox_LostFocus"/>
+
+                                    <StackPanel Grid.Column="3"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Margin="12,0,0,0">
+                                        <CheckBox x:Name="CaptureHotkeyEnabledCheckBox"
+                                                  Style="{StaticResource ToggleSwitch}"
+                                                  Checked="HotkeyEnabled_Toggled"
+                                                  Unchecked="HotkeyEnabled_Toggled"/>
+                                    </StackPanel>
                                 </Grid>
 
                                 <ContentControl x:Name="CaptureElevatedNote" Style="{StaticResource HotkeyElevatedNote}"/>
@@ -702,8 +714,12 @@
                                     </Border>
 
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
-                                        <TextBlock Text="{DynamicResource S.Settings.QuickLookupHotkey}"
-                                                   Style="{StaticResource OptionTitle}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{DynamicResource S.Settings.QuickLookupHotkey}"
+                                                       Style="{StaticResource OptionTitle}"
+                                                       VerticalAlignment="Center"/>
+                                            <controls:InfoTip TextKey="S.Settings.QuickLookupHotkeyNote"/>
+                                        </StackPanel>
                                         <TextBlock controls:HighlightedText.Source="{DynamicResource S.Settings.QuickLookupHotkeyHint}"
                                                    Style="{StaticResource OptionDescription}"
                                                    TextTrimming="CharacterEllipsis"
@@ -727,31 +743,6 @@
                                                   Checked="HotkeyEnabled_Toggled"
                                                   Unchecked="HotkeyEnabled_Toggled"/>
                                     </StackPanel>
-                                </Grid>
-
-                                <!-- The one thing about this shortcut that the name does not say,
-                                     inside the row it is about. -->
-                                <Grid Margin="0,8,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Path Grid.Column="0"
-                                          Data="{StaticResource InfoMarkGeometry}"
-                                          Stroke="{DynamicResource AppTextSecondary}"
-                                          StrokeThickness="1.1"
-                                          StrokeStartLineCap="Round"
-                                          StrokeEndLineCap="Round"
-                                          Stretch="None"
-                                          Width="12" Height="12"
-                                          VerticalAlignment="Top"
-                                          Margin="0,1.7,8,0"/>
-                                    <TextBlock Grid.Column="1"
-                                               Text="{DynamicResource S.Settings.QuickLookupHotkeyNote}"
-                                               Style="{StaticResource FieldHint}"
-                                               Margin="0"
-                                               VerticalAlignment="Top"/>
                                 </Grid>
 
                                 <ContentControl x:Name="QuickLookupElevatedNote" Style="{StaticResource HotkeyElevatedNote}"/>
@@ -812,8 +803,12 @@
                                     </Border>
 
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
-                                        <TextBlock Text="{DynamicResource S.Settings.QuickTranslateHotkey}"
-                                                   Style="{StaticResource OptionTitle}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{DynamicResource S.Settings.QuickTranslateHotkey}"
+                                                       Style="{StaticResource OptionTitle}"
+                                                       VerticalAlignment="Center"/>
+                                            <controls:InfoTip TextKey="S.Settings.QuickTranslateHotkeyNote"/>
+                                        </StackPanel>
                                         <TextBlock controls:HighlightedText.Source="{DynamicResource S.Settings.QuickTranslateHotkeyHint}"
                                                    Style="{StaticResource OptionDescription}"
                                                    TextTrimming="CharacterEllipsis"
@@ -845,28 +840,6 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Grid Grid.Column="0" Margin="0,0,12,0" VerticalAlignment="Center">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <Path Grid.Column="0"
-                                              Data="{StaticResource InfoMarkGeometry}"
-                                              Stroke="{DynamicResource AppTextSecondary}"
-                                              StrokeThickness="1.1"
-                                              StrokeStartLineCap="Round"
-                                              StrokeEndLineCap="Round"
-                                              Stretch="None"
-                                              Width="12" Height="12"
-                                              VerticalAlignment="Top"
-                                              Margin="0,1.7,8,0"/>
-                                        <TextBlock Grid.Column="1"
-                                                   Text="{DynamicResource S.Settings.QuickTranslateHotkeyNote}"
-                                                   Style="{StaticResource FieldHint}"
-                                                   Margin="0"
-                                                   VerticalAlignment="Top"/>
-                                    </Grid>
                                     <ToggleButton Grid.Column="1" x:Name="QuickTranslateSettingsToggle"
                                                   Checked="QuickTranslateSettings_Toggled"
                                                   Unchecked="QuickTranslateSettings_Toggled"
@@ -1043,8 +1016,11 @@
                                     </Border>
 
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
-                                        <TextBlock Text="{DynamicResource S.Settings.WindowHotkey}"
-                                                   Style="{StaticResource OptionTitle}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{DynamicResource S.Settings.WindowHotkey}"
+                                                       Style="{StaticResource OptionTitle}"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
                                         <TextBlock controls:HighlightedText.Source="{DynamicResource S.Settings.WindowHotkeyHint}"
                                                    Style="{StaticResource OptionDescription}"
                                                    TextTrimming="CharacterEllipsis"
@@ -1107,8 +1083,12 @@
                                     </Border>
 
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
-                                        <TextBlock Text="{DynamicResource S.Settings.RealtimePauseHotkey}"
-                                                   Style="{StaticResource OptionTitle}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{DynamicResource S.Settings.RealtimePauseHotkey}"
+                                                       Style="{StaticResource OptionTitle}"
+                                                       VerticalAlignment="Center"/>
+                                            <controls:InfoTip TextKey="S.Settings.RealtimePauseHotkeyNote"/>
+                                        </StackPanel>
                                         <TextBlock controls:HighlightedText.Source="{DynamicResource S.Settings.RealtimePauseHotkeyHint}"
                                                    Style="{StaticResource OptionDescription}"
                                                    TextTrimming="CharacterEllipsis"
@@ -1134,32 +1114,6 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <!-- When this shortcut does nothing, inside the row it is about
-                                     rather than under the three of them: nothing here applies to
-                                     the other two. -->
-                                <Grid Margin="0,8,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Path Grid.Column="0"
-                                          Data="{StaticResource InfoMarkGeometry}"
-                                          Stroke="{DynamicResource AppTextSecondary}"
-                                          StrokeThickness="1.1"
-                                          StrokeStartLineCap="Round"
-                                          StrokeEndLineCap="Round"
-                                          Stretch="None"
-                                          Width="12" Height="12"
-                                          VerticalAlignment="Top"
-                                          Margin="0,1.7,8,0"/>
-                                    <TextBlock Grid.Column="1"
-                                               Text="{DynamicResource S.Settings.RealtimePauseHotkeyNote}"
-                                               Style="{StaticResource FieldHint}"
-                                               Margin="0"
-                                               VerticalAlignment="Top"/>
-                                </Grid>
-
                                 <ContentControl x:Name="RealtimePauseElevatedNote" Style="{StaticResource HotkeyElevatedNote}"/>
                             </StackPanel>
                         </Border>
@@ -1182,8 +1136,12 @@
                                     </Border>
 
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
-                                        <TextBlock Text="{DynamicResource S.Settings.PinHotkey}"
-                                                   Style="{StaticResource OptionTitle}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{DynamicResource S.Settings.PinHotkey}"
+                                                       Style="{StaticResource OptionTitle}"
+                                                       VerticalAlignment="Center"/>
+                                            <controls:InfoTip TextKey="S.Settings.PinHotkeyNote"/>
+                                        </StackPanel>
                                         <TextBlock controls:HighlightedText.Source="{DynamicResource S.Settings.PinHotkeyHint}"
                                                    Style="{StaticResource OptionDescription}"
                                                    TextTrimming="CharacterEllipsis"
@@ -1212,35 +1170,12 @@
                                 <!-- The other 貼圖: the selection, during a capture. Not a global
                                      shortcut — it means nothing outside a capture, so it takes no key
                                      away from other programs. -->
-                                <local:PinSelectionTriggerRow x:Name="PinSelectionRow" Margin="0,10,0,0"/>
 
                                 <Grid Margin="0,8,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Grid Grid.Column="0" Margin="0,0,12,0" VerticalAlignment="Center">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <Path Grid.Column="0"
-                                              Data="{StaticResource InfoMarkGeometry}"
-                                              Stroke="{DynamicResource AppTextSecondary}"
-                                              StrokeThickness="1.1"
-                                              StrokeStartLineCap="Round"
-                                              StrokeEndLineCap="Round"
-                                              Stretch="None"
-                                              Width="12" Height="12"
-                                              VerticalAlignment="Top"
-                                              Margin="0,1.7,8,0"/>
-                                        <TextBlock Grid.Column="1"
-                                                   Text="{DynamicResource S.Settings.PinHotkeyNote}"
-                                                   Style="{StaticResource FieldHint}"
-                                                   Margin="0"
-                                                   VerticalAlignment="Top"/>
-                                    </Grid>
                                     <ToggleButton Grid.Column="1" x:Name="PinOpsToggle"
                                                   Style="{StaticResource CardFoldButton}"
                                                   Checked="CardFold_Toggled"
@@ -1259,11 +1194,183 @@
                                     <Border x:Name="PinOpsBody" Opacity="0" Margin="0,8,0,0" Padding="12,10"
                                             BorderBrush="{DynamicResource AppButtonBorder}"
                                             BorderThickness="1" CornerRadius="6">
-                                        <local:PinSettingsPanel x:Name="PinOpsPanel"/>
+                                        <StackPanel>
+                                            <!-- 截圖中貼出選區 first: it is a 貼圖 control like the rest. -->
+                                            <local:PinSelectionTriggerRow x:Name="PinSelectionRow"/>
+                                            <Border Height="1" Margin="0,10,0,10" Background="{DynamicResource AppSeparator}"/>
+                                            <local:PinSettingsPanel x:Name="PinOpsPanel"/>
+                                        </StackPanel>
                                     </Border>
                                 </Border>
 
                                 <ContentControl x:Name="PinElevatedNote" Style="{StaticResource HotkeyElevatedNote}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 便利貼: makes a note from the clipboard. Its look, the picture-reading
+                             language and the archive log are in the fold, as 貼圖操作 is. -->
+                        <Border Style="{StaticResource HotkeyRow}">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="0.72*" MinWidth="140"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="HotkeyToggle"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0" Style="{StaticResource HotkeyRowIcon}">
+                                        <Path Style="{StaticResource DrawnMark}"
+                                              Data="{StaticResource NoteMarkGeometry}"
+                                              Stroke="{DynamicResource AppAccent}"/>
+                                    </Border>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{DynamicResource S.Settings.StickyNoteHotkey}"
+                                                       Style="{StaticResource OptionTitle}"
+                                                       VerticalAlignment="Center"/>
+                                            <controls:InfoTip TextKey="S.Settings.StickyNoteNote"/>
+                                        </StackPanel>
+                                        <TextBlock controls:HighlightedText.Source="{DynamicResource S.Settings.StickyNoteHotkeyHint}"
+                                                   Style="{StaticResource OptionDescription}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxHeight="34"/>
+                                    </StackPanel>
+
+                                    <TextBox Grid.Column="2" x:Name="StickyNoteHotkeyBox"
+                                             Style="{StaticResource HotkeyBox}"
+                                             PreviewMouseLeftButtonDown="HotkeyBox_PreviewMouseLeftButtonDown"
+                                             PreviewKeyDown="HotkeyBox_PreviewKeyDown"
+                                             PreviewKeyUp="HotkeyBox_PreviewKeyUp"
+                                             GotFocus="HotkeyBox_GotFocus"
+                                             LostFocus="HotkeyBox_LostFocus"/>
+
+                                    <StackPanel Grid.Column="3"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Margin="12,0,0,0">
+                                        <CheckBox x:Name="StickyNoteHotkeyEnabledCheckBox"
+                                                  Style="{StaticResource ToggleSwitch}"
+                                                  Checked="HotkeyEnabled_Toggled"
+                                                  Unchecked="HotkeyEnabled_Toggled"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ToggleButton Grid.Column="1" x:Name="StickyNoteOpsToggle"
+                                                  Style="{StaticResource CardFoldButton}"
+                                                  Checked="CardFold_Toggled"
+                                                  Unchecked="CardFold_Toggled"
+                                                  AutomationProperties.Name="{DynamicResource S.Settings.StickyNoteOps}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE713;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                                       FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <TextBlock Text="{DynamicResource S.Settings.StickyNoteOps}"
+                                                       FontSize="12" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                </Grid>
+
+                                <Border x:Name="StickyNoteOpsFold" Height="0" Visibility="Collapsed" ClipToBounds="True">
+                                    <Border x:Name="StickyNoteOpsBody" Opacity="0" Margin="0,8,0,0" Padding="12,10"
+                                            BorderBrush="{DynamicResource AppButtonBorder}"
+                                            BorderThickness="1" CornerRadius="6">
+                                        <local:StickyNoteSettingsPanel x:Name="StickyNoteOpsPanel"/>
+                                    </Border>
+                                </Border>
+
+                                <ContentControl x:Name="StickyNoteElevatedNote" Style="{StaticResource HotkeyElevatedNote}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 鼠標增強: window tools after AltSnap. The row's switch is the master switch;
+                             each tool's own tick, keys and options are in the fold, as 貼圖操作 is. -->
+                        <Border Style="{StaticResource HotkeyRow}">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="0.72*" MinWidth="140"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="HotkeyToggle"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0" Style="{StaticResource HotkeyRowIcon}">
+                                        <TextBlock Text="&#xE962;" Style="{StaticResource HotkeyRowGlyph}"/>
+                                    </Border>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{DynamicResource S.Settings.MouseEnhance}"
+                                                       Style="{StaticResource OptionTitle}"
+                                                       VerticalAlignment="Center"/>
+                                            <controls:InfoTip TextKey="S.Settings.MouseNote"/>
+                                        </StackPanel>
+                                        <TextBlock controls:HighlightedText.Source="{DynamicResource S.Settings.MouseEnhanceHint}"
+                                                   Style="{StaticResource OptionDescription}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxHeight="34"/>
+                                    </StackPanel>
+
+                                    <!-- What the tools are set to, in a box that sits where the other rows' shortcut boxes
+                                         do: one line, "…" when narrow, the full text on hover. Clicking it opens the settings. -->
+                                    <Border Grid.Column="2" x:Name="MouseEnhanceSummaryBox"
+                                            Height="34" CornerRadius="6" BorderThickness="1" Padding="9,0"
+                                            VerticalAlignment="Center" Cursor="Hand"
+                                            Background="{DynamicResource AppInputBg}"
+                                            BorderBrush="{DynamicResource AppInputBorder}"
+                                            MouseLeftButtonUp="MouseEnhanceSummary_Click">
+                                        <TextBlock x:Name="MouseEnhanceSummary"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontFamily="{DynamicResource AppFont}"
+                                                   FontSize="{StaticResource AppFontSize}"
+                                                   Foreground="{DynamicResource AppTextPrimary}"/>
+                                    </Border>
+
+                                    <StackPanel Grid.Column="3"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Margin="12,0,0,0">
+                                        <CheckBox x:Name="MouseEnhanceEnabledCheckBox"
+                                                  Style="{StaticResource ToggleSwitch}"
+                                                  AutomationProperties.Name="{DynamicResource S.Settings.MouseEnhance}"
+                                                  Checked="MouseEnhanceEnabled_Toggled"
+                                                  Unchecked="MouseEnhanceEnabled_Toggled"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ToggleButton Grid.Column="1" x:Name="MouseOpsToggle"
+                                                  Style="{StaticResource CardFoldButton}"
+                                                  Checked="CardFold_Toggled"
+                                                  Unchecked="CardFold_Toggled"
+                                                  AutomationProperties.Name="{DynamicResource S.Settings.MouseOps}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE713;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                                       FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <TextBlock Text="{DynamicResource S.Settings.MouseOps}"
+                                                       FontSize="12" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                </Grid>
+
+                                <Border x:Name="MouseOpsFold" Height="0" Visibility="Collapsed" ClipToBounds="True">
+                                    <Border x:Name="MouseOpsBody" Opacity="0" Margin="0,8,0,0" Padding="12,10"
+                                            BorderBrush="{DynamicResource AppButtonBorder}"
+                                            BorderThickness="1" CornerRadius="6">
+                                        <local:MouseEnhancePanel x:Name="MouseEnhancePanel"/>
+                                    </Border>
+                                </Border>
                             </StackPanel>
                         </Border>
 
@@ -1379,6 +1486,42 @@
                                            Click="OpenScreenshotFolderBtn_Click"/>
                             </Grid>
                         </Grid>
+
+                        <Border Height="1" Margin="0,14,0,12"
+                                Background="{DynamicResource AppSeparator}"/>
+
+                        <!-- 托盤右鍵選單: which feature switches the tray menu offers, folded away
+                             behind a button the way 文字辨識 is. -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0">
+                                <TextBlock Text="{DynamicResource S.Settings.TrayMenu}"
+                                           Style="{StaticResource OptionTitle}"/>
+                                <TextBlock Text="{DynamicResource S.Settings.TrayMenuHint}"
+                                           Style="{StaticResource OptionDescription}"/>
+                            </StackPanel>
+                            <ToggleButton Grid.Column="1" x:Name="TrayMenuToggle"
+                                                  Style="{StaticResource CardFoldButton}"
+                                                  Checked="CardFold_Toggled"
+                                                  Unchecked="CardFold_Toggled"
+                                                  AutomationProperties.Name="{DynamicResource S.Settings.TrayMenuFold}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE713;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                                       FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <TextBlock Text="{DynamicResource S.Settings.TrayMenuFold}"
+                                                       FontSize="12" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                        </Grid>
+
+                        <Border x:Name="TrayMenuFold" Height="0" Visibility="Collapsed" ClipToBounds="True">
+                            <Border x:Name="TrayMenuBody" Opacity="0" Margin="0,8,0,0">
+                                <local:TrayMenuOptionsPanel x:Name="TrayMenuOptions"/>
+                            </Border>
+                        </Border>
 
                         <Border Height="1" Margin="0,14,0,12"
                                 Background="{DynamicResource AppSeparator}"/>
@@ -1773,6 +1916,7 @@
                             <TextBlock Text="&#xE774;" Style="{StaticResource CardHeaderIcon}"/>
                             <TextBlock Text="{DynamicResource S.Settings.ServiceSetup}"
                                        Style="{StaticResource CardTitle}"/>
+                            <controls:InfoTip TextKey="S.Settings.ProviderMenuHint"/>
                             <TextBlock x:Name="ServicesChevron"
                                            Text="&#xE70D;"
                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
@@ -1993,28 +2137,6 @@
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
-
-                        <!-- Under the rows rather than in a tooltip, because it is the one thing about
-                             the switches a user would get wrong without being told: a service that is
-                             off is not switched off, only out of the menus. -->
-                        <Grid Margin="2,16,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0"
-                                       Text="&#xE946;"
-                                       FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                                       FontSize="13"
-                                       Foreground="{DynamicResource AppTextSecondary}"
-                                       VerticalAlignment="Top"
-                                       Margin="0,2,8,0"/>
-                            <TextBlock Grid.Column="1"
-                                       Text="{DynamicResource S.Settings.ProviderMenuHint}"
-                                       Style="{StaticResource FieldHint}"
-                                       FontSize="12"
-                                       Margin="0"/>
-                        </Grid>
                                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -2140,8 +2262,10 @@
                                               Data="{StaticResource TextGroupBoxMarkGeometry}"/>
                                     </Grid>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="{DynamicResource S.Settings.TextGroupBoxes}" Style="{StaticResource OptionTitle}"/>
-                                        <TextBlock Text="{DynamicResource S.Settings.TextGroupBoxesHint}" Style="{StaticResource OptionDescription}" Margin="0,3,12,0"/>
+                                        <TextBlock Text="{DynamicResource S.Settings.TextGroupBoxes}"
+                                                   Style="{StaticResource OptionTitle}"/>
+                                        <TextBlock Text="{DynamicResource S.Settings.TextGroupBoxesHint}"
+                                                   Style="{StaticResource OptionDescription}"/>
                                     </StackPanel>
                                     <CheckBox x:Name="TextGroupBoxesCheckBox" Grid.Column="2"
                                               Style="{StaticResource ToggleSwitch}"
@@ -2164,8 +2288,10 @@
                                               Data="{StaticResource OcrLineBoxMarkGeometry}"/>
                                     </Grid>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="{DynamicResource S.Settings.OcrLineBoxes}" Style="{StaticResource OptionTitle}"/>
-                                        <TextBlock Text="{DynamicResource S.Settings.OcrLineBoxesHint}" Style="{StaticResource OptionDescription}" Margin="0,3,12,0"/>
+                                        <TextBlock Text="{DynamicResource S.Settings.OcrLineBoxes}"
+                                                   Style="{StaticResource OptionTitle}"/>
+                                        <TextBlock Text="{DynamicResource S.Settings.OcrLineBoxesHint}"
+                                                   Style="{StaticResource OptionDescription}"/>
                                     </StackPanel>
                                     <CheckBox x:Name="OcrLineBoxesCheckBox" Grid.Column="2"
                                               Style="{StaticResource ToggleSwitch}"

@@ -57,6 +57,7 @@ public static class LocalizationService
     public const string Japanese           = "ja";
     public const string Korean             = "ko";
     public const string Russian            = "ru";
+    public const string Thai               = "th";
 
     /// <summary>The languages offered in settings, in the order they are listed.</summary>
     /// <remarks>
@@ -75,6 +76,7 @@ public static class LocalizationService
         new(Japanese,           "日本語",   "S.Lang.Japanese",           "Japanese"),
         new(Korean,             "한국어",   "S.Lang.Korean",             "Korean"),
         new(Russian,            "Русский",  "S.Lang.Russian",            "Russian"),
+        new(Thai,               "ไทย",      "S.Lang.Thai",               "Thai"),
     ];
 
     /// <summary>The dictionary each language is served by, and the set of languages that exist.</summary>
@@ -122,6 +124,8 @@ public static class LocalizationService
         [English]            = "Segoe UI Variable Text, Segoe UI, Microsoft JhengHei UI, Sans-Serif",
         [Japanese]           = "Segoe UI Variable Text, Segoe UI, Yu Gothic UI, Meiryo UI, Sans-Serif",
         [Korean]             = "Segoe UI Variable Text, Segoe UI, Malgun Gothic, Sans-Serif",
+        // Leelawadee UI is what Windows sets Thai in; Segoe UI has no Thai glyphs of its own.
+        [Thai]               = "Leelawadee UI, Segoe UI Variable Text, Segoe UI, Tahoma, Microsoft YaHei UI, Sans-Serif",
     };
 
     /// <summary>
@@ -272,7 +276,7 @@ public static class LocalizationService
                     var loaded = new ResourceDictionary
                     {
                         Source = new Uri(
-                            "pack://application:,,,/OverTranslate;component/Resources/Strings.zh-Hant.xaml",
+                            "pack://application:,,,/TTTools;component/Resources/Strings.zh-Hant.xaml",
                             UriKind.Absolute)
                     };
 

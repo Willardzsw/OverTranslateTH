@@ -39,6 +39,9 @@ public class GlobalHotkey : IDisposable
     /// <summary>The 貼圖 shortcut (F3 by default): pins the clipboard under the pointer.</summary>
     public const int PinId = 9007;
 
+    /// <summary>The 便利貼 shortcut (F4 by default): makes a note from the clipboard.</summary>
+    public const int StickyNoteId = 9008;
+
     public GlobalHotkey(int id) : this(id, RegisterHotKey, UnregisterHotKey) { }
 
     internal GlobalHotkey(int id, Func<IntPtr, int, uint, uint, bool> register,

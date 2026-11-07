@@ -65,9 +65,9 @@ internal static class Program
         // fails at parse time, which is the whole reason this is an executable and not a test.
         foreach (var uri in new[]
                  {
-                     "pack://application:,,,/OverTranslate;component/Themes/LightTheme.xaml",
-                     "pack://application:,,,/OverTranslate;component/Themes/SharedStyles.xaml",
-                     "pack://application:,,,/OverTranslate;component/Resources/Strings.zh-Hant.xaml",
+                     "pack://application:,,,/TTTools;component/Themes/LightTheme.xaml",
+                     "pack://application:,,,/TTTools;component/Themes/SharedStyles.xaml",
+                     "pack://application:,,,/TTTools;component/Resources/Strings.zh-Hant.xaml",
                  })
         {
             app.Resources.MergedDictionaries.Add(

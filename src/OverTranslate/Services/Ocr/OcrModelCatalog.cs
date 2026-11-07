@@ -52,10 +52,25 @@ internal static class OcrModelCatalog
     internal static string RecognizerSize(OcrModelSettings settings) =>
         settings.RecognizerSize == "medium" ? "medium" : "small";
 
-    internal static string Device(OcrModelSettings settings) =>
-        settings.Device?.StartsWith("directml:", StringComparison.Ordinal) == true &&
-        int.TryParse(settings.Device.AsSpan(9), out var index) && index >= 0
-            ? $"directml:{index}" : "cpu";
+    /// <summary>
+    /// "cpu", or "directml:" and the adapter's name. A bare number after the prefix is the old
+    /// form, the adapter's position in Windows' list — which changes between boots (an external
+    /// display or a power-mode switch reorders it), so a saved RTX quietly became the Intel iGPU.
+    /// It is still read, and replaced by a name when settings load (SettingsService.Parse).
+    /// </summary>
+    internal static string Device(OcrModelSettings settings)
+    {
+        var device = settings.Device?.Trim();
+        if (device is null || !device.StartsWith("directml:", StringComparison.Ordinal)) return "cpu";
+        var rest = device[9..].Trim();
+        if (rest.Length == 0) return "cpu";
+        if (int.TryParse(rest, out var index)) return index >= 0 ? $"directml:{index}" : "cpu";
+        return $"directml:{rest}";
+    }
+
+    /// <summary>Whether <paramref name="device"/> is the old position-numbered form.</summary>
+    internal static bool IsLegacyIndex(string device) =>
+        device.StartsWith("directml:", StringComparison.Ordinal) && int.TryParse(device.AsSpan(9), out _);
 
     internal static string Identity(OcrModelSettings settings) =>
         $"{Normalize(settings.Selection)}|{DetectorSize(settings)}|{RecognizerSize(settings)}|{Device(settings)}";

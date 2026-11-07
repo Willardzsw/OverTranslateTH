@@ -71,6 +71,7 @@ public class StringsParityTests
         "Strings.ja.xaml",
         "Strings.ko.xaml",
         "Strings.ru.xaml",
+        "Strings.th.xaml",
     ];
 
     /// <summary>The dictionaries held against the authored one, which is every other one.</summary>
@@ -167,7 +168,8 @@ public class StringsParityTests
         var project = ProjectDirectory();
         var references = new Dictionary<string, List<string>>();
 
-        var inXaml = new Regex(@"DynamicResource\s+(S\.[A-Za-z0-9_.]+)", RegexOptions.Compiled);
+        // DynamicResource, or the key an ⓘ (InfoTip) shows: TextKey="S.…" / ExtraKey="S.…".
+        var inXaml = new Regex(@"(?:DynamicResource\s+|(?:TextKey|ExtraKey)="")(S\.[A-Za-z0-9_.]+)", RegexOptions.Compiled);
         var inCode = new Regex(@"""(S\.[A-Za-z0-9_.]+)""", RegexOptions.Compiled);
 
         foreach (var path in Directory.EnumerateFiles(project, "*.*", SearchOption.AllDirectories))

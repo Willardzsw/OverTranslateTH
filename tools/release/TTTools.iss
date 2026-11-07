@@ -1,4 +1,4 @@
-﻿; OverTranslateTH installer. Built by tools\release\build-release.ps1.
+﻿; TT Tools installer. Built by tools\release\build-release.ps1.
 #ifndef AppVersion
   #error Pass /DAppVersion
 #endif
@@ -8,22 +8,22 @@
 
 [Setup]
 AppId={{6F3B8E52-7C1D-4A96-9E0B-2D41C7A58F13}
-AppName=OverTranslateTH
+AppName=TT Tools
 AppVersion={#AppVersion}
-AppVerName=OverTranslateTH {#AppVersion}
+AppVerName=TT Tools {#AppVersion}
 AppPublisher=Willardzsw
 AppPublisherURL=https://github.com/Willardzsw/OverTranslateTH
 AppSupportURL=https://github.com/Willardzsw/OverTranslateTH/issues
 ; Per user: settings are written beside the executable, which Program Files would refuse.
 PrivilegesRequired=lowest
-DefaultDirName={localappdata}\Programs\OverTranslateTH
+DefaultDirName={localappdata}\Programs\TTTools
 DisableProgramGroupPage=yes
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
-OutputBaseFilename=OverTranslateTH-{#AppVersion}-win-x64-Setup
+OutputBaseFilename=TTTools-{#AppVersion}-win-x64-Setup
 SetupIconFile=..\..\src\OverTranslate\icons\app.ico
-UninstallDisplayIcon={app}\OverTranslate.exe
-UninstallDisplayName=OverTranslateTH
+UninstallDisplayIcon={app}\TTTools.exe
+UninstallDisplayName=TT Tools
 LicenseFile=..\..\LICENSE
 Compression=lzma2/max
 SolidCompression=yes
@@ -45,23 +45,50 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
+; Upgrading from OverTranslateTH (1.2.0 and earlier): the program was OverTranslate.exe and its
+; shortcuts were named OverTranslateTH. Same AppId, so the same folder; take the old program and
+; shortcuts away so nothing starts the old version. OverTranslate.Translation.dll is still used.
+[InstallDelete]
+Type: files; Name: "{app}\OverTranslate.exe"
+Type: files; Name: "{app}\OverTranslate.dll"
+Type: files; Name: "{app}\OverTranslate.deps.json"
+Type: files; Name: "{app}\OverTranslate.runtimeconfig.json"
+Type: files; Name: "{app}\OverTranslate.pdb"
+Type: files; Name: "{autoprograms}\OverTranslateTH.lnk"
+Type: files; Name: "{autodesktop}\OverTranslateTH.lnk"
+
 [Icons]
-Name: "{autoprograms}\OverTranslateTH"; Filename: "{app}\OverTranslate.exe"; AppUserModelID: "Willardzsw.OverTranslateTH"
-Name: "{autodesktop}\OverTranslateTH"; Filename: "{app}\OverTranslate.exe"; AppUserModelID: "Willardzsw.OverTranslateTH"; Tasks: desktopicon
+Name: "{autoprograms}\TT Tools"; Filename: "{app}\TTTools.exe"; AppUserModelID: "Willardzsw.TTTools"
+Name: "{autodesktop}\TT Tools"; Filename: "{app}\TTTools.exe"; AppUserModelID: "Willardzsw.TTTools"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\OverTranslate.exe"; Description: "{cm:LaunchProgram,OverTranslateTH}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\TTTools.exe"; Description: "{cm:LaunchProgram,TT Tools}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 const
   RunKey = 'Software\Microsoft\Windows\CurrentVersion\Run';
-  RunValue = 'OverTranslate-Thai-Dev';
-  AumidKey = 'Software\Classes\AppUserModelId\Willardzsw.OverTranslateTH';
+  RunValue = 'TTTools';
+  AumidKey = 'Software\Classes\AppUserModelId\Willardzsw.TTTools';
+
+  LegacyRunValue = 'OverTranslate-Thai-Dev';
 
 // Only entries that point into this install: another copy that ran last owns them.
 function PointsIntoApp(const Value: String): Boolean;
 begin
   Result := Pos(Lowercase(AddBackslash(ExpandConstant('{app}'))), Lowercase(Value)) > 0;
+end;
+
+// The startup entry from before the rename pointed at OverTranslate.exe, which is gone now.
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  Value: String;
+begin
+  if (CurStep = ssPostInstall)
+    and RegQueryStringValue(HKCU, RunKey, LegacyRunValue, Value) and PointsIntoApp(Value) then
+  begin
+    RegDeleteValue(HKCU, RunKey, LegacyRunValue);
+    RegWriteStringValue(HKCU, RunKey, RunValue, '"' + ExpandConstant('{app}\TTTools.exe') + '"');
+  end;
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);

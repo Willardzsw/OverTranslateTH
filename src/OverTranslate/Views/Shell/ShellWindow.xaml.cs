@@ -19,7 +19,8 @@ public enum ShellPage
 {
     Translation,
     Realtime,
-    Settings
+    Settings,
+    StickyNotes,
 }
 
 /// <summary>
@@ -89,6 +90,7 @@ public partial class ShellWindow : Window
     private readonly TranslationPage _translationPage = new();
     private readonly RealtimePage    _realtimePage    = new();
     private readonly SettingsPage    _settingsPage    = new();
+    private readonly StickyNote.StickyNotesPage _notesPage = new();
 
     private ShellPage? _current;
 
@@ -463,6 +465,7 @@ public partial class ShellWindow : Window
         var page =
             ReferenceEquals(sender, RealtimeNav) ? ShellPage.Realtime :
             ReferenceEquals(sender, SettingsNav) ? ShellPage.Settings :
+            ReferenceEquals(sender, StickyNotesNav) ? ShellPage.StickyNotes :
             ShellPage.Translation;
         if (_current == page) return;
         ShowPage(page);
@@ -478,11 +481,13 @@ public partial class ShellWindow : Window
         if (page == ShellPage.Translation) _translationPage.Reload();
         if (page == ShellPage.Realtime) _realtimePage.Reload();
         if (page == ShellPage.Settings) _settingsPage.Reload();
+        if (page == ShellPage.StickyNotes) _notesPage.Reload();
 
         ContentHost.Child = page switch
         {
             ShellPage.Realtime => _realtimePage,
             ShellPage.Settings => _settingsPage,
+            ShellPage.StickyNotes => _notesPage,
             _                  => (UIElement)_translationPage
         };
 
@@ -494,6 +499,7 @@ public partial class ShellWindow : Window
     {
         ShellPage.Realtime => RealtimeNav,
         ShellPage.Settings => SettingsNav,
+        ShellPage.StickyNotes => StickyNotesNav,
         _                  => TranslationNav
     };
 

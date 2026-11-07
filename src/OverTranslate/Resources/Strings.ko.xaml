@@ -36,6 +36,7 @@
     <sys:String x:Key="S.Tray.OpenWindow">번역 창 열기</sys:String>
     <sys:String x:Key="S.Tray.RealtimeWindow">실시간 번역 창</sys:String>
     <sys:String x:Key="S.Tray.Settings">설정</sys:String>
+    <sys:String x:Key="S.Tray.Toggles">기능 스위치</sys:String>
     <sys:String x:Key="S.Tray.Exit">종료</sys:String>
 
     <!-- ── About ── -->
@@ -228,7 +229,7 @@
     <sys:String x:Key="S.Secret.Hide">숨기기</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslateTH가 실행 중입니다</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">TT Tools가 실행 중입니다</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">시스템 트레이로 최소화했습니다. {0} 키로 캡처 번역을 시작할 수 있습니다.</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">설정한 단축키</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">API 키가 없습니다</sys:String>
@@ -740,6 +741,70 @@
     <sys:String x:Key="S.Settings.PinMiddleClick">가운데 클릭</sys:String>
     <sys:String x:Key="S.Settings.PinMiddleDouble">가운데 더블클릭</sys:String>
     <sys:String x:Key="S.Settings.PinConflictNote">* 겹치면 위쪽 항목이 우선합니다. Esc로 언제든 닫을 수 있습니다.</sys:String>
+    <sys:String x:Key="S.Settings.MouseEnhance">마우스 향상</sys:String>
+    <sys:String x:Key="S.Settings.MouseEnhanceHint">키와 마우스로 창 투명도, 가로 스크롤, 창 크기를 조정합니다.</sys:String>
+    <sys:String x:Key="S.Settings.MouseOps">마우스 향상 설정</sys:String>
+    <sys:String x:Key="S.Settings.MouseWheelGesture">휠</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenuFold">메뉴 설정</sys:String>
+    <sys:String x:Key="S.Note.Title">메모지</sys:String>
+    <sys:String x:Key="S.Note.Recognising">그림의 글자를 인식하는 중…</sys:String>
+    <sys:String x:Key="S.Note.NothingRead">그림에서 글자를 찾지 못해 빈 메모지를 열었습니다.</sys:String>
+    <sys:String x:Key="S.Note.ReadFailed">그림 글자 인식 실패: {0}</sys:String>
+    <sys:String x:Key="S.Note.Edit">편집</sys:String>
+    <sys:String x:Key="S.Note.Topmost">항상 위</sys:String>
+    <sys:String x:Key="S.Note.Unpin">항상 위 해제</sys:String>
+    <sys:String x:Key="S.Note.Delete">삭제</sys:String>
+    <sys:String x:Key="S.Note.Save">저장(Ctrl+Enter)</sys:String>
+    <sys:String x:Key="S.Note.Cancel">취소(Esc)</sys:String>
+    <sys:String x:Key="S.Note.CopyText">텍스트 복사</sys:String>
+    <sys:String x:Key="S.Note.PassThrough">마우스 통과</sys:String>
+    <sys:String x:Key="S.Note.Resize">크기 조정</sys:String>
+    <sys:String x:Key="S.Note.AutoSize">자동 크기로</sys:String>
+    <sys:String x:Key="S.Note.Empty">(비어 있음)</sys:String>
+    <sys:String x:Key="S.Note.Opacity">불투명도</sys:String>
+    <sys:String x:Key="S.Settings.NoteOpacity">기본 불투명도</sys:String>
+    <sys:String x:Key="S.Note.ReadTimeout">인식이 30초를 넘어 중지했습니다.</sys:String>
+    <sys:String x:Key="S.Notes.Title">메모지</sys:String>
+    <sys:String x:Key="S.Notes.Subtitle">바탕 화면의 모든 메모지(최근 저장 순).</sys:String>
+    <sys:String x:Key="S.Notes.New">새 메모지</sys:String>
+    <sys:String x:Key="S.Notes.Empty">아직 메모지가 없습니다. 텍스트나 그림을 복사하고 메모지 단축키(기본 F2)를 누르거나 '새 메모지'를 클릭하세요.</sys:String>
+    <sys:String x:Key="S.Notes.StateTopmost">항상 위</sys:String>
+    <sys:String x:Key="S.Notes.StatePassThrough">통과</sys:String>
+    <sys:String x:Key="S.Notes.Locate">위치 찾기(화면 가운데로)</sys:String>
+    <sys:String x:Key="S.Notes.PassThroughOn">마우스 통과 켜기</sys:String>
+    <sys:String x:Key="S.Notes.PassThroughOff">마우스 통과 끄기</sys:String>
+    <sys:String x:Key="S.Shell.StickyNotes">메모지</sys:String>
+    <sys:String x:Key="S.Tray.NotePassThroughOff">메모지 통과 해제</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteHotkey">메모지</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteHotkeyHint">텍스트나 그림을 복사한 뒤 누르면 포인터 위치에 메모지를 붙입니다. 그림은 먼저 글자로 인식합니다</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteNote">메모지를 두 번 클릭해 편집하고 ✓로 저장합니다. 오른쪽 클릭으로 항상 위·투명도·마우스 통과·크기 조정. 마우스 통과 중에는 클릭이 메모지를 지나갑니다. 메모지 위에서 메모지 단축키를 누르거나 트레이 메뉴·메모지 페이지에서 끌 수 있습니다.</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteOps">메모지 설정</sys:String>
+    <sys:String x:Key="S.Settings.NoteOcrLanguage">그림 인식 언어</sys:String>
+    <sys:String x:Key="S.Settings.NoteWidth">기본 너비</sys:String>
+    <sys:String x:Key="S.Settings.NoteFontSize">글자 크기</sys:String>
+    <sys:String x:Key="S.Settings.NotePaperColor">종이 색</sys:String>
+    <sys:String x:Key="S.Settings.NoteTapeColor">테이프 색</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveTitle">자동 보관</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchive">저장한 내용을 로그 파일에 기록</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveChoose">폴더 선택</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveOpen">폴더 열기</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveHint">저장할 때마다 한 줄 추가: 번호 날짜시간 내용(줄바꿈은 ↵). 삭제하지 않습니다.</sys:String>
+    <sys:String x:Key="S.Settings.NoteCustomColor">사용자 지정…</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeStep">단계</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeMinimum">최소</sys:String>
+    <sys:String x:Key="S.Settings.MouseFade">창 투명도</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeHint">키를 누른 채 휠을 돌리면 포인터 아래 창의 투명도가 바뀝니다. 위로는 불투명, 아래로는 투명.</sys:String>
+    <sys:String x:Key="S.Settings.MouseScroll">가로 스크롤</sys:String>
+    <sys:String x:Key="S.Settings.MouseScrollHint">키를 누른 채 휠을 돌리면 포인터 아래 내용이 좌우로 스크롤됩니다.</sys:String>
+    <sys:String x:Key="S.Settings.MouseScrollReverse">반대로</sys:String>
+    <sys:String x:Key="S.Settings.MouseResize">창 크기 조정</sys:String>
+    <sys:String x:Key="S.Settings.MouseResizeHint">키를 누른 채 창 안에서 드래그하면 가장 가까운 가장자리나 모서리가 움직입니다. 가운데에서는 오른쪽 아래 모서리.</sys:String>
+    <sys:String x:Key="S.Settings.MouseRightDrag">오른쪽 드래그</sys:String>
+    <sys:String x:Key="S.Settings.MouseMiddleDrag">가운데 드래그</sys:String>
+    <sys:String x:Key="S.Settings.MouseLeftDrag">왼쪽 드래그</sys:String>
+    <sys:String x:Key="S.Settings.MouseNote">두 휠 기능의 키가 같으면 투명도가 우선합니다. 관리자 권한으로 실행 중인 프로그램에는 적용되지 않습니다. 종료 시 투명하게 한 창은 원래대로 돌아갑니다.</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenu">트레이 메뉴</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenuHint">선택한 기능 스위치가 트레이 아이콘의 오른쪽 클릭 메뉴에 표시되며, 클릭하면 켜고 끌 수 있습니다.</sys:String>
 
     <sys:String x:Key="S.Settings.OcrFold">OCR 설정</sys:String>
     <sys:String x:Key="S.Settings.OcrFoldTitle">문자 인식(OCR)</sys:String>

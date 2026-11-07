@@ -115,7 +115,9 @@ public partial class SettingsPage : UserControl
                 s => s.HotkeyDisplay,
                 s => HotkeyBindings.TriggerFor(s, HotkeyAction.Capture),
                 ApplyCaptureTrigger,
-                AdvertisedInShell: true),
+                AdvertisedInShell: true,
+                CaptureHotkeyEnabledCheckBox,
+                (s, on) => s.CaptureHotkeyEnabled = on),
             new HotkeyField(
                 HotkeyAction.QuickLookup,
                 "S.Settings.QuickLookupHotkey",
@@ -171,9 +173,27 @@ public partial class SettingsPage : UserControl
                 AdvertisedInShell: false,
                 PinHotkeyEnabledCheckBox,
                 (s, on) => s.PinClipboardHotkeyEnabled = on),
+            new HotkeyField(
+                HotkeyAction.StickyNote,
+                "S.Settings.StickyNoteHotkey",
+                StickyNoteHotkeyBox,
+                StickyNoteElevatedNote,
+                s => s.StickyNoteHotkeyDisplay,
+                s => HotkeyBindings.TriggerFor(s, HotkeyAction.StickyNote),
+                ApplyStickyNoteTrigger,
+                AdvertisedInShell: false,
+                StickyNoteHotkeyEnabledCheckBox,
+                (s, on) => s.StickyNoteHotkeyEnabled = on),
         ];
 
         PinOpsPanel.Saved += (_, _) => FlashSaved();
+        MouseEnhancePanel.Saved += (_, _) =>
+        {
+            ShowMouseEnhanceSummary();
+            FlashSaved();
+        };
+        TrayMenuOptions.Saved += (_, _) => FlashSaved();
+        StickyNoteOpsPanel.Saved += (_, _) => FlashSaved();
         PinSelectionRow.Saved += (_, _) => FlashSaved();
 
         _hotkeyGamepadRecordTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(45) };
@@ -197,6 +217,7 @@ public partial class SettingsPage : UserControl
             LocalizationService.LanguageChanged += OnLanguageChanged;
             SettingsService.Instance.OcrDebugChanged += OnOcrDebugChanged;
             SettingsService.Instance.CaptureOptionsChanged += OnCaptureOptionsChanged;
+            SettingsService.Instance.FeatureTogglesChanged += OnFeatureTogglesChanged;
             OnOcrDebugChanged(this, EventArgs.Empty);
             OnCaptureOptionsChanged(this, EventArgs.Empty);
         };
@@ -205,6 +226,7 @@ public partial class SettingsPage : UserControl
             LocalizationService.LanguageChanged -= OnLanguageChanged;
             SettingsService.Instance.OcrDebugChanged -= OnOcrDebugChanged;
             SettingsService.Instance.CaptureOptionsChanged -= OnCaptureOptionsChanged;
+            SettingsService.Instance.FeatureTogglesChanged -= OnFeatureTogglesChanged;
             StopRecording();
         };
 
@@ -217,6 +239,40 @@ public partial class SettingsPage : UserControl
     /// panel, a shortcut rebound — is on screen when this page is next shown.
     /// </summary>
     public void Reload() => LoadSettings();
+
+    /// <summary>鼠標增強's master switch: saved and put into effect at once.</summary>
+    private void MouseEnhanceEnabled_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (_loading) return;
+        SettingsService.Instance.SetFeatureToggle(FeatureToggle.MouseEnhance, MouseEnhanceEnabledCheckBox.IsChecked == true);
+        MouseEnhanceService.Instance.Apply(SettingsService.Instance.Current.MouseEnhance);
+        ShowMouseEnhanceSummary();
+        FlashSaved();
+    }
+
+    /// <summary>The summary box opens 鼠標增強設定, where what it lists is changed.</summary>
+    private void MouseEnhanceSummary_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) =>
+        MouseOpsToggle.IsChecked = true;
+
+    /// <summary>The 鼠標增強 row's summary, greyed with the row when the master switch is off.</summary>
+    private void ShowMouseEnhanceSummary()
+    {
+        var s = SettingsService.Instance.Current.MouseEnhance;
+        bool on = s.Enabled;
+        MouseEnhanceSummary.Text = MouseEnhancePanel.Summary(s);
+        MouseEnhanceSummaryBox.ToolTip = MouseEnhanceSummary.Text;
+        MouseEnhanceSummaryBox.Opacity = on ? 1 : 0.5;
+        MouseEnhancePanel.IsEnabled = on;
+        MouseEnhanceEnabledCheckBox.SetResourceReference(ToolTipProperty,
+            on ? "S.Settings.HotkeyDisable" : "S.Settings.HotkeyEnable");
+    }
+
+    /// <summary>A switch flipped from the tray menu: show it on the shortcut rows.</summary>
+    private void OnFeatureTogglesChanged(object? sender, EventArgs e)
+    {
+        StopRecording();
+        LoadSettings();
+    }
 
     private void LoadSettings()
     {
@@ -235,6 +291,11 @@ public partial class SettingsPage : UserControl
                     box.IsChecked = binding.Enabled;
 
             foreach (var field in _hotkeyFields) ApplyHotkeyRowAvailability(field);
+            MouseEnhancePanel.Reload();
+            StickyNoteOpsPanel.Reload();
+            MouseEnhanceEnabledCheckBox.IsChecked = s.MouseEnhance.Enabled;
+            ShowMouseEnhanceSummary();
+            TrayMenuOptions.Reload();
 
             LightThemeRadio.IsChecked = s.Theme != ThemeService.Dark;
             DarkThemeRadio.IsChecked  = s.Theme == ThemeService.Dark;
@@ -298,6 +359,9 @@ public partial class SettingsPage : UserControl
         var (fold, body, chevron) = sender switch
         {
             _ when ReferenceEquals(sender, PinOpsToggle)      => (PinOpsFold, (FrameworkElement)PinOpsBody, (FrameworkElement?)null),
+            _ when ReferenceEquals(sender, MouseOpsToggle)    => (MouseOpsFold, MouseOpsBody, null),
+            _ when ReferenceEquals(sender, StickyNoteOpsToggle) => (StickyNoteOpsFold, StickyNoteOpsBody, null),
+            _ when ReferenceEquals(sender, TrayMenuToggle)    => (TrayMenuFold, TrayMenuBody, null),
             _ when ReferenceEquals(sender, OcrSettingsToggle) => (OcrSettingsFold, OcrSettingsBody, null),
             _ when ReferenceEquals(sender, ServicesToggle)    => (ServicesFold, ServicesBody, ServicesChevron),
             _ when ReferenceEquals(sender, AdvancedToggle)    => (AdvancedFold, AdvancedBody, AdvancedChevron),
@@ -1481,6 +1545,22 @@ public partial class SettingsPage : UserControl
         else if (trigger.Kind == ShortcutInputKind.Gamepad)
         {
             s.QuickLookupHotkeyGamepadButton = trigger.GamepadButton;
+        }
+    }
+
+    private static void ApplyStickyNoteTrigger(AppSettings s, ShortcutTrigger trigger, string display)
+    {
+        s.StickyNoteHotkeyInputKind = trigger.Kind;
+        s.StickyNoteHotkeyDisplay = display;
+        if (trigger.Kind == ShortcutInputKind.Keyboard)
+        {
+            s.StickyNoteHotkeyModifiers = trigger.Modifiers;
+            s.StickyNoteHotkeyVirtualKey = trigger.VirtualKey;
+            s.StickyNoteHotkeyGamepadButton = GamepadShortcutButton.None;
+        }
+        else if (trigger.Kind == ShortcutInputKind.Gamepad)
+        {
+            s.StickyNoteHotkeyGamepadButton = trigger.GamepadButton;
         }
     }
 

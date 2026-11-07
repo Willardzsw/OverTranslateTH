@@ -35,6 +35,7 @@
     <sys:String x:Key="S.Tray.OpenWindow">打开翻译窗口</sys:String>
     <sys:String x:Key="S.Tray.RealtimeWindow">实时翻译窗口</sys:String>
     <sys:String x:Key="S.Tray.Settings">设置</sys:String>
+    <sys:String x:Key="S.Tray.Toggles">功能开关</sys:String>
     <sys:String x:Key="S.Tray.Exit">退出</sys:String>
 
     <!-- ── About ── -->
@@ -224,7 +225,7 @@
     <sys:String x:Key="S.Secret.Hide">隐藏内容</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslateTH 已最小化</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">TT Tools 已最小化</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">程序已最小化到系统托盘，可使用 {0} 开始进行截图翻译。</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">已设置的快捷键</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">缺少 API Key</sys:String>
@@ -736,6 +737,70 @@
     <sys:String x:Key="S.Settings.PinMiddleClick">中键单击</sys:String>
     <sys:String x:Key="S.Settings.PinMiddleDouble">中键双击</sys:String>
     <sys:String x:Key="S.Settings.PinConflictNote">* 如有冲突，由上至下优先匹配；Esc 始终可以关闭贴图。</sys:String>
+    <sys:String x:Key="S.Settings.MouseEnhance">鼠标增强</sys:String>
+    <sys:String x:Key="S.Settings.MouseEnhanceHint">用组合键加鼠标调节窗口透明度、横向滚动、调整窗口大小。</sys:String>
+    <sys:String x:Key="S.Settings.MouseOps">鼠标增强设置</sys:String>
+    <sys:String x:Key="S.Settings.MouseWheelGesture">滚轮</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenuFold">菜单设置</sys:String>
+    <sys:String x:Key="S.Note.Title">便利贴</sys:String>
+    <sys:String x:Key="S.Note.Recognising">正在识别图片文字…</sys:String>
+    <sys:String x:Key="S.Note.NothingRead">图片里没有识别到文字，已打开空白便利贴。</sys:String>
+    <sys:String x:Key="S.Note.ReadFailed">识别图片文字失败：{0}</sys:String>
+    <sys:String x:Key="S.Note.Edit">编辑</sys:String>
+    <sys:String x:Key="S.Note.Topmost">置顶</sys:String>
+    <sys:String x:Key="S.Note.Unpin">取消置顶</sys:String>
+    <sys:String x:Key="S.Note.Delete">删除</sys:String>
+    <sys:String x:Key="S.Note.Save">保存（Ctrl+Enter）</sys:String>
+    <sys:String x:Key="S.Note.Cancel">取消（Esc）</sys:String>
+    <sys:String x:Key="S.Note.CopyText">复制文字</sys:String>
+    <sys:String x:Key="S.Note.PassThrough">鼠标穿透</sys:String>
+    <sys:String x:Key="S.Note.Resize">调整大小</sys:String>
+    <sys:String x:Key="S.Note.AutoSize">恢复自动大小</sys:String>
+    <sys:String x:Key="S.Note.Empty">（空白）</sys:String>
+    <sys:String x:Key="S.Note.Opacity">透明度</sys:String>
+    <sys:String x:Key="S.Settings.NoteOpacity">默认透明度</sys:String>
+    <sys:String x:Key="S.Note.ReadTimeout">识别超过 30 秒仍未完成，已停止。</sys:String>
+    <sys:String x:Key="S.Notes.Title">便利贴</sys:String>
+    <sys:String x:Key="S.Notes.Subtitle">桌面上的所有便利贴，按最后保存时间排列。</sys:String>
+    <sys:String x:Key="S.Notes.New">新建便利贴</sys:String>
+    <sys:String x:Key="S.Notes.Empty">还没有便利贴。复制文字或图片后按便利贴快捷键（默认 F2），或点右上角“新建便利贴”。</sys:String>
+    <sys:String x:Key="S.Notes.StateTopmost">置顶</sys:String>
+    <sys:String x:Key="S.Notes.StatePassThrough">穿透</sys:String>
+    <sys:String x:Key="S.Notes.Locate">定位（移到屏幕中间）</sys:String>
+    <sys:String x:Key="S.Notes.PassThroughOn">开启鼠标穿透</sys:String>
+    <sys:String x:Key="S.Notes.PassThroughOff">取消鼠标穿透</sys:String>
+    <sys:String x:Key="S.Shell.StickyNotes">便利贴</sys:String>
+    <sys:String x:Key="S.Tray.NotePassThroughOff">取消便利贴穿透</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteHotkey">便利贴</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteHotkeyHint">复制文字或图片后按下，在指针处贴一张便利贴；图片会先识别成文字</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteNote">双击便利贴编辑，点 √ 保存；右键可置顶、调透明度、鼠标穿透、调整大小。开启鼠标穿透后点击会穿过便利贴，指针放在便利贴上按便利贴快捷键，或从托盘菜单、便利贴页即可取消。</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteOps">便利贴设置</sys:String>
+    <sys:String x:Key="S.Settings.NoteOcrLanguage">图片识别语言</sys:String>
+    <sys:String x:Key="S.Settings.NoteWidth">默认宽度</sys:String>
+    <sys:String x:Key="S.Settings.NoteFontSize">字号</sys:String>
+    <sys:String x:Key="S.Settings.NotePaperColor">纸张颜色</sys:String>
+    <sys:String x:Key="S.Settings.NoteTapeColor">胶带颜色</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveTitle">自动存档</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchive">保存时记录到日志文件</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveChoose">选择文件夹</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveOpen">打开文件夹</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveHint">每次保存追加一行：序号 日期时间 内容（换行记为 ↵），永不删除。</sys:String>
+    <sys:String x:Key="S.Settings.NoteCustomColor">自定义…</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeStep">每格</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeMinimum">最低</sys:String>
+    <sys:String x:Key="S.Settings.MouseFade">窗口透明度</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeHint">按住组合键滚动滚轮，调节指针下窗口的透明度：向上更不透明，向下更透明。</sys:String>
+    <sys:String x:Key="S.Settings.MouseScroll">横向滚动</sys:String>
+    <sys:String x:Key="S.Settings.MouseScrollHint">按住组合键滚动滚轮，让指针下的内容左右滚动。</sys:String>
+    <sys:String x:Key="S.Settings.MouseScrollReverse">反向</sys:String>
+    <sys:String x:Key="S.Settings.MouseResize">调整窗口大小</sys:String>
+    <sys:String x:Key="S.Settings.MouseResizeHint">按住组合键在窗口内拖动，移动离起点最近的边或角；从正中拖动则调整右下角。</sys:String>
+    <sys:String x:Key="S.Settings.MouseRightDrag">右键拖动</sys:String>
+    <sys:String x:Key="S.Settings.MouseMiddleDrag">中键拖动</sys:String>
+    <sys:String x:Key="S.Settings.MouseLeftDrag">左键拖动</sys:String>
+    <sys:String x:Key="S.Settings.MouseNote">两个滚轮功能组合键相同时优先透明度；以管理员身份运行的程序不受影响；退出时被调透明的窗口会恢复。</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenu">托盘右键菜单</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenuHint">勾选的功能开关会出现在托盘图标的右键菜单里，点一下即可开启或关闭。</sys:String>
 
     <sys:String x:Key="S.Settings.OcrFold">OCR 设置</sys:String>
     <sys:String x:Key="S.Settings.OcrFoldTitle">文字识别（OCR）</sys:String>

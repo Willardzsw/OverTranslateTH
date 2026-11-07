@@ -21,7 +21,7 @@ public class OcrPerformanceSettingsTests
     {
         var original = new OcrModelSettings
         {
-            Selection = OcrModelCatalog.Thai, DetectorSize = "medium", RecognizerSize = "medium", Device = "directml:1",
+            Selection = OcrModelCatalog.Thai, DetectorSize = "medium", RecognizerSize = "medium", Device = "directml:Some GPU 4060",
         };
         var copy = SettingsService.Parse(SettingsService.Serialize(new AppSettings { OcrModels = original })).OcrModels.Copy();
         Assert.Equal(OcrModelCatalog.Identity(original), OcrModelCatalog.Identity(copy));
@@ -98,13 +98,32 @@ public class OcrPerformanceSettingsTests
     }
 
     [Fact]
-    public void UnavailableExplicitGpuThrowsInsteadOfSilentlyUsingCpu()
+    public void AGpuThatIsNotThereFallsBackToTheCpu()
     {
-        Assert.Throws<InvalidOperationException>(() =>
-        {
-            using var options = OcrExecution.Options(new() { Device = "directml:2147483647" }, 1, out _);
-        });
+        using var missingByName = OcrExecution.Options(new() { Device = "directml:No Such GPU 9999" }, 1, out var byName);
+        Assert.Equal("CPU", byName);
+        using var missingByIndex = OcrExecution.Options(new() { Device = "directml:2147483647" }, 1, out var byIndex);
+        Assert.Equal("CPU", byIndex);
         using var cpu = OcrExecution.Options(new(), 1, out var device);
         Assert.Equal("CPU", device);
+    }
+
+    [Fact]
+    public void AnOldPositionNumberedGpuChoiceBecomesTheStrongestGpusName()
+    {
+        var previous = SettingsService.LegacyGpuReplacement;
+        SettingsService.LegacyGpuReplacement = () => "directml:NVIDIA GeForce RTX 4060 Laptop GPU";
+        try
+        {
+            var settings = SettingsService.Parse("{\"OcrModels\":{\"Device\":\"directml:1\"}}").OcrModels;
+            Assert.Equal("directml:NVIDIA GeForce RTX 4060 Laptop GPU", settings.Device);
+
+            var named = SettingsService.Parse("{\"OcrModels\":{\"Device\":\"directml:Intel(R) Iris(R) Xe Graphics\"}}").OcrModels;
+            Assert.Equal("directml:Intel(R) Iris(R) Xe Graphics", named.Device);
+        }
+        finally
+        {
+            SettingsService.LegacyGpuReplacement = previous;
+        }
     }
 }

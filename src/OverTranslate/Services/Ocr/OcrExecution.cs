@@ -19,13 +19,36 @@ internal static class OcrExecution
         var result = new List<DeviceOption> { new("cpu", "CPU") };
         try
         {
+            // By name, strongest first. Two identical cards share a name; the first is used.
             result.AddRange(DirectMlDevice.Enumerate().Where(a => !DirectMlDevice.IsSoftware(a))
                 .OrderByDescending(a => a.DedicatedMemory)
-                .Select(a => new DeviceOption($"directml:{a.Index}", $"DirectML · {a.Name}")));
+                .DistinctBy(a => a.Name)
+                .Select(a => new DeviceOption($"directml:{a.Name}", $"DirectML · {a.Name}")));
         }
         catch { /* CPU remains available on machines without DXGI. */ }
         return result;
     }
+
+    /// <summary>
+    /// What an old position-numbered choice becomes: the GPU with the most dedicated memory — the
+    /// fast one, which is what choosing a GPU was for — or the CPU when there is none.
+    /// </summary>
+    internal static string PreferredGpu() =>
+        Devices().FirstOrDefault(d => d.Id != "cpu")?.Id ?? "cpu";
+
+    /// <summary>The adapter a device id means now, or null when it is not in this machine.</summary>
+    private static DirectMlDevice.Adapter? Resolve(string id)
+    {
+        var rest = id[9..];
+        var adapters = DirectMlDevice.Enumerate().Where(a => !DirectMlDevice.IsSoftware(a)).ToList();
+        if (int.TryParse(rest, out var index))
+            return adapters.Where(a => a.Index == index).Select(a => (DirectMlDevice.Adapter?)a).FirstOrDefault();
+        return adapters.Where(a => string.Equals(a.Name, rest, StringComparison.Ordinal))
+            .OrderByDescending(a => a.DedicatedMemory)
+            .Select(a => (DirectMlDevice.Adapter?)a).FirstOrDefault();
+    }
+
+    private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
     internal static SessionOptions Options(OcrModelSettings settings, int threads, out string device)
     {
@@ -34,8 +57,15 @@ internal static class OcrExecution
         if (OcrModelCatalog.Device(settings) == "cpu") return options;
         try
         {
-            var index = int.Parse(OcrModelCatalog.Device(settings).AsSpan(9));
-            var adapter = DirectMlDevice.Enumerate().Single(a => a.Index == index && !DirectMlDevice.IsSoftware(a));
+            var id = OcrModelCatalog.Device(settings);
+            if (Resolve(id) is not { } adapter)
+            {
+                // The chosen GPU is not in this machine now (switched off, removed, renamed by a
+                // driver). Recognition carries on, on the CPU, and the OCR card's 上次執行裝置 says so.
+                Log.Warn("OCR device {Id} is not available; using the CPU", id);
+                return options;
+            }
+            var index = adapter.Index;
             if (DirectMlDevice.Direct3D12Problem(adapter) is { } incompatible)
                 throw new NotSupportedException(incompatible);
             if (DirectMlDevice.Load(OcrModelAssets.RuntimePath, OcrModelAssets.RuntimeFile) is { } missing)

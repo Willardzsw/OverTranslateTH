@@ -165,7 +165,7 @@ public class HighlightedTextTests
         return new ResourceDictionary
         {
             Source = new Uri(
-                "pack://application:,,,/OverTranslate;component/Themes/SharedStyles.xaml",
+                "pack://application:,,,/TTTools;component/Themes/SharedStyles.xaml",
                 UriKind.Absolute)
         };
     }

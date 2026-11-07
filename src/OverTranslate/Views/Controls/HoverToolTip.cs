@@ -28,7 +28,7 @@ namespace OverTranslate.Views.Controls;
 public static class HoverToolTip
 {
     /// <summary>How long the pointer has to rest before the hint appears.</summary>
-    private static readonly TimeSpan OpenDelay = TimeSpan.FromMilliseconds(200);
+    private static readonly TimeSpan OpenDelay = TimeSpan.FromMilliseconds(500);
 
     /// <summary>
     /// Anchored under the element rather than under the pointer, where WPF puts its own.

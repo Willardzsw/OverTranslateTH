@@ -38,6 +38,7 @@
     <sys:String x:Key="S.Tray.OpenWindow">Открыть окно перевода</sys:String>
     <sys:String x:Key="S.Tray.RealtimeWindow">Окно перевода в реальном времени</sys:String>
     <sys:String x:Key="S.Tray.Settings">Настройки</sys:String>
+    <sys:String x:Key="S.Tray.Toggles">Переключатели функций</sys:String>
     <sys:String x:Key="S.Tray.Exit">Выход</sys:String>
 
     <!-- ── About ── -->
@@ -221,7 +222,7 @@
     <sys:String x:Key="S.Secret.Hide">Скрыть</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">OverTranslateTH продолжает работать</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">TT Tools продолжает работать</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">Программа свернута в область уведомлений. Нажмите {0}, чтобы начать перевод снимка экрана.</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">сочетание клавиш</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">Нет ключа API</sys:String>
@@ -729,6 +730,70 @@
     <sys:String x:Key="S.Settings.PinMiddleClick">Щелчок средней</sys:String>
     <sys:String x:Key="S.Settings.PinMiddleDouble">Двойной щелчок средней</sys:String>
     <sys:String x:Key="S.Settings.PinConflictNote">* При совпадении действует верхняя строка. Esc всегда закрывает.</sys:String>
+    <sys:String x:Key="S.Settings.MouseEnhance">Улучшения мыши</sys:String>
+    <sys:String x:Key="S.Settings.MouseEnhanceHint">Прозрачность, горизонтальная прокрутка и размер окон — клавишами и мышью.</sys:String>
+    <sys:String x:Key="S.Settings.MouseOps">Настройки мыши</sys:String>
+    <sys:String x:Key="S.Settings.MouseWheelGesture">Колесо</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenuFold">Настроить меню</sys:String>
+    <sys:String x:Key="S.Note.Title">Заметка</sys:String>
+    <sys:String x:Key="S.Note.Recognising">Распознаю текст на картинке…</sys:String>
+    <sys:String x:Key="S.Note.NothingRead">На картинке не найден текст; открыта пустая заметка.</sys:String>
+    <sys:String x:Key="S.Note.ReadFailed">Не удалось распознать картинку: {0}</sys:String>
+    <sys:String x:Key="S.Note.Edit">Изменить</sys:String>
+    <sys:String x:Key="S.Note.Topmost">Поверх всех окон</sys:String>
+    <sys:String x:Key="S.Note.Unpin">Не поверх окон</sys:String>
+    <sys:String x:Key="S.Note.Delete">Удалить</sys:String>
+    <sys:String x:Key="S.Note.Save">Сохранить (Ctrl+Enter)</sys:String>
+    <sys:String x:Key="S.Note.Cancel">Отмена (Esc)</sys:String>
+    <sys:String x:Key="S.Note.CopyText">Копировать текст</sys:String>
+    <sys:String x:Key="S.Note.PassThrough">Сквозные щелчки</sys:String>
+    <sys:String x:Key="S.Note.Resize">Изменить размер</sys:String>
+    <sys:String x:Key="S.Note.AutoSize">Автоматический размер</sys:String>
+    <sys:String x:Key="S.Note.Empty">(пусто)</sys:String>
+    <sys:String x:Key="S.Note.Opacity">Непрозрачность</sys:String>
+    <sys:String x:Key="S.Settings.NoteOpacity">Непрозрачность по умолчанию</sys:String>
+    <sys:String x:Key="S.Note.ReadTimeout">Распознавание заняло больше 30 секунд и остановлено.</sys:String>
+    <sys:String x:Key="S.Notes.Title">Заметки</sys:String>
+    <sys:String x:Key="S.Notes.Subtitle">Все заметки на рабочем столе, последние сохранённые сверху.</sys:String>
+    <sys:String x:Key="S.Notes.New">Новая заметка</sys:String>
+    <sys:String x:Key="S.Notes.Empty">Заметок пока нет. Скопируйте текст или картинку и нажмите клавишу заметок (по умолчанию F2) или «Новая заметка».</sys:String>
+    <sys:String x:Key="S.Notes.StateTopmost">поверх окон</sys:String>
+    <sys:String x:Key="S.Notes.StatePassThrough">сквозные щелчки</sys:String>
+    <sys:String x:Key="S.Notes.Locate">Найти (в центр экрана)</sys:String>
+    <sys:String x:Key="S.Notes.PassThroughOn">Включить сквозные щелчки</sys:String>
+    <sys:String x:Key="S.Notes.PassThroughOff">Выключить сквозные щелчки</sys:String>
+    <sys:String x:Key="S.Shell.StickyNotes">Заметки</sys:String>
+    <sys:String x:Key="S.Tray.NotePassThroughOff">Выключить сквозные щелчки заметок</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteHotkey">Заметка</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteHotkeyHint">Скопируйте текст или картинку и нажмите, чтобы прикрепить заметку под указателем; картинка сначала распознаётся</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteNote">Двойной щелчок — изменить, ✓ — сохранить; правой кнопкой — поверх окон, прозрачность, сквозные щелчки, размер. Со сквозными щелчками нажатия проходят сквозь заметку: наведите на неё и нажмите клавишу заметок или выключите в меню трея или на странице заметок.</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteOps">Настройки заметок</sys:String>
+    <sys:String x:Key="S.Settings.NoteOcrLanguage">Язык картинки</sys:String>
+    <sys:String x:Key="S.Settings.NoteWidth">Ширина по умолчанию</sys:String>
+    <sys:String x:Key="S.Settings.NoteFontSize">Размер шрифта</sys:String>
+    <sys:String x:Key="S.Settings.NotePaperColor">Цвет бумаги</sys:String>
+    <sys:String x:Key="S.Settings.NoteTapeColor">Цвет ленты</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveTitle">Архив</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchive">Записывать сохранённые заметки в журнал</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveChoose">Выбрать папку</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveOpen">Открыть папку</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveHint">Каждое сохранение — одна строка: номер, дата и время, текст (переносы как ↵). Не удаляется.</sys:String>
+    <sys:String x:Key="S.Settings.NoteCustomColor">Другой…</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeStep">Шаг</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeMinimum">Минимум</sys:String>
+    <sys:String x:Key="S.Settings.MouseFade">Прозрачность окна</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeHint">Удерживайте клавиши и вращайте колесо, чтобы менять прозрачность окна под указателем: вверх — плотнее, вниз — прозрачнее.</sys:String>
+    <sys:String x:Key="S.Settings.MouseScroll">Горизонтальная прокрутка</sys:String>
+    <sys:String x:Key="S.Settings.MouseScrollHint">Удерживайте клавиши и вращайте колесо для горизонтальной прокрутки под указателем.</sys:String>
+    <sys:String x:Key="S.Settings.MouseScrollReverse">Обратно</sys:String>
+    <sys:String x:Key="S.Settings.MouseResize">Изменение размера окон</sys:String>
+    <sys:String x:Key="S.Settings.MouseResizeHint">Удерживайте клавиши и тяните внутри окна, чтобы двигать ближайший край или угол; из центра — правый нижний угол.</sys:String>
+    <sys:String x:Key="S.Settings.MouseRightDrag">Правой кнопкой</sys:String>
+    <sys:String x:Key="S.Settings.MouseMiddleDrag">Средней кнопкой</sys:String>
+    <sys:String x:Key="S.Settings.MouseLeftDrag">Левой кнопкой</sys:String>
+    <sys:String x:Key="S.Settings.MouseNote">Если у обоих действий колеса одинаковые клавиши, приоритет у прозрачности. Программы от имени администратора не затрагиваются. При выходе прозрачность окон восстанавливается.</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenu">Меню в трее</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenuHint">Отмеченные переключатели появятся в контекстном меню значка в трее, где их можно включать и выключать одним щелчком.</sys:String>
 
     <sys:String x:Key="S.Settings.OcrFold">Настройки OCR</sys:String>
     <sys:String x:Key="S.Settings.OcrFoldTitle">Распознавание текста (OCR)</sys:String>

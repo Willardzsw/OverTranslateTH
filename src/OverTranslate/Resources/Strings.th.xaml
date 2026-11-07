@@ -1,0 +1,817 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Thai (ไทย). Same keys and placeholders as Strings.zh-Hant.xaml — StringsParityTests checks it. Machine-assisted translation; a native review is welcome. -->
+
+    <!-- ── Shared ── -->
+    <sys:String x:Key="S.Common.Reset">รีเซ็ต</sys:String>
+    <sys:String x:Key="S.Common.Close">ปิด</sys:String>
+    <sys:String x:Key="S.Common.Cancel">ยกเลิก</sys:String>
+    <sys:String x:Key="S.Common.Save">บันทึก</sys:String>
+    <sys:String x:Key="S.Common.Configure">ตั้งค่า</sys:String>
+    <sys:String x:Key="S.Common.ApiKey">คีย์ API</sys:String>
+    <!-- The search box in a language picker. Typing narrows the list and never changes the
+         selection on its own — the user still picks. -->
+    <sys:String x:Key="S.Common.SearchLanguage">ค้นหาภาษา</sys:String>
+    <sys:String x:Key="S.Common.SearchNoMatch">ไม่พบภาษาที่ตรงกัน</sys:String>
+
+    <!-- ── Shell window ── -->
+    <sys:String x:Key="S.Shell.About">เกี่ยวกับ</sys:String>
+    <sys:String x:Key="S.Shell.CaptureTranslate">จับภาพหน้าจอ</sys:String>
+    <sys:String x:Key="S.Shell.TextTranslate">ข้อความ</sys:String>
+    <sys:String x:Key="S.Shell.Settings">การตั้งค่า</sys:String>
+    <sys:String x:Key="S.Shell.HideSidebar">ซ่อนแถบด้านข้าง</sys:String>
+    <sys:String x:Key="S.Shell.ShowSidebar">แสดงแถบด้านข้าง</sys:String>
+    <sys:String x:Key="S.Shell.Pin">ปักหมุดหน้าต่างไว้บนสุด</sys:String>
+    <sys:String x:Key="S.Shell.Unpin">เลิกปักหมุด</sys:String>
+
+    <!-- ── Tray menu ── -->
+    <sys:String x:Key="S.Tray.OpenWindow">เปิดหน้าต่างแปล</sys:String>
+    <sys:String x:Key="S.Tray.RealtimeWindow">หน้าต่างแปลแบบเรียลไทม์</sys:String>
+    <sys:String x:Key="S.Tray.Settings">การตั้งค่า</sys:String>
+    <sys:String x:Key="S.Tray.Toggles">สวิตช์ฟังก์ชัน</sys:String>
+    <sys:String x:Key="S.Tray.Exit">ออก</sys:String>
+
+    <!-- ── About ── -->
+    <sys:String x:Key="S.About.BasedOn">พัฒนาจาก OverTranslate · © 2026 Hon-Lu · สัญญาอนุญาต MIT</sys:String>
+    <sys:String x:Key="S.About.License">สัญญาอนุญาต</sys:String>
+    <sys:String x:Key="S.About.ThirdParty">ประกาศของบุคคลที่สาม</sys:String>
+    <sys:String x:Key="S.About.Version">เวอร์ชัน {0}</sys:String>
+    <sys:String x:Key="S.About.OpenSource">ฟรีและเป็นโอเพนซอร์ส</sys:String>
+
+    <!-- ── Toast ── -->
+    <sys:String x:Key="S.Toast.CopyMessage">คัดลอกข้อความ</sys:String>
+    <sys:String x:Key="S.Toast.Copied">คัดลอกไปยังคลิปบอร์ดแล้ว</sys:String>
+    <sys:String x:Key="S.Toast.CopyFailed">คัดลอกไม่สำเร็จ โปรดลองอีกครั้งภายหลัง</sys:String>
+
+    <!-- ── Update ── -->
+
+    <!-- ── Service errors ── -->
+    <sys:String x:Key="S.Error.OpenAiHttp">API ที่รองรับ OpenAI ตอบกลับ {0}: {1}</sys:String>
+    <sys:String x:Key="S.Error.OpenAiUnparsable">ไม่สามารถอ่านการตอบกลับของ API ที่รองรับ OpenAI ได้</sys:String>
+    <sys:String x:Key="S.Error.OpenAiNoTranslation">API ที่รองรับ OpenAI ไม่ได้ส่งคำแปลกลับมา</sys:String>
+    <sys:String x:Key="S.Error.OpenAiTimeout">API ที่รองรับ OpenAI ไม่ตอบกลับภายใน {0} วินาที คุณสามารถเปลี่ยนเวลารอได้ในการตั้งค่าบริการแปล</sys:String>
+    <sys:String x:Key="S.Error.OpenAiBadUrl">ที่อยู่ API ที่รองรับ OpenAI ต้องเป็น URL แบบ HTTP หรือ HTTPS ที่ถูกต้อง</sys:String>
+    <sys:String x:Key="S.Error.OpenAiNoModel">ยังไม่ได้ตั้งชื่อโมเดล กรอกโมเดลที่จะใช้ในการตั้งค่าบริการแปล</sys:String>
+    <sys:String x:Key="S.Error.UnknownError">ข้อผิดพลาดที่ไม่ทราบสาเหตุ</sys:String>
+    <sys:String x:Key="S.Error.NoErrorContent">ไม่มีรายละเอียดข้อผิดพลาด</sys:String>
+    <sys:String x:Key="S.Error.OcrUnsupportedLanguage">ขณะนี้ OCR รองรับเฉพาะ AUTO, EN, ZH, ZH-HANT, JA, KO และ TH เท่านั้น ยังไม่รองรับ "{0}"</sys:String>
+    <sys:String x:Key="S.Error.OcrSwapTimeout">หมดเวลารอให้การรู้จำอื่นเสร็จก่อนสลับโมเดล OCR</sys:String>
+    <sys:String x:Key="S.Error.OcrImageConvert">ไม่สามารถแปลงภาพเป็นรูปแบบที่ ONNX OCR อ่านได้</sys:String>
+    <sys:String x:Key="S.Error.OcrModelMissing">ไม่พบไฟล์โมเดล OCR: {0}</sys:String>
+    <sys:String x:Key="S.Error.NotTranslated">ยังไม่ได้แปล</sys:String>
+
+    <!-- ── Text translation page ── -->
+    <sys:String x:Key="S.Translation.Title">แปลข้อความ</sys:String>
+    <sys:String x:Key="S.Translation.Subtitle">พิมพ์หรือวางข้อความเพื่อแปล ผลจากการจับภาพหน้าจอก็จะแสดงที่นี่</sys:String>
+    <sys:String x:Key="S.Translation.SwapTip">สลับภาษาและข้อความ</sys:String>
+    <sys:String x:Key="S.Translation.ClearSource">ล้างข้อความต้นฉบับ</sys:String>
+    <sys:String x:Key="S.Translation.SpeakSource">อ่านต้นฉบับออกเสียง</sys:String>
+    <sys:String x:Key="S.Translation.SpeakSourceOpenAi">เมื่อใช้บริการ OpenAI ให้เลือกภาษาต้นทางก่อนจึงจะอ่านต้นฉบับออกเสียงได้</sys:String>
+    <sys:String x:Key="S.Translation.SpeakSourceUnknown">ยังไม่ทราบภาษาของต้นฉบับ จะอ่านออกเสียงได้เมื่อได้คำแปลกลับมาแล้ว</sys:String>
+    <!-- The note at the foot of the page and the greyed speaker's tooltip are the same sentence:
+         the note is what is read, the tooltip is for whoever hovers the button instead. -->
+    <sys:String x:Key="S.Translation.Source">ต้นฉบับ</sys:String>
+    <sys:String x:Key="S.Translation.SpeakResult">อ่านคำแปลออกเสียง</sys:String>
+    <sys:String x:Key="S.Translation.Result">คำแปล</sys:String>
+    <sys:String x:Key="S.Translation.Retry">↻ ลองใหม่</sys:String>
+    <sys:String x:Key="S.Translation.MissingApiKey">ไม่มีคีย์ API — กรอกในการตั้งค่าก่อน</sys:String>
+    <sys:String x:Key="S.Translation.ProviderUnavailable">{0} ใช้งานไม่ได้ในขณะนี้ ลองใช้แหล่งแปลอื่น
+แปลไม่สำเร็จ: {1}</sys:String>
+    <sys:String x:Key="S.Translation.Translating">กำลังแปล...</sys:String>
+    <sys:String x:Key="S.Translation.SpeakFailed">อ่านออกเสียงไม่ได้: {0}</sys:String>
+
+    <!-- ── In-place translation ── Only ever seen on the hint card, so each line stays to one: it sits
+         over the window the reader is working in. -->
+    <sys:String x:Key="S.QuickTranslate.Replaced">แปลและวางแล้ว</sys:String>
+    <sys:String x:Key="S.QuickTranslate.EmptyResult">คำแปลว่างเปล่า ข้อความของคุณจึงยังเหมือนเดิม</sys:String>
+    <sys:String x:Key="S.QuickTranslate.FocusMoved">คุณสลับหน้าต่าง จึงวางคำแปลไม่ได้</sys:String>
+    <sys:String x:Key="S.QuickTranslate.ClipboardBusy">คลิปบอร์ดใช้งานไม่ได้ จึงไม่ได้วางอะไร</sys:String>
+
+    <!-- ── Rich dictionary ── -->
+    <sys:String x:Key="S.Dictionary.Alternatives">คำแปลเพิ่มเติม</sys:String>
+    <sys:String x:Key="S.Dictionary.NoResult">ไม่พบรายการในพจนานุกรมสำหรับคำนี้</sys:String>
+    <sys:String x:Key="S.Dictionary.Unavailable">ไม่พบรายการในพจนานุกรมสำหรับคำนี้</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Adjective">คำคุณศัพท์</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Adverb">คำวิเศษณ์</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Article">คำนำหน้านาม</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Conjunction">คำสันธาน</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Determiner">คำบ่งชี้</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Interjection">คำอุทาน</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.ModalVerb">กริยาช่วย</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Noun">คำนาม</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Other">อื่น ๆ</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Phrase">วลี</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Preposition">คำบุพบท</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Pronoun">คำสรรพนาม</sys:String>
+    <sys:String x:Key="S.Dictionary.PartOfSpeech.Verb">คำกริยา</sys:String>
+
+    <!-- ── Quick lookup popup ── -->
+    <sys:String x:Key="S.QuickLookup.Placeholder">พิมพ์ข้อความที่จะแปล...</sys:String>
+    <sys:String x:Key="S.QuickLookup.Settings">การตั้งค่าแปลด่วน</sys:String>
+    <sys:String x:Key="S.QuickLookup.BackToResult">กลับไปที่คำแปล</sys:String>
+    <sys:String x:Key="S.QuickLookup.Pin">ปักหมุดเพื่อไม่ให้หน้าต่างปิดเอง</sys:String>
+    <sys:String x:Key="S.QuickLookup.Unpin">เลิกปักหมุด</sys:String>
+    <sys:String x:Key="S.QuickLookup.Copy">คัดลอก</sys:String>
+    <sys:String x:Key="S.QuickLookup.Copied">คัดลอกแล้ว</sys:String>
+    <sys:String x:Key="S.QuickLookup.SpeakSource">อ่านต้นฉบับ</sys:String>
+    <sys:String x:Key="S.QuickLookup.SpeakResult">อ่านคำแปล</sys:String>
+    <sys:String x:Key="S.QuickLookup.SpeakSourceTip">อ่านต้นฉบับออกเสียง</sys:String>
+    <!-- Automatic is not switched off here the way it is on the text translation page: once the
+         translation is back the engine has said which language the original was in, so the only
+         gap is before the first result. -->
+    <sys:String x:Key="S.QuickLookup.SpeakSourceOpenAi">เมื่อใช้บริการ OpenAI ให้เลือกภาษาต้นทางก่อนจึงจะอ่านต้นฉบับออกเสียงได้</sys:String>
+    <sys:String x:Key="S.QuickLookup.SpeakSourceUnknown">ยังไม่ทราบภาษาของต้นฉบับ จะอ่านออกเสียงได้เมื่อได้คำแปลกลับมาแล้ว</sys:String>
+    <sys:String x:Key="S.QuickLookup.Provider">บริการแปล</sys:String>
+    <sys:String x:Key="S.QuickLookup.ProviderHint">ใช้ร่วมกับการแปลหน้าจอและการแปลข้อความ</sys:String>
+    <sys:String x:Key="S.QuickLookup.AutoCopy">คัดลอกผลการแปลโดยอัตโนมัติ</sys:String>
+    <sys:String x:Key="S.QuickLookup.AutoCopyHint">คัดลอกผลลัพธ์ไปยังคลิปบอร์ดโดยอัตโนมัติเมื่อแปลเสร็จ</sys:String>
+    <sys:String x:Key="S.QuickLookup.MultilineInput">ป้อนหลายบรรทัด</sys:String>
+    <sys:String x:Key="S.QuickLookup.MultilineInputHint">เก็บการขึ้นบรรทัดใหม่ในข้อความที่เลือกและอนุญาตให้ป้อนหลายบรรทัด</sys:String>
+    <sys:String x:Key="S.QuickLookup.Bilingual">แปลสองทาง</sys:String>
+    <sys:String x:Key="S.QuickLookup.BilingualHint">ตรวจหาภาษาที่คุณพิมพ์และแปลระหว่างสองภาษาที่คุณเลือก</sys:String>
+    <sys:String x:Key="S.QuickLookup.BilingualFallback">ภาษาอื่นที่ตรวจพบจะถูกแปลเป็นภาษาทางซ้าย คือ {0}</sys:String>
+    <sys:String x:Key="S.QuickLookup.BilingualFirst">ภาษาแรก</sys:String>
+    <sys:String x:Key="S.QuickLookup.BilingualSecond">ภาษาที่สอง</sys:String>
+    <sys:String x:Key="S.QuickLookup.BilingualStatusIdle">สองทาง: กำลังตรวจหา</sys:String>
+    <sys:String x:Key="S.QuickLookup.BilingualStatusPair">สองทาง: {0} → {1}</sys:String>
+    <sys:String x:Key="S.QuickLookup.BilingualStatusTip">ทิศทางจะถูกเลือกให้ระหว่าง {0} และ {1} คลิกเพื่อเปลี่ยนภาษา</sys:String>
+    <sys:String x:Key="S.QuickLookup.Collapse">ย่อ</sys:String>
+    <sys:String x:Key="S.QuickLookup.Expand">ขยาย</sys:String>
+    <sys:String x:Key="S.QuickLookup.TranslationCopied">คัดลอกไปยังคลิปบอร์ดแล้ว</sys:String>
+    <sys:String x:Key="S.QuickLookup.OpenFullSettings">การตั้งค่าทั้งหมด</sys:String>
+    <sys:String x:Key="S.QuickLookup.SettingsHint">กด {0} เพื่อเปิด หน้าต่างจะปิดเมื่อคุณสลับไปหน้าต่างอื่น ปักหมุดไว้หากต้องการให้แสดงต่อ</sys:String>
+
+    <!-- ── Capture toolbar ── -->
+    <sys:String x:Key="S.Toolbar.Translate">แปล</sys:String>
+    <sys:String x:Key="S.Toolbar.Translating">กำลังแปล...</sys:String>
+    <sys:String x:Key="S.Toolbar.Recognising">กำลังอ่าน...</sys:String>
+    <sys:String x:Key="S.Toolbar.Retranslate">แปลอีกครั้ง</sys:String>
+    <sys:String x:Key="S.Toolbar.ShowSource">แสดงต้นฉบับ</sys:String>
+    <sys:String x:Key="S.Toolbar.ShowTranslation">แสดงคำแปล</sys:String>
+    <sys:String x:Key="S.Toolbar.CopyText">คัดลอกข้อความ</sys:String>
+    <sys:String x:Key="S.Toolbar.CopyTranslation">คัดลอกคำแปล</sys:String>
+    <sys:String x:Key="S.Toolbar.Annotate">ใส่เครื่องหมาย</sys:String>
+    <sys:String x:Key="S.Toolbar.AnnotateHint">วาดเครื่องหมายบนส่วนที่เลือก</sys:String>
+    <sys:String x:Key="S.Annotate.Pen">ปากกา</sys:String>
+    <sys:String x:Key="S.Annotate.Highlighter">ปากกาเน้นข้อความ</sys:String>
+    <sys:String x:Key="S.Annotate.Line">เส้นตรง</sys:String>
+    <sys:String x:Key="S.Annotate.Arrow">ลูกศร</sys:String>
+    <sys:String x:Key="S.Annotate.Rectangle">สี่เหลี่ยม</sys:String>
+    <sys:String x:Key="S.Annotate.Ellipse">วงรี</sys:String>
+    <sys:String x:Key="S.Annotate.Text">ข้อความ</sys:String>
+    <sys:String x:Key="S.Annotate.Bold">ตัวหนา</sys:String>
+    <sys:String x:Key="S.Annotate.Italic">ตัวเอียง</sys:String>
+    <sys:String x:Key="S.Annotate.Underline">ขีดเส้นใต้</sys:String>
+    <sys:String x:Key="S.Annotate.Strikethrough">ขีดฆ่า</sys:String>
+    <sys:String x:Key="S.Annotate.Eraser">ยางลบ</sys:String>
+    <sys:String x:Key="S.Annotate.Undo">เลิกทำ</sys:String>
+    <sys:String x:Key="S.Annotate.Redo">ทำซ้ำ</sys:String>
+    <sys:String x:Key="S.Annotate.Thickness">ขนาด</sys:String>
+    <sys:String x:Key="S.Annotate.Thin">บาง</sys:String>
+    <sys:String x:Key="S.Annotate.Thick">หนา</sys:String>
+    <sys:String x:Key="S.Annotate.Opacity">ความทึบ</sys:String>
+    <sys:String x:Key="S.Annotate.Faint">อ่อน</sys:String>
+    <sys:String x:Key="S.Annotate.Strong">เข้ม</sys:String>
+    <sys:String x:Key="S.Annotate.Size">ขนาด</sys:String>
+    <sys:String x:Key="S.Annotate.Small">เล็ก</sys:String>
+    <sys:String x:Key="S.Annotate.Large">ใหญ่</sys:String>
+    <sys:String x:Key="S.Toolbar.Screenshot">ภาพหน้าจอ</sys:String>
+    <sys:String x:Key="S.Toolbar.OpenWindow">หน้าต่าง</sys:String>
+    <sys:String x:Key="S.Toolbar.OpenWindowHint">เปิดคำแปลนี้ในหน้าต่าง</sys:String>
+    <sys:String x:Key="S.Toolbar.ShowSourceHint">ซ่อนคำแปลชั่วคราวและดูส่วนที่เลือกตามเดิม</sys:String>
+    <sys:String x:Key="S.Toolbar.ShowTranslationHint">แสดงคำแปลกลับมา</sys:String>
+    <sys:String x:Key="S.Toolbar.CopyTextHint">คัดลอกข้อความต้นฉบับในส่วนที่เลือกไปยังคลิปบอร์ด</sys:String>
+    <sys:String x:Key="S.Toolbar.CopyTranslationHint">คัดลอกคำแปลไปยังคลิปบอร์ด</sys:String>
+    <sys:String x:Key="S.Toolbar.ScreenshotHint">คัดลอกส่วนที่เลือกตามที่เห็นตอนนี้ไปยังคลิปบอร์ด</sys:String>
+    <sys:String x:Key="S.Toolbar.SettingsHint">แปลอัตโนมัติ ปิดหลังจับภาพ บันทึกภาพหน้าจอ และอื่น ๆ</sys:String>
+    <sys:String x:Key="S.Toolbar.Swap">สลับภาษาต้นทางและภาษาปลายทาง</sys:String>
+    <sys:String x:Key="S.Toolbar.Close">จบการแปลภาพหน้าจอ</sys:String>
+    <sys:String x:Key="S.Toolbar.Direction">ทิศทางการเขียนของต้นฉบับ</sys:String>
+    <sys:String x:Key="S.Toolbar.DirectionHorizontal">แนวนอน</sys:String>
+    <sys:String x:Key="S.Toolbar.DirectionVertical">แนวตั้ง</sys:String>
+    <sys:String x:Key="S.Toolbar.DirectionHorizontalHint">ต้นฉบับเขียนจากซ้ายไปขวา</sys:String>
+    <sys:String x:Key="S.Toolbar.DirectionVerticalHint">สำหรับข้อความแนวตั้งเป็นหลัก และแปลข้อความแนวนอนบางส่วนได้ด้วย (หนังสือและมังงะญี่ปุ่น)</sys:String>
+    <sys:String x:Key="S.Toolbar.LayoutMode">ส่วนที่เลือกมีอะไร</sys:String>
+    <sys:String x:Key="S.Toolbar.LayoutModeGeneral">ทั่วไป</sys:String>
+    <sys:String x:Key="S.Toolbar.LayoutModeInterface">หน้าจอโปรแกรม</sys:String>
+    <sys:String x:Key="S.Toolbar.LayoutModeGeneralHint">เรียงข้อความตามลำดับการอ่านและรวมบรรทัดที่อยู่ติดกันซึ่งเป็นเนื้อเดียวกัน เหมาะกับบทความ การ์ตูน บทสนทนา และการจับภาพทั่วไป</sys:String>
+    <sys:String x:Key="S.Toolbar.LayoutModeInterfaceHint">คงการจัดวางเดิมและการแยกระหว่างบล็อก และตัดสินการรวมอย่างเข้มงวดกว่า เหมาะกับหน้าจอเกม เมนู และหน้าจอหลายคอลัมน์</sys:String>
+    <sys:String x:Key="S.Toolbar.Speak">อ่าน</sys:String>
+    <sys:String x:Key="S.Toolbar.SpeakStopLabel">หยุด</sys:String>
+    <sys:String x:Key="S.Toolbar.SpeakHint">อ่านข้อความต้นฉบับที่รู้จำได้ออกเสียง</sys:String>
+    <sys:String x:Key="S.Toolbar.SpeakStop">หยุดอ่าน</sys:String>
+    <sys:String x:Key="S.Toolbar.SpeakAutomatic">อ่านออกเสียงไม่ได้ขณะที่ภาษาต้นทางเป็นอัตโนมัติ โปรดเลือกภาษาจริงก่อน</sys:String>
+    <sys:String x:Key="S.Toolbar.SpeakNoText">ยังไม่มีข้อความที่รู้จำได้ให้อ่าน</sys:String>
+    <sys:String x:Key="S.Toolbar.BackupBadge">⚡สำรอง</sys:String>
+    <sys:String x:Key="S.Toolbar.BackupTooltip">"{0}" แปลได้ไม่ครบ "{1}" จึงแปลส่วนที่เหลือแทน
+ที่ใช้จริงครั้งนี้: {2}</sys:String>
+
+    <!-- ── Capture overlay ── -->
+    <sys:String x:Key="S.Capture.CancelTip">ยกเลิกการจับภาพ</sys:String>
+    <sys:String x:Key="S.Capture.DragPrompt">ลากเพื่อเลือกพื้นที่ที่จะแปล</sys:String>
+    <sys:String x:Key="S.Capture.PressPrefix">กด</sys:String>
+    <sys:String x:Key="S.Capture.CancelSuffix">เพื่อยกเลิก</sys:String>
+    <sys:String x:Key="S.Overlay.Recognising">กำลังอ่าน</sys:String>
+
+    <!-- ── Secret box ── -->
+    <sys:String x:Key="S.Secret.Show">แสดง</sys:String>
+    <sys:String x:Key="S.Secret.Hide">ซ่อน</sys:String>
+
+    <!-- ── Tray notifications and capture balloons ── -->
+    <sys:String x:Key="S.Main.MinimizedTitle">TT Tools ยังทำงานอยู่</sys:String>
+    <sys:String x:Key="S.Main.MinimizedBody">ย่อไว้ที่ถาดระบบแล้ว กด {0} เพื่อเริ่มแปลภาพหน้าจอ</sys:String>
+    <sys:String x:Key="S.Main.DefaultShortcutName">ปุ่มลัดของคุณ</sys:String>
+    <sys:String x:Key="S.Main.MissingApiKeyTitle">ไม่มีคีย์ API</sys:String>
+    <sys:String x:Key="S.Main.MissingApiKeyBody">กรอกคีย์ API ในการตั้งค่า</sys:String>
+    <sys:String x:Key="S.Main.RecogniseFailedTitle">รู้จำไม่สำเร็จ</sys:String>
+    <sys:String x:Key="S.Main.NoImageBody">ไม่พบภาพที่เลือก โปรดเลือกพื้นที่อีกครั้ง</sys:String>
+    <sys:String x:Key="S.Main.Recognising">กำลังอ่าน</sys:String>
+    <sys:String x:Key="S.Main.NoTextTitle">ไม่พบข้อความ</sys:String>
+    <sys:String x:Key="S.Main.NoTextBody">ไม่มีข้อความที่อ่านได้ในพื้นที่ที่เลือก</sys:String>
+    <sys:String x:Key="S.Main.Translating">กำลังแปล</sys:String>
+    <sys:String x:Key="S.Main.TranslateFailedTitle">แปลไม่สำเร็จ</sys:String>
+    <sys:String x:Key="S.Main.TranslateFailedBody">แหล่งแปลปัจจุบันอาจใช้งานไม่ได้ชั่วคราว
+เปลี่ยนไปใช้แหล่งอื่นแล้วลองอีกครั้ง
+รายละเอียด: {0}</sys:String>
+    <sys:String x:Key="S.Main.CopiedTitle">คัดลอกแล้ว</sys:String>
+    <sys:String x:Key="S.Main.CopiedBody">คัดลอกพื้นที่ที่เลือกไปยังคลิปบอร์ดแล้ว</sys:String>
+    <sys:String x:Key="S.Main.TextCopiedBody">คัดลอกข้อความที่รู้จำได้ไปยังคลิปบอร์ดแล้ว</sys:String>
+    <sys:String x:Key="S.Main.TranslationCopiedBody">คัดลอกคำแปลไปยังคลิปบอร์ดแล้ว</sys:String>
+    <sys:String x:Key="S.Main.CopiedAndSavedBody">คัดลอกไปยังคลิปบอร์ดและบันทึกไว้ที่:
+{0}</sys:String>
+    <sys:String x:Key="S.Main.CopiedSaveFailedTitle">คัดลอกแล้ว (ไม่ได้บันทึก)</sys:String>
+    <sys:String x:Key="S.Main.CopiedSaveFailedBody">คัดลอกไปยังคลิปบอร์ดแล้ว แต่บันทึกไม่ได้: {0}</sys:String>
+    <sys:String x:Key="S.Main.CopyFailedTitle">คัดลอกไม่สำเร็จ</sys:String>
+    <sys:String x:Key="S.Main.CopyFailedBody">คัดลอกภาพหน้าจอไม่ได้: {0}</sys:String>
+    <sys:String x:Key="S.Main.CopyTextFailedBody">คลิปบอร์ดใช้งานไม่ได้ในขณะนี้ ลองอีกครั้งในอีกสักครู่</sys:String>
+    <sys:String x:Key="S.Main.SpeakFailedTitle">อ่านออกเสียงไม่ได้</sys:String>
+    <sys:String x:Key="S.Main.SpeakFailedBody">อ่านข้อความนี้ออกเสียงไม่ได้: {0}</sys:String>
+
+    <!-- ── Realtime translation ── -->
+    <sys:String x:Key="S.Realtime.Title">แปลแบบเรียลไทม์</sys:String>
+    <sys:String x:Key="S.Realtime.Subtitle">เลือกพื้นที่บนหน้าจอ แล้วระบบจะแปลใหม่ทุกครั้งที่ข้อความเปลี่ยน — สำหรับวิดีโอ เกม และสิ่งที่เคลื่อนไหวตลอด</sys:String>
+
+    <sys:String x:Key="S.Realtime.TranslationSettings">การแปล</sys:String>
+    <sys:String x:Key="S.Realtime.SourceLanguage">ภาษาต้นทาง</sys:String>
+    <sys:String x:Key="S.Realtime.SourceLanguagePrompt">เลือกภาษาต้นทาง</sys:String>
+    <sys:String x:Key="S.Realtime.TargetLanguage">ภาษาปลายทาง</sys:String>
+    <sys:String x:Key="S.Realtime.Provider">ผู้ให้บริการ</sys:String>
+
+    <sys:String x:Key="S.Realtime.ScreenHint">ขณะนี้การแปลแบบเรียลไทม์ทำได้ทีละหน้าจอ</sys:String>
+    <sys:String x:Key="S.Realtime.BlockCountProgress">บล็อก {0} / {1}</sys:String>
+
+    <sys:String x:Key="S.Realtime.Appearance">ลักษณะ</sys:String>
+    <sys:String x:Key="S.Realtime.Preview">ตัวอย่าง</sys:String>
+    <sys:String x:Key="S.Realtime.PreviewText">ข้อความจะแสดงบนหน้าจอแบบนี้</sys:String>
+    <sys:String x:Key="S.Realtime.TextColor">สีข้อความ</sys:String>
+    <sys:String x:Key="S.Realtime.TextColorHint">กำหนดสีของข้อความแปล อัตโนมัติจะใช้สีเดียวกับข้อความต้นฉบับบนหน้าจอ</sys:String>
+    <sys:String x:Key="S.Realtime.TextColorMode">โหมดสีข้อความ</sys:String>
+    <sys:String x:Key="S.Realtime.FontSize">ขนาดข้อความ</sys:String>
+    <sys:String x:Key="S.Realtime.FontSizeHint">กำหนดขนาดของข้อความแปล อัตโนมัติจะตามขนาดของข้อความต้นฉบับ</sys:String>
+    <sys:String x:Key="S.Realtime.FontSizeMode">โหมดขนาดข้อความ</sys:String>
+    <sys:String x:Key="S.Realtime.FontSizeValue">ขนาดข้อความ (px)</sys:String>
+    <sys:String x:Key="S.Realtime.FontSizeIncrease">เพิ่มขนาดข้อความ</sys:String>
+    <sys:String x:Key="S.Realtime.FontSizeDecrease">ลดขนาดข้อความ</sys:String>
+    <sys:String x:Key="S.Realtime.ScrimColor">สีพื้นหลัง</sys:String>
+    <sys:String x:Key="S.Realtime.ScrimColorHint">กำหนดสีของแถบหลังคำแปล อัตโนมัติจะสร้างพื้นหลังใหม่จากภาพรอบ ๆ แทน</sys:String>
+    <sys:String x:Key="S.Realtime.ScrimColorMode">โหมดสีพื้นหลัง</sys:String>
+    <sys:String x:Key="S.Realtime.ScrimOpacity">ความทึบของพื้นหลัง</sys:String>
+    <sys:String x:Key="S.Realtime.ScrimOpacityHint">ค่ายิ่งสูง พื้นหลังหลังคำแปลยิ่งทึบ</sys:String>
+    <sys:String x:Key="S.Realtime.ColorAuto">อัตโนมัติ</sys:String>
+    <sys:String x:Key="S.Realtime.ColorFixed">คงที่</sys:String>
+    <sys:String x:Key="S.Realtime.Border">เส้นขอบ</sys:String>
+    <sys:String x:Key="S.Realtime.BorderHint">วาดเส้นขอบรอบคำแปล เพื่อให้แยกออกจากภาพ</sys:String>
+    <sys:String x:Key="S.Realtime.BorderMode">โหมดสีเส้นขอบ</sys:String>
+    <sys:String x:Key="S.Realtime.BorderRandom">สุ่ม</sys:String>
+    <sys:String x:Key="S.Realtime.BorderFixed">คงที่</sys:String>
+    <sys:String x:Key="S.Realtime.BorderColor">สีเส้นขอบ</sys:String>
+    <sys:String x:Key="S.Realtime.ResetAppearance">รีเซ็ตลักษณะเป็นค่าเริ่มต้น</sys:String>
+    <sys:String x:Key="S.ColorPicker.Undo">กลับไปสีก่อนหน้า</sys:String>
+    <sys:String x:Key="S.ColorPicker.Hex">รหัสสี</sys:String>
+    <sys:String x:Key="S.ColorPicker.Square">ความอิ่มตัวและความสว่าง</sys:String>
+    <sys:String x:Key="S.ColorPicker.Hue">เฉดสี</sys:String>
+    <sys:String x:Key="S.Realtime.AutoModeBestFor">สีข้อความและพื้นหลังที่โหมดอัตโนมัติเลือกไม่เหมาะกับทุกภาพ: บนวิดีโอบางเรื่องหรือพื้นหลังที่ซับซ้อน ข้อความอาจอ่านยากและพื้นที่ที่ลบอาจดูแปลกตา ให้เปลี่ยนเป็นคงที่สำหรับฉากเหล่านั้น</sys:String>
+
+    <sys:String x:Key="S.Realtime.HowItWorks">วิธีใช้งาน</sys:String>
+    <sys:String x:Key="S.Realtime.Step1">1. คลิก "เลือกบล็อก" แล้วลากครอบพื้นที่ที่ต้องการแปล</sys:String>
+    <sys:String x:Key="S.Realtime.Step2">2. คลิก "เริ่ม" บนแถบลอย แต่ละบล็อกจะถูกอ่านและอัปเดตใหม่ทุกครั้งที่เนื้อหาเปลี่ยน</sys:String>
+    <sys:String x:Key="S.Realtime.Step3">3. พื้นที่ที่แปลแล้วไม่รับการคลิก เกมและแอปอื่นจึงใช้งานได้ตามปกติ คลิก "แก้ไข" เพื่อปรับบล็อก</sys:String>
+    <sys:String x:Key="S.Realtime.Step4">4. หรือกด {0}: ครั้งแรกเพื่อเลือกบล็อก ครั้งต่อไปเพื่อเริ่มแปล และระหว่างแปลเพื่อหยุดชั่วคราวและทำต่อ การหยุดชั่วคราวจะแสดงข้อความต้นฉบับกลับมา</sys:String>
+
+    <sys:String x:Key="S.Realtime.SelectBlocks">เลือกบล็อก</sys:String>
+    <sys:String x:Key="S.Realtime.StopSession">หยุด</sys:String>
+    <sys:String x:Key="S.Realtime.ActiveHint">กำลังทำงาน ใช้แถบลอยบนหน้าจอเพื่อปรับหรือหยุด</sys:String>
+    <sys:String x:Key="S.Realtime.NoApiKey">ยังไม่ได้ตั้งคีย์ API กรอกในการตั้งค่า มิฉะนั้นการแปลแบบเรียลไทม์จะดึงคำแปลไม่ได้</sys:String>
+    <sys:String x:Key="S.Realtime.ScreenItem">หน้าจอ {0} · {1}×{2}</sys:String>
+    <sys:String x:Key="S.Realtime.ScreenItemPrimary">หน้าจอ {0} · {1}×{2} (หลัก)</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureInProgress">กำลังแปลภาพหน้าจออยู่ ทำให้เสร็จก่อนเริ่มแปลแบบเรียลไทม์</sys:String>
+    <sys:String x:Key="S.Realtime.ChooseSourceFirst">เลือกภาษาต้นทางก่อน</sys:String>
+    <sys:String x:Key="S.Realtime.NoScreens">ไม่พบหน้าจอที่ใช้ได้ เปิดหน้านี้ใหม่</sys:String>
+
+    <!-- Floating control bar -->
+    <sys:String x:Key="S.Realtime.EditHint">ลากบนหน้าจอเพื่อสร้างพื้นที่ที่ต้องการแปล</sys:String>
+    <sys:String x:Key="S.Realtime.StartTranslating">เริ่ม</sys:String>
+    <sys:String x:Key="S.Realtime.Running">กำลังแปล</sys:String>
+    <sys:String x:Key="S.Realtime.Paused">หยุดชั่วคราว</sys:String>
+    <sys:String x:Key="S.Realtime.LoadingModels">กำลังโหลดโมเดล…</sys:String>
+    <sys:String x:Key="S.Realtime.Pause">หยุดการแปลแบบเรียลไทม์ชั่วคราว</sys:String>
+    <sys:String x:Key="S.Realtime.Resume">ทำการแปลแบบเรียลไทม์ต่อ</sys:String>
+    <sys:String x:Key="S.Realtime.EditBlocks">แก้ไขบล็อก</sys:String>
+    <sys:String x:Key="S.Realtime.CollapseBar">ย่อแถบลอย</sys:String>
+    <sys:String x:Key="S.Realtime.ExpandBar">ขยายแถบลอย</sys:String>
+    <sys:String x:Key="S.Realtime.ChangeSourceLanguage">เปลี่ยนภาษาต้นทาง</sys:String>
+    <sys:String x:Key="S.Realtime.ChangeTargetLanguage">เปลี่ยนภาษาปลายทาง</sys:String>
+    <sys:String x:Key="S.Realtime.LanguageNoMatch">ไม่พบผลลัพธ์สำหรับ “{0}”</sys:String>
+    <sys:String x:Key="S.Realtime.DismissMessage">คลิกเพื่อปิด</sys:String>
+    <sys:String x:Key="S.Realtime.CrosshairOff">หยุดการตีกรอบชั่วคราวและใช้แอปด้านล่าง</sys:String>
+    <sys:String x:Key="S.Realtime.CrosshairOn">ตีกรอบต่อ</sys:String>
+    <sys:String x:Key="S.Realtime.CompareDisplay">เทียบกับต้นฉบับ</sys:String>
+    <sys:String x:Key="S.Realtime.CompareDisplayOn">เปิด</sys:String>
+    <sys:String x:Key="S.Realtime.CompareDisplayOff">ปิด</sys:String>
+    <sys:String x:Key="S.Realtime.CompareDisplayOnHint">เทียบกับต้นฉบับ: ปิดเพื่อแสดงคำแปลทับต้นฉบับโดยตรง</sys:String>
+    <sys:String x:Key="S.Realtime.CompareDisplayOffHint">เทียบกับต้นฉบับ: เปิดเพื่อให้ต้นฉบับยังมองเห็นได้และแสดงคำแปลในพื้นที่เทียบแยกต่างหาก</sys:String>
+    <sys:String x:Key="S.Realtime.CompareCopyHint">ลากเพื่อย้ายกล่องเทียบ ดับเบิลคลิกป้ายนี้เพื่อจัดวางกลับอัตโนมัติ</sys:String>
+    <sys:String x:Key="S.Realtime.CompareHideBlock">ปิดการเทียบสำหรับบล็อกนี้</sys:String>
+    <sys:String x:Key="S.Realtime.CompareShowBlock">แสดงการเทียบสำหรับบล็อกนี้</sys:String>
+    <sys:String x:Key="S.Realtime.CompareCopyCenter">คำแปลจะแสดงที่นี่</sys:String>
+    <sys:String x:Key="S.Realtime.CrosshairOffHint">หยุดตีกรอบชั่วคราว — แอปด้านล่างจะรับเมาส์แทน</sys:String>
+
+    <!-- Control bar and edit window messages -->
+    <sys:String x:Key="S.Realtime.MovedToFront">นำหน้าต่างเรียลไทม์มาไว้ด้านหน้าแล้ว</sys:String>
+    <sys:String x:Key="S.Realtime.TooManyBlocks">ได้มากที่สุด {0} บล็อก — ลบออกหนึ่งบล็อกก่อน</sys:String>
+    <sys:String x:Key="S.Realtime.NeedOneBlock">ลากเพื่อสร้างอย่างน้อยหนึ่งบล็อกก่อน</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureSourceLost">หน้าต่างที่กำลังแปลถูกปิดแล้ว — หยุดการแปลแบบเรียลไทม์</sys:String>
+    <sys:String x:Key="S.Realtime.ScreenCaptureUnavailable">ระบบนี้อ่านทั้งหน้าจอสำหรับการแปลแบบเรียลไทม์ไม่ได้ เปลี่ยนเป็นหนึ่งหน้าต่างแล้วเลือกหน้าต่างที่ต้องการแปล</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureSourceScreen">ทั้งหน้าจอ</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureSourceWindow">หนึ่งหน้าต่าง</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureSourceScreenHint">ทุกอย่างบนหน้าจอ</sys:String>
+    <sys:String x:Key="S.Realtime.ScreenModeUnsupported">ขณะนี้ระบบนี้ไม่รองรับการจับภาพทั้งหน้าจอ</sys:String>
+    <sys:String x:Key="S.Realtime.RealtimeUnsupported">การแปลแบบเรียลไทม์ต้องใช้การจับภาพหน้าจอ ซึ่ง Windows นี้ไม่มีให้</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureSourceWindowHint">หนึ่งหน้าต่าง แม้มีสิ่งอื่นบังอยู่</sys:String>
+    <sys:String x:Key="S.Realtime.Step1Label">ขั้นที่ 1</sys:String>
+    <sys:String x:Key="S.Realtime.Step1Name">เลือกแหล่งที่จะจับภาพ</sys:String>
+    <sys:String x:Key="S.Realtime.Step1Desc">เลือกชนิดของพื้นที่ที่จะอ่าน</sys:String>
+    <sys:String x:Key="S.Realtime.Step2Label">ขั้นที่ 2</sys:String>
+    <sys:String x:Key="S.Realtime.Step2Name">เลือกหน้าจอหรือหน้าต่าง</sys:String>
+    <sys:String x:Key="S.Realtime.Step2Desc">ระบุหน้าจอหรือหน้าต่างที่จะอ่าน ตามตัวเลือกด้านบน</sys:String>
+    <sys:String x:Key="S.Realtime.ScreenPrompt">เลือกหน้าจอที่จะอ่าน</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureWindowPromptLine">เลือกหน้าต่างที่จะอ่าน</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureWindowPrompt">เลือกหน้าต่าง</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureWindowHint">รายการหน้าต่างจะอัปเดตเมื่อคุณกดรีเฟรช หากเพิ่งเปิดแอปอื่น ให้รีเฟรชก่อนเลือก</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureWindowNone">ไม่มีหน้าต่างที่จับภาพได้ เปิดแอปก่อนแล้วรีเฟรช</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureWindowDetail">จาก {0}</sys:String>
+    <sys:String x:Key="S.Realtime.CaptureWindowOnScreen">บล็อกจะถูกตีกรอบบน {0}</sys:String>
+    <sys:String x:Key="S.Realtime.RefreshWindows">รีเฟรช</sys:String>
+    <sys:String x:Key="S.Realtime.ChooseWindowFirst">เลือกหน้าต่างที่จะแปลก่อน</sys:String>
+    <sys:String x:Key="S.Realtime.WindowCaptureUnsupported">Windows เวอร์ชันนี้ไม่รองรับการจับภาพหน้าจอ</sys:String>
+    <sys:String x:Key="S.Realtime.WindowCaptureGone">หน้าต่างนั้นถูกปิดหรือย่อแล้ว โปรดเลือกหน้าต่างอีกครั้ง</sys:String>
+    <sys:String x:Key="S.Realtime.WindowCaptureFailed">จับภาพหน้าต่างนั้นไม่ได้ เปลี่ยนเป็นหน้าต่างไร้ขอบหรือโหมดหน้าต่างแล้วลองอีกครั้ง</sys:String>
+    <sys:String x:Key="S.Realtime.WindowCaptureFullscreen">โหมดการแสดงผลนั้นจับภาพไม่ได้ เปลี่ยนเป็นหน้าต่างไร้ขอบหรือโหมดหน้าต่างแล้วลองอีกครั้ง</sys:String>
+    <sys:String x:Key="S.Realtime.WindowCaptureNoFrame">ไม่ได้ภาพจากหน้าต่างนั้น เปลี่ยนเป็นหน้าต่างไร้ขอบหรือโหมดหน้าต่างแล้วลองอีกครั้ง</sys:String>
+    <sys:String x:Key="S.Realtime.RemoveBlock">ลบบล็อกนี้</sys:String>
+
+    <!-- Block mode picker -->
+    <sys:String x:Key="S.Realtime.ModeSubtitle">คำบรรยาย / การ์ตูน</sys:String>
+    <sys:String x:Key="S.Realtime.ModeGameUi">เกม / หน้าจอโปรแกรม</sys:String>
+    <sys:String x:Key="S.Realtime.ModeSubtitleSummary">ข้อความทีละตอนที่ถูกแทนด้วยตอนถัดไป — คำบรรยาย บทสนทนาในเนื้อเรื่อง การ์ตูน</sys:String>
+    <sys:String x:Key="S.Realtime.ModeGameUiSummary">ข้อความสั้น ๆ แยกกันทั่วหน้าจอ — HUD เมนู ข้อความไอเท็ม แชต</sys:String>
+    <sys:String x:Key="S.Realtime.ModeSubtitleGuidance">สำหรับคำบรรยายวิดีโอ บทสนทนาในเกม และตัวอักษรในการ์ตูน — ข้อความที่อ่านต่อเนื่อง</sys:String>
+    <sys:String x:Key="S.Realtime.ModeGameUiGuidance">สำหรับหน้าจอเกม หน้าต่างแชต เมนู และข้อความในโปรแกรม — ทุกอย่างที่ไม่ใช่คำบรรยาย บทสนทนา หรือการ์ตูน</sys:String>
+    <sys:String x:Key="S.Realtime.CollapseGuidance">ซ่อนรายละเอียดโหมด</sys:String>
+    <sys:String x:Key="S.Realtime.ExpandGuidance">แสดงรายละเอียดโหมด</sys:String>
+
+    <!-- Session failures -->
+    <sys:String x:Key="S.Realtime.SessionAborted">หยุดการแปลแบบเรียลไทม์: {0}</sys:String>
+    <sys:String x:Key="S.Realtime.MissingApiKey">ไม่มีคีย์ API กรอกในการตั้งค่าก่อน</sys:String>
+    <sys:String x:Key="S.Realtime.RetryingAfterFailure">แปลไม่สำเร็จในตอนนี้ กำลังลองใหม่: {0}</sys:String>
+
+    <!-- ── Translation providers ── -->
+    <sys:String x:Key="S.Provider.Google">Google (มาตรฐาน)</sys:String>
+    <sys:String x:Key="S.Provider.GoogleChrome">Google (เบต้า)</sys:String>
+    <sys:String x:Key="S.Provider.GoogleChromeHint">เป็นธรรมชาติกว่า แต่ชื่ออาจถูกเรียบเรียงใหม่หรือตกหล่น</sys:String>
+    <sys:String x:Key="S.Provider.Bing">Bing</sys:String>
+    <sys:String x:Key="S.Provider.Microsoft">Microsoft</sys:String>
+    <sys:String x:Key="S.Provider.Youdao">Youdao</sys:String>
+    <sys:String x:Key="S.Provider.TranSmart">Tencent</sys:String>
+    <sys:String x:Key="S.Provider.Yandex">Yandex</sys:String>
+    <sys:String x:Key="S.Provider.DeepL">DeepL</sys:String>
+    <sys:String x:Key="S.Provider.DeepLHint">ต้องใช้คีย์ API จาก DeepL</sys:String>
+    <sys:String x:Key="S.Provider.OpenAI">OpenAI</sys:String>
+    <sys:String x:Key="S.Provider.OpenAIHint">API ใดก็ได้ที่รองรับ OpenAI (Ollama, LM Studio, OpenRouter…) แนะนำให้ใช้ LLM ในเครื่อง</sys:String>
+
+    <!-- ── Settings page ── -->
+    <sys:String x:Key="S.Settings.Title">การตั้งค่า</sys:String>
+    <sys:String x:Key="S.Settings.Subtitle">ปุ่มลัด บริการแปล ลักษณะ และตัวเลือกขั้นสูง</sys:String>
+
+    <sys:String x:Key="S.Settings.Hotkeys">ปุ่มลัด</sys:String>
+    <!-- The checkbox carries no text, so this is its ToolTip rather than a label -->
+    <sys:String x:Key="S.Settings.HotkeyEnable">เปิดใช้ปุ่มลัดนี้</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyDisable">ปิดใช้ปุ่มลัดนี้</sys:String>
+    <!-- The shortcut box has no label of its own; this is its ToolTip -->
+    <sys:String x:Key="S.Settings.HotkeyRecordTip">คลิกเพื่อบันทึกปุ่มลัดใหม่</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuide">ปุ่มที่รองรับ</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideCombo">ปุ่มผสม</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideComboNote">Ctrl, Alt และ Shift อย่างน้อยหนึ่งปุ่ม บวกอีกหนึ่งปุ่ม</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideSingle">ปุ่มเดียว</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideDouble">กดสองครั้ง</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideDoubleNote">กด Ctrl สองครั้งเร็ว ๆ หรือกด Ctrl ค้างแล้วกด C สองครั้ง</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideMouse">เมาส์</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideMouseMiddle">ปุ่มกลาง</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideMouseX1">ปุ่มข้าง 1</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideMouseX2">ปุ่มข้าง 2</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideGamepad">เกมแพด</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideGamepadNote">ปุ่มใดก็ได้บนคอนโทรลเลอร์ที่รองรับ Xbox (XInput)</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideExclusive">ใช้แต่เพียงผู้เดียว</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideExclusiveNote">โปรแกรมอื่นจะไม่ได้รับปุ่มเหล่านี้</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideExclusiveExample">เช่น เมื่อตั้งเป็น Ctrl+Alt+A แล้ว Ctrl+Alt+A จะใช้ที่อื่นไม่ได้</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideShared">ใช้ร่วมกัน</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideSharedNote">ปุ่มยังส่งถึงโปรแกรมปัจจุบันและอาจทำงานตามหน้าที่เดิมในโปรแกรมนั้นด้วย</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideSharedExample">เช่น ปุ่มข้างอาจพาเบราว์เซอร์ย้อนกลับไปหน้าก่อนด้วย</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyGuideSharedDouble">การกดสองครั้งจำกัดไว้แค่สองแบบข้างต้น เพื่อไม่ให้โปรแกรมทำงานซ้ำสองครั้ง</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyElevatedNote">อาจใช้ไม่ได้ในโปรแกรมที่ทำงานในฐานะผู้ดูแลระบบ</sys:String>
+    <sys:String x:Key="S.Settings.QuickLookupHotkey">แปลด่วน</sys:String>
+    <sys:String x:Key="S.Settings.QuickLookupHotkeyHint">กดปุ่มลัดเพื่อเปิด[[แปลด่วน]]</sys:String>
+    <sys:String x:Key="S.Settings.QuickLookupHotkeyNote">หากมีข้อความที่เลือกไว้ จะถูกนำเข้ามาแปลทันทีเมื่อหน้าต่างเปิด</sys:String>
+    <sys:String x:Key="S.Settings.QuickTranslateHotkey">แปลแทนที่</sys:String>
+    <sys:String x:Key="S.Settings.QuickTranslateHotkeyHint">แปล[[ข้อความที่เลือก]]แล้ววางทับต้นฉบับ</sys:String>
+    <sys:String x:Key="S.Settings.QuickTranslateHotkeyNote" xml:space="preserve">ใช้ได้เฉพาะในช่องที่พิมพ์ข้อความได้ วางนอกพื้นที่ป้อนข้อมูลไม่ได้</sys:String>
+    <sys:String x:Key="S.Settings.QuickTranslateSettings">การตั้งค่าการแปล</sys:String>
+    <sys:String x:Key="S.Settings.QuickTranslateLanguageNote">ภาษาเหล่านี้ใช้กับการแปลแทนที่เท่านั้น ไม่กระทบการแปลภาพหน้าจอ ข้อความ หรือแบบเรียลไทม์</sys:String>
+    <sys:String x:Key="S.Settings.QuickTranslateBilingualHint">ตรวจหาภาษาของข้อความที่เลือกและแปลระหว่างสองภาษาที่คุณเลือก</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyNeedsModifier">✗ ปุ่มเดียวใช้ได้เฉพาะ F1–F24, Pause หรือ Scroll Lock — ปุ่มอื่นต้องใช้ร่วมกับ Ctrl/Alt/Shift</sys:String>
+
+    <sys:String x:Key="S.Settings.General">ทั่วไป</sys:String>
+    <sys:String x:Key="S.Settings.CaptureHotkey">แปลภาพหน้าจอ</sys:String>
+    <sys:String x:Key="S.Settings.CaptureHotkeyHint">กดปุ่มลัดนี้เพื่อเริ่ม[[แปลภาพหน้าจอ]]</sys:String>
+    <sys:String x:Key="S.Settings.WindowHotkey">เปิดหน้าต่าง</sys:String>
+    <sys:String x:Key="S.Settings.WindowHotkeyHint">กดปุ่มลัดนี้เพื่อเปิด[[หน้าต่างแปล]]</sys:String>
+    <sys:String x:Key="S.Settings.AutoTranslateCheck">แปลทันทีที่เลือกพื้นที่จับภาพ โดยไม่ต้องคลิกอะไรเพิ่ม</sys:String>
+    <sys:String x:Key="S.Settings.Startup">เริ่มต้นระบบ</sys:String>
+    <sys:String x:Key="S.Settings.StartupCheck">เปิดเมื่อ Windows เริ่มทำงาน</sys:String>
+
+    <sys:String x:Key="S.Settings.ServiceSetup">ตั้งค่าบริการ</sys:String>
+    <sys:String x:Key="S.Settings.ProviderMenuHint">การปิดบริการจะซ่อนเฉพาะรายการในเมนู ไม่เปลี่ยนบริการที่คุณใช้อยู่ และบริการนั้นอาจยังถูกใช้เป็นตัวสำรองหรือค้นพจนานุกรม</sys:String>
+    <sys:String x:Key="S.Settings.ProviderMenuKeepOne">ต้องเหลือบริการอย่างน้อยหนึ่งรายการ</sys:String>
+    <sys:String x:Key="S.Settings.ProviderGroupFree">บริการทั่วไป</sys:String>
+    <sys:String x:Key="S.Settings.ProviderGroupKeyed">บริการที่ปรับแต่งได้</sys:String>
+    <sys:String x:Key="S.Settings.ServiceNeedsSetup">ต้องตั้งค่า</sys:String>
+    <sys:String x:Key="S.Settings.ServiceReady">ตั้งค่าแล้ว</sys:String>
+    <sys:String x:Key="S.Settings.ServiceDefault">ใช้ค่าเริ่มต้น</sys:String>
+    <sys:String x:Key="S.Settings.ServiceDialogTitle">การตั้งค่า {0}</sys:String>
+    <sys:String x:Key="S.Settings.ApiBaseUrl">URL ของ API</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiTimeout">หมดเวลา</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiMode">โหมดการแปล</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeSegment">มาตรฐาน</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeBatch">แบบชุด</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeSegmentHint">แปลบล็อกข้อความบนหน้าจอทีละบล็อกตามลำดับ</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeBatchHint">รวมบล็อกข้อความบนหน้าจอแล้วแปลพร้อมกัน</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeSegmentPro1">เร็วกว่ากับโมเดลในเครื่อง</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeSegmentPro2">มีโอกาสข้ามบล็อกน้อยกว่า</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeBatchPro1">เห็นทั้งหน้าจอ ความหมายจึงต่อเนื่องกว่า</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeBatchPro2">ส่งคำขอน้อยกว่า เหมาะกับบริการคลาวด์</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeSuits">เหมาะสำหรับ</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeSegmentTag1">คำบรรยายวิดีโอ</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeSegmentTag2">บทสนทนาในเนื้อเรื่อง</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeBatchTag1">การ์ตูน</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiModeBatchTag2">หน้าต่างแชต</sys:String>
+    <sys:String x:Key="S.Settings.PromptModeSwitchTitle">เปลี่ยนโหมดการแปล</sys:String>
+    <sys:String x:Key="S.Settings.PromptModeSwitchToBatch">คุณกำลังใช้พรอมต์ที่กำหนดเอง เปลี่ยนเป็นพรอมต์แบบชุดค่าเริ่มต้นหรือไม่</sys:String>
+    <sys:String x:Key="S.Settings.PromptModeSwitchToSegment">คุณกำลังใช้พรอมต์ที่กำหนดเอง เปลี่ยนเป็นพรอมต์มาตรฐานค่าเริ่มต้นหรือไม่</sys:String>
+    <sys:String x:Key="S.Settings.PromptModeUseDefault">ใช้ค่าเริ่มต้น</sys:String>
+    <sys:String x:Key="S.Settings.PromptModeKeep">คงไว้</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiTimeoutUnit">วินาที</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiTimeoutMin">อย่างน้อย {0} วินาที</sys:String>
+    <sys:String x:Key="S.Settings.ModelName">โมเดล</sys:String>
+    <sys:String x:Key="S.Settings.ModelRequired">จำเป็น</sys:String>
+    <sys:String x:Key="S.Settings.OllamaGuide">คู่มือตั้งค่า LLM ในเครื่อง</sys:String>
+    <sys:String x:Key="S.Settings.ModelProfiles">การตั้งค่าโมเดล</sys:String>
+    <sys:String x:Key="S.Settings.ProfileAdd">เพิ่มการตั้งค่า ({0}/{1})</sys:String>
+    <sys:String x:Key="S.Settings.ProfileListHint">คลิกการตั้งค่าที่จะใช้</sys:String>
+    <sys:String x:Key="S.Settings.ProfileBuiltInNote">การตั้งค่าในตัวจะเปลี่ยนไปตามแต่ละเวอร์ชัน หากต้องการเก็บแบบปัจจุบันไว้ ให้บันทึกสำเนาด้วยปุ่มคัดลอกข้าง ๆ</sys:String>
+    <sys:String x:Key="S.Settings.ProfileCopy">คัดลอกเป็นการตั้งค่าใหม่</sys:String>
+    <sys:String x:Key="S.Settings.ProfileTagCustomPrompt">พรอมต์ที่กำหนดเอง</sys:String>
+    <sys:String x:Key="S.Settings.ProfileSnapshotName">ในตัว v{0}</sys:String>
+    <sys:String x:Key="S.Settings.PromptDeleteTitle">ลบการตั้งค่า</sys:String>
+    <sys:String x:Key="S.Settings.PromptDeleteConfirm">ลบ “{0}” หรือไม่ การกระทำนี้ย้อนกลับไม่ได้</sys:String>
+    <sys:String x:Key="S.Settings.PromptDefaultName">ในตัว</sys:String>
+    <sys:String x:Key="S.Settings.PromptReadOnly">อ่านอย่างเดียว</sys:String>
+    <sys:String x:Key="S.Settings.PromptAddTitle">การตั้งค่าใหม่</sys:String>
+    <sys:String x:Key="S.Settings.PromptEditTitle">แก้ไขการตั้งค่า</sys:String>
+    <sys:String x:Key="S.Settings.PromptDelete">ลบ</sys:String>
+    <sys:String x:Key="S.Settings.PromptName">ชื่อ</sys:String>
+    <sys:String x:Key="S.Settings.PromptNamePlaceholder">ตั้งชื่อการตั้งค่านี้</sys:String>
+    <sys:String x:Key="S.Settings.PromptParams">พารามิเตอร์ที่ใช้ได้</sys:String>
+    <sys:String x:Key="S.Settings.PromptParamSourceName">ชื่อภาษาต้นทาง</sys:String>
+    <sys:String x:Key="S.Settings.PromptParamSourceCode">รหัสภาษาต้นทาง</sys:String>
+    <sys:String x:Key="S.Settings.PromptParamTargetName">ชื่อภาษาปลายทาง</sys:String>
+    <sys:String x:Key="S.Settings.PromptParamTargetCode">รหัสภาษาปลายทาง</sys:String>
+    <sys:String x:Key="S.Settings.PromptParamSourceNameExample">อังกฤษ</sys:String>
+    <sys:String x:Key="S.Settings.PromptParamTargetNameExample">ญี่ปุ่น</sys:String>
+    <sys:String x:Key="S.Settings.PromptParamsTipAuto">เมื่อภาษาต้นทางเป็นอัตโนมัติ ชื่อภาษาต้นทางคือ "any language" และรหัสจะว่างเปล่า</sys:String>
+    <sys:String x:Key="S.Settings.PromptTemplate">พรอมต์</sys:String>
+    <sys:String x:Key="S.Settings.PromptTemplateHint">สิ่งที่ส่งไปยังโมเดลในการแปลแต่ละครั้ง พารามิเตอร์ในวงเล็บปีกกาจะถูกแทนด้วยข้อความจริง</sys:String>
+    <sys:String x:Key="S.Settings.PromptTemplateReset">คืนค่าเริ่มต้น</sys:String>
+    <sys:String x:Key="S.Settings.PromptParamText">ข้อความต้นฉบับ ส่งทีละบล็อกข้อความ หากเทมเพลตไม่ได้ใช้ {text} จะถูกเพิ่มไว้ท้ายพรอมต์</sys:String>
+    <sys:String x:Key="S.Settings.PromptParamTextBatch">ข้อความต้นฉบับ: บล็อกข้อความบนหน้าจอจะถูกรวมและส่งพร้อมกัน บรรทัดละหนึ่งบล็อกพร้อมหมายเลข เช่น &lt;1&gt;ข้อความ...&lt;/1&gt; หากเทมเพลตไม่ได้ใช้ {text} จะถูกเพิ่มไว้ท้ายพรอมต์</sys:String>
+    <sys:String x:Key="S.Settings.PromptParamContext">คำแปลก่อนหน้า เพื่อให้โมเดลตามบริบทและคำศัพท์ได้และรักษาความหมายให้สอดคล้องกัน เมื่อไม่มีอะไรให้อ้างอิง ส่วนนี้และบรรทัดว่างที่เกินมาจะถูกลบออก หากเทมเพลตไม่ได้ใช้ โมเดลจะอ้างอิงคำแปลก่อนหน้าไม่ได้</sys:String>
+    <sys:String x:Key="S.Settings.PromptNewName">การตั้งค่าของฉัน {0}</sys:String>
+    <sys:String x:Key="S.Settings.OpenAiAdvanced">ขั้นสูง</sys:String>
+    <sys:String x:Key="S.Settings.ModelResetTip">ใช้โมเดลที่แนะนำ</sys:String>
+    <sys:String x:Key="S.Settings.ThinkingOff">ปิดการคิด</sys:String>
+    <sys:String x:Key="S.Settings.ThinkingOffDetail">ส่ง reasoning_effort: none</sys:String>
+    <sys:String x:Key="S.Settings.ThinkingOffTip" xml:space="preserve">ขอให้โมเดลตอบทันทีโดยไม่ต้องคิดก่อน โมเดลทั่วไปบางตัวจะคิดก่อนตอบโดยค่าเริ่มต้น ทำให้การแปลช้ามากหรือถึงขั้นหมดเวลา โมเดลที่ทำมาเพื่อการแปลมักไม่ต้องใช้ตัวเลือกนี้
+บางบริการไม่รู้จักพารามิเตอร์นี้และส่งข้อผิดพลาดกลับมา หากเป็นเช่นนั้นให้ยกเลิกเครื่องหมาย</sys:String>
+    <sys:String x:Key="S.Settings.AdvancedHint">พารามิเตอร์ที่ไม่ได้ทำเครื่องหมายจะไม่ถูกส่ง โมเดลแต่ละตัวรับพารามิเตอร์และช่วงค่าไม่เหมือนกัน — ให้ยึดตามเอกสารของโมเดลที่คุณใช้</sys:String>
+    <sys:String x:Key="S.Settings.Temperature">Temperature</sys:String>
+    <sys:String x:Key="S.Settings.TemperatureRange">ช่วง: 0.0 ~ 2.0</sys:String>
+    <sys:String x:Key="S.Settings.TemperatureTip" xml:space="preserve">ระดับที่โมเดลเลือกสำนวนที่น่าจะเป็นที่สุด ค่ายิ่งต่ำ
+ยิ่งยึดวิธีพูดที่น่าจะเป็นที่สุด ค่ายิ่งสูง
+สำนวนอื่นก็ยิ่งมีโอกาสถูกเลือก</sys:String>
+    <sys:String x:Key="S.Settings.TopP">Top P</sys:String>
+    <sys:String x:Key="S.Settings.TopPRange">ช่วง: 0.0 ~ 1.0</sys:String>
+    <sys:String x:Key="S.Settings.TopPTip" xml:space="preserve">จำนวนตัวเลือกที่โมเดลเลือกได้ ค่ายิ่งต่ำ
+ยิ่งเหลือเฉพาะตัวเลือกที่น่าจะเป็นที่สุดน้อยลง ค่ายิ่งสูง
+ยิ่งมีให้เลือกมากขึ้น</sys:String>
+    <sys:String x:Key="S.Settings.Seed">Seed</sys:String>
+    <sys:String x:Key="S.Settings.SeedRange">จำนวนเต็ม</sys:String>
+    <sys:String x:Key="S.Settings.SeedTip" xml:space="preserve">ช่วยให้ได้ผลลัพธ์ซ้ำเดิมได้ง่ายขึ้น เมื่อใช้โมเดลเดียวกัน พรอมต์เดียวกัน และการตั้งค่า
+เดียวกัน seed เดียวกันมักให้ผลลัพธ์เหมือนเดิม</sys:String>
+
+    <sys:String x:Key="S.Settings.SaveScreenshot">บันทึก</sys:String>
+    <sys:String x:Key="S.Settings.SaveScreenshotCheck">บันทึกสำเนาของทุกการจับภาพ</sys:String>
+    <sys:String x:Key="S.Settings.SavePath">ตำแหน่ง</sys:String>
+    <sys:String x:Key="S.Settings.SavePathTip">คลิกเพื่อเลือกโฟลเดอร์</sys:String>
+    <sys:String x:Key="S.Settings.OpenFolderTip">เปิดโฟลเดอร์</sys:String>
+
+    <sys:String x:Key="S.Settings.Appearance">ลักษณะ</sys:String>
+    <sys:String x:Key="S.Settings.Theme">ธีม</sys:String>
+    <sys:String x:Key="S.Settings.ThemeLight">สว่าง</sys:String>
+    <sys:String x:Key="S.Settings.ThemeDark">มืด</sys:String>
+    <sys:String x:Key="S.Settings.UiLanguage">ภาษาของหน้าจอ</sys:String>
+
+    <sys:String x:Key="S.Settings.Advanced">ขั้นสูง</sys:String>
+    <sys:String x:Key="S.Settings.Logging">การบันทึกล็อก</sys:String>
+    <sys:String x:Key="S.Settings.LoggingCheck">บันทึกข้อมูลโดยละเอียด</sys:String>
+    <sys:String x:Key="S.Settings.LoggingHint">บันทึกข้อมูลของแอปมากขึ้น แนะนำเฉพาะตอนแก้ปัญหา</sys:String>
+    <sys:String x:Key="S.Settings.OcrLineBoxes">กรอบ OCR</sys:String>
+    <sys:String x:Key="S.Settings.OcrLineBoxesHint">แสดงพื้นที่ข้อความต้นฉบับที่ OCR ตรวจพบ</sys:String>
+    <sys:String x:Key="S.Settings.TextGroupBoxes">กรอบกลุ่มข้อความ</sys:String>
+    <sys:String x:Key="S.Settings.TextGroupBoxesHint">แสดงว่าข้อความต้นฉบับใดถูกรวมกลุ่มเพื่อแปลด้วยกัน</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsHint">การส่งออกจะรวบรวมไฟล์ล็อก ข้อมูลระบบ และการตั้งค่าปัจจุบันไว้ในไฟล์วินิจฉัยที่คุณแนบกับรายงานปัญหาได้ ไม่รวมข้อมูลสำคัญอย่างคีย์ API และไม่มีการอัปโหลดข้อมูลโดยอัตโนมัติ</sys:String>
+    <sys:String x:Key="S.Settings.ExportDiagnostics">ส่งออกข้อมูลวินิจฉัย</sys:String>
+    <sys:String x:Key="S.Settings.OpenDiagnosticsFolder">เปิดโฟลเดอร์</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsUploadHint" xml:space="preserve">ข้อมูลวินิจฉัยประกอบด้วยไฟล์ล็อก ข้อมูลระบบ และการตั้งค่าปัจจุบัน โดยแทนที่ข้อมูลสำคัญแล้ว&#x0a;ไฟล์วินิจฉัยจะเก็บไว้ในเครื่องของคุณและถูกลบอัตโนมัติหลัง 30 วัน</sys:String>
+    <sys:String x:Key="S.Settings.UploadBundle">อัปโหลด</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsCodeLabel">รหัสรายงาน</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsExportedTitle">ส่งออกแล้ว ยังไม่ได้อัปโหลด</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsExportedHint">ไฟล์ถูกบันทึกในเครื่องของคุณและยังไม่ได้อัปโหลด การอัปโหลดจะส่งข้อมูลวินิจฉัยไปยังผู้พัฒนาพร้อมคำอธิบายปัญหาของคุณ เปิดไฟล์เพื่อดูว่ามีอะไรบ้าง</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsNoEndpointHint">ไฟล์อยู่ในเครื่องของคุณและยังไม่มีการส่งสิ่งใด รายงานปัญหาผ่าน GitHub หรือฟอรัมแล้วแนบไฟล์นี้ เปิดไฟล์เพื่อดูว่ามีอะไรบ้าง</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsUploadFailedTitle">ส่งออกข้อมูลวินิจฉัยแล้ว</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsUploadedHint">อัปโหลดข้อมูลวินิจฉัยแล้ว หากมีข้อมูลเพิ่มเติม ให้แจ้งรหัสรายงานนี้ผ่าน GitHub หรือฟอรัม เปิดไฟล์เพื่อดูสิ่งที่ส่งออกครั้งนี้</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsNotUploadedHint" xml:space="preserve">ส่งออกข้อมูลวินิจฉัยแล้วแต่อัปโหลดไม่ได้ โปรดรายงานปัญหาผ่าน GitHub หรือฟอรัมแล้วแนบไฟล์ เปิดไฟล์เพื่อดูสิ่งที่ส่งออกครั้งนี้</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsRetention">ไฟล์จะถูกลบอัตโนมัติหลัง 30 วัน</sys:String>
+    <sys:String x:Key="S.Settings.CopyCode">คัดลอก</sys:String>
+    <sys:String x:Key="S.Settings.OpenBundle">เปิดไฟล์</sys:String>
+
+    <sys:String x:Key="S.Settings.AutoSaveHint">การเปลี่ยนแปลงจะบันทึกโดยอัตโนมัติ</sys:String>
+
+    <!-- Settings page, composed in code-behind -->
+    <sys:String x:Key="S.Settings.Saved">✓ บันทึกแล้ว</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyPromptAnyInput">กดปุ่มลัด…</sys:String>
+    <sys:String x:Key="S.Settings.MouseMiddle">ปุ่มกลางเมาส์</sys:String>
+    <sys:String x:Key="S.Settings.MouseX1">ปุ่มข้างเมาส์ 1</sys:String>
+    <sys:String x:Key="S.Settings.MouseX2">ปุ่มข้างเมาส์ 2</sys:String>
+    <sys:String x:Key="S.Settings.GamepadButton">เกมแพด {0}</sys:String>
+    <sys:String x:Key="S.Settings.FolderPickerTitle">เลือกตำแหน่งบันทึกภาพหน้าจอ</sys:String>
+    <sys:String x:Key="S.Settings.LoggingEnvOverride">ขณะนี้ระดับล็อกถูกกำหนดโดยตัวแปรสภาพแวดล้อม OVERTRANSLATE_LOGLEVEL ตัวเลือกนี้จึงไม่มีผล</sys:String>
+    <sys:String x:Key="S.Settings.StartupFailed">✗ เปลี่ยนการตั้งค่าเริ่มต้นระบบไม่ได้: {0}</sys:String>
+    <sys:String x:Key="S.Settings.OpenFolderFailed">✗ เปิดโฟลเดอร์ไม่ได้: {0}</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsExported">✓ ส่งออกข้อมูลวินิจฉัยแล้ว</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsFailed">✗ ส่งออกข้อมูลวินิจฉัยไม่ได้: {0}</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsExporting">กำลังรวบรวมข้อมูลวินิจฉัย…</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsUploaded">✓ อัปโหลดแล้ว — รหัส {0}</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsCodeCopied">✓ คัดลอกรหัสแล้ว</sys:String>
+    <sys:String x:Key="S.Settings.CopyFailed">✗ คัดลอกไม่ได้ — โปรดอ่านรหัสจากช่องด้านบน</sys:String>
+    <sys:String x:Key="S.Settings.DiagnosticsUploadFailed">⚠ ส่งออกข้อมูลวินิจฉัยแล้วแต่อัปโหลดไม่ได้</sys:String>
+
+    <!-- ── Diagnostics note ── -->
+    <sys:String x:Key="S.Settings.NoteTitle">รายงานปัญหา</sys:String>
+    <sys:String x:Key="S.Settings.NoteIntro">สิ่งที่คุณเขียนที่นี่จะถูกส่งไปพร้อมข้อมูลวินิจฉัย และใช้เพื่อหาสาเหตุของปัญหาเท่านั้น</sys:String>
+    <sys:String x:Key="S.Settings.NotePlaceholder">เพิ่มสิ่งที่คุณกำลังทำเมื่อเกิดปัญหา หรือสิ่งอื่นที่อาจเกี่ยวข้อง — ช่วยให้ผู้พัฒนาหาสาเหตุได้เร็วขึ้น เว้นว่างไว้ได้</sys:String>
+    <sys:String x:Key="S.Settings.NoteSending">กำลังอัปโหลด…</sys:String>
+    <sys:String x:Key="S.Settings.NoteUploadFailed">อัปโหลดไม่สำเร็จ ไฟล์ยังอยู่ในเครื่องของคุณ จึงลองอีกครั้งได้</sys:String>
+    <sys:String x:Key="S.Settings.NoteAttachFailed">เขียนข้อความของคุณลงในไฟล์ไม่ได้ จึงยังไม่ได้ส่งอะไร โปรดลองอีกครั้ง</sys:String>
+    <sys:String x:Key="S.Settings.HotkeyTaken">✗ {0} ถูกกำหนดให้ "{1}" แล้ว</sys:String>
+
+    <!-- ── Language names ── -->
+    <!-- The language names in the pickers. The English interface shows LangItem.English
+         instead of these, so they exist here for parity and for anything that asks for a
+         name by key. -->
+    <sys:String x:Key="S.Lang.Automatic">อัตโนมัติ</sys:String>
+    <sys:String x:Key="S.Lang.AutomaticOcr">อัตโนมัติ (ZH/EN/JA)</sys:String>
+    <sys:String x:Key="S.Lang.English">อังกฤษ</sys:String>
+    <sys:String x:Key="S.Lang.Japanese">ญี่ปุ่น</sys:String>
+    <sys:String x:Key="S.Lang.Korean">เกาหลี</sys:String>
+    <sys:String x:Key="S.Lang.Thai">ไทย</sys:String>
+    <sys:String x:Key="S.Lang.TraditionalChinese">จีนตัวเต็ม</sys:String>
+    <sys:String x:Key="S.Lang.SimplifiedChinese">จีนตัวย่อ</sys:String>
+    <sys:String x:Key="S.Lang.Bulgarian">บัลแกเรีย</sys:String>
+    <sys:String x:Key="S.Lang.Czech">เช็ก</sys:String>
+    <sys:String x:Key="S.Lang.Danish">เดนมาร์ก</sys:String>
+    <sys:String x:Key="S.Lang.German">เยอรมัน</sys:String>
+    <sys:String x:Key="S.Lang.Greek">กรีก</sys:String>
+    <sys:String x:Key="S.Lang.Spanish">สเปน</sys:String>
+    <sys:String x:Key="S.Lang.Estonian">เอสโตเนีย</sys:String>
+    <sys:String x:Key="S.Lang.Persian">เปอร์เซีย</sys:String>
+    <sys:String x:Key="S.Lang.Finnish">ฟินแลนด์</sys:String>
+    <sys:String x:Key="S.Lang.French">ฝรั่งเศส</sys:String>
+    <sys:String x:Key="S.Lang.Hungarian">ฮังการี</sys:String>
+    <sys:String x:Key="S.Lang.Indonesian">อินโดนีเซีย</sys:String>
+    <sys:String x:Key="S.Lang.Italian">อิตาลี</sys:String>
+    <sys:String x:Key="S.Lang.Lithuanian">ลิทัวเนีย</sys:String>
+    <sys:String x:Key="S.Lang.Latvian">ลัตเวีย</sys:String>
+    <sys:String x:Key="S.Lang.Norwegian">นอร์เวย์</sys:String>
+    <sys:String x:Key="S.Lang.Dutch">ดัตช์</sys:String>
+    <sys:String x:Key="S.Lang.Polish">โปแลนด์</sys:String>
+    <sys:String x:Key="S.Lang.Portuguese">โปรตุเกส</sys:String>
+    <sys:String x:Key="S.Lang.Romanian">โรมาเนีย</sys:String>
+    <sys:String x:Key="S.Lang.Russian">รัสเซีย</sys:String>
+    <sys:String x:Key="S.Lang.Slovak">สโลวัก</sys:String>
+    <sys:String x:Key="S.Lang.Slovenian">สโลวีเนีย</sys:String>
+    <sys:String x:Key="S.Lang.Swedish">สวีเดน</sys:String>
+    <sys:String x:Key="S.Lang.Turkish">ตุรกี</sys:String>
+    <sys:String x:Key="S.Lang.Ukrainian">ยูเครน</sys:String>
+    <sys:String x:Key="S.Lang.Vietnamese">เวียดนาม</sys:String>
+
+    <sys:String x:Key="S.Toolbar.DebugAssist">ตัวช่วยดีบัก</sys:String>
+    <sys:String x:Key="S.Toolbar.DebugAssistOn">เปิด {0} รายการ</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopy">ปิดหลังจับภาพ</sys:String>
+    <sys:String x:Key="S.Toolbar.CloseAfterCopyTip">จบการจับภาพเมื่อ "ภาพหน้าจอ" คัดลอกไปยังคลิปบอร์ดแล้ว</sys:String>
+    <sys:String x:Key="S.Toolbar.MoreGeneral">ทั่วไป</sys:String>
+    <sys:String x:Key="S.Toolbar.AutoTranslate">แปลอัตโนมัติ</sys:String>
+    <sys:String x:Key="S.Toolbar.SaveScreenshot">บันทึกภาพหน้าจอ</sys:String>
+    <sys:String x:Key="S.Toolbar.SavePathInSettings">เปลี่ยนตำแหน่งได้ในการตั้งค่า</sys:String>
+    <sys:String x:Key="S.Debug.DisplayScope">ขอบเขตการแสดงผล</sys:String>
+    <sys:String x:Key="S.Debug.BoxDisplayScope">ขอบเขตการแสดงกรอบ</sys:String>
+    <sys:String x:Key="S.Debug.SourceOnly">เฉพาะต้นฉบับ</sys:String>
+    <sys:String x:Key="S.Debug.SourceAndTranslation">ต้นฉบับและคำแปล</sys:String>
+    <!-- Two lines, one per half of the switch. xml:space is what keeps the break: without it XAML
+         collapses the &#x0A; away and the two sentences run together. -->
+    <sys:String x:Key="S.Debug.ScopeHint" xml:space="preserve">เฉพาะต้นฉบับ: วาดกรอบบนมุมมองต้นฉบับเท่านั้น&#x0A;ต้นฉบับและคำแปล: วาดกรอบทั้งบนมุมมองต้นฉบับและมุมมองคำแปล</sys:String>
+
+    <!-- Thai fork: notification only, with no official binary installer. -->
+
+    <!-- Installed local OCR model selection. -->
+    <sys:String x:Key="S.OcrModel.Title">โมเดลรู้จำ OCR</sys:String>
+    <sys:String x:Key="S.OcrModel.ByLanguage">เลือกตามภาษาต้นทาง (ค่าเริ่มต้น)</sys:String>
+    <sys:String x:Key="S.OcrModel.General">PP-OCRv6 · จีน/อังกฤษ/ญี่ปุ่น (ในเครื่อง)</sys:String>
+    <sys:String x:Key="S.OcrModel.Thai">PP-OCRv5 · ไทย/อังกฤษ (ในเครื่อง)</sys:String>
+    <sys:String x:Key="S.OcrModel.Korean">ตัวรู้จำภาษาเกาหลี (ในเครื่อง)</sys:String>
+    <sys:String x:Key="S.OcrModel.Hint">ใช้สำหรับ OCR ภาพหน้าจอ เลือกโมเดลให้ตรงกับภาษาต้นทาง การเปลี่ยนแปลงจะมีผลในการรู้จำครั้งถัดไป</sys:String>
+    <sys:String x:Key="S.OcrModel.Incompatible">โมเดล OCR นี้ไม่รองรับภาษาต้นทาง ทั่วไป: จีน/อังกฤษ/ญี่ปุ่น; ไทย: ไทย/อังกฤษ; เกาหลี: เกาหลี</sys:String>
+    <sys:String x:Key="S.OcrModel.DetectorSize">ขนาดการตรวจจับข้อความ (ทุกภาษา)</sys:String>
+    <sys:String x:Key="S.OcrModel.RecognizerSize">ขนาดการรู้จำทั่วไป (จีน/อังกฤษ/ญี่ปุ่น)</sys:String>
+    <sys:String x:Key="S.OcrModel.ScaleHint">โมเดลที่ใหญ่กว่ามักใช้เวลาและหน่วยความจำมากกว่า ให้เปรียบเทียบด้วยภาพเดียวกัน ภาษาไทยและเกาหลีใช้ตัวรู้จำเฉพาะของตัวเอง</sys:String>
+    <sys:String x:Key="S.OcrModel.Device">อุปกรณ์ประมวลผล</sys:String>
+    <sys:String x:Key="S.OcrModel.DeviceHint">GPU ใช้ DirectML ไม่จำเป็นต้องมี CUDA การใช้งานครั้งแรกอาจช้ากว่า หาก GPU ที่เลือกใช้ไม่ได้ ให้เลือก CPU</sys:String>
+    <sys:String x:Key="S.OcrModel.Tiny">Tiny · เร็ว</sys:String>
+    <sys:String x:Key="S.OcrModel.Small">Small · สมดุล</sys:String>
+    <sys:String x:Key="S.OcrModel.Medium">Medium · ใหญ่กว่า</sys:String>
+    <sys:String x:Key="S.OcrModel.Prepare">เตรียมโมเดลที่เลือกและส่วนประกอบ GPU</sys:String>
+    <sys:String x:Key="S.OcrModel.Preparing">กำลังเตรียม: {0}</sys:String>
+    <sys:String x:Key="S.OcrModel.Ready">ส่วนประกอบที่เลือกพร้อมแล้ว</sys:String>
+    <sys:String x:Key="S.OcrModel.PrepareNeeded">ยังขาดส่วนประกอบ คลิก “เตรียมโมเดลที่เลือกและส่วนประกอบ GPU”</sys:String>
+    <sys:String x:Key="S.OcrModel.PrepareFailed">เตรียมไม่สำเร็จ:</sys:String>
+    <sys:String x:Key="S.OcrModel.ActualDevice">อุปกรณ์ประมวลผลล่าสุด: {0}</sys:String>
+    <sys:String x:Key="S.OcrModel.NextRun">การเปลี่ยนแปลงจะมีผลในการรู้จำครั้งถัดไป</sys:String>
+    <sys:String x:Key="S.OcrModel.DeviceUnavailable">GPU ที่เลือกใช้ไม่ได้ (เลือก CPU ได้)</sys:String>
+
+    <sys:String x:Key="S.Main.RealtimeRunningBody">ใช้แปลด่วนไม่ได้ขณะแก้ไขบล็อก</sys:String>
+    <sys:String x:Key="S.Main.RealtimeRunningTitle">การแปลแบบเรียลไทม์กำลังทำงาน</sys:String>
+    <sys:String x:Key="S.Realtime.SessionEndedTitle">การแปลแบบเรียลไทม์สิ้นสุดแล้ว</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkey">แปลแบบเรียลไทม์</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyHint">กดปุ่มลัดเพื่อ[[เลือกบล็อกและแปล]]</sys:String>
+    <sys:String x:Key="S.Settings.RealtimePauseHotkeyNote">เมื่อยังไม่ทำงาน กดปุ่มลัดเพื่อเลือกบล็อก แล้วกดอีกครั้งเพื่อเริ่มแปล ระหว่างแปลจะใช้หยุดชั่วคราวและทำต่อ</sys:String>
+    <sys:String x:Key="S.Shell.RealtimeTranslate">เรียลไทม์</sys:String>
+
+
+    <!-- Snipaste-style additions: gestures, pinning, mosaic / blur / numbers -->
+    <sys:String x:Key="S.Toolbar.DoubleClickFinish">ดับเบิลคลิกเพื่อจบ</sys:String>
+    <sys:String x:Key="S.Toolbar.DoubleClickFinishTip">ดับเบิลคลิกในส่วนที่เลือกเพื่อคัดลอกภาพหน้าจอและจบการจับภาพ</sys:String>
+    <sys:String x:Key="S.Toolbar.RightClickCancel">คลิกขวาเพื่อยกเลิก</sys:String>
+    <sys:String x:Key="S.Toolbar.RightClickCancelTip">คลิกขวาเพื่อจบการจับภาพทันที</sys:String>
+    <sys:String x:Key="S.Toolbar.Pin">ปักหมุด</sys:String>
+    <sys:String x:Key="S.Toolbar.PinHint">ปักหมุดส่วนที่เลือกไว้บนสุดของหน้าจอและจบการจับภาพ</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkey">ปักหมุดคลิปบอร์ด</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkeyHint">[[ปักหมุดรูปภาพหรือข้อความ]]บนคลิปบอร์ดไว้บนหน้าจอ</sys:String>
+    <sys:String x:Key="S.Settings.PinHotkeyNote">ลากหมุดเพื่อย้าย ล้อเมาส์ใช้ซูม และ Ctrl+ล้อเมาส์ใช้เปลี่ยนความทึบ ดับเบิลคลิกหรือ Esc เพื่อปิด และคลิกขวาเพื่อดูเพิ่มเติม เปลี่ยนการควบคุมเหล่านี้ได้ที่การควบคุมหมุดทางขวา</sys:String>
+    <sys:String x:Key="S.Pin.Title">ปักหมุด</sys:String>
+    <sys:String x:Key="S.Pin.Copy">คัดลอก</sys:String>
+    <sys:String x:Key="S.Pin.SaveAs">บันทึกเป็น…</sys:String>
+    <sys:String x:Key="S.Pin.ActualSize">ขนาดจริง</sys:String>
+    <sys:String x:Key="S.Pin.Opacity">ความทึบ</sys:String>
+    <sys:String x:Key="S.Pin.Close">ปิด</sys:String>
+    <sys:String x:Key="S.Pin.CloseAll">ปิดหมุดทั้งหมด</sys:String>
+    <sys:String x:Key="S.Pin.ClipboardEmpty">ไม่มีรูปภาพหรือข้อความบนคลิปบอร์ดให้ปักหมุด</sys:String>
+    <sys:String x:Key="S.Annotate.Mosaic">โมเสก</sys:String>
+    <sys:String x:Key="S.Annotate.Blur">เบลอ</sys:String>
+    <sys:String x:Key="S.Annotate.Number">หมายเลข</sys:String>
+    <sys:String x:Key="S.Annotate.Intensity">ความแรง</sys:String>
+    <sys:String x:Key="S.Annotate.Light">เบา</sys:String>
+    <sys:String x:Key="S.Annotate.Heavy">หนัก</sys:String>
+
+    <sys:String x:Key="S.Settings.PinOps">การควบคุมหมุด</sys:String>
+    <sys:String x:Key="S.Settings.PinZoom">ซูม:</sys:String>
+    <sys:String x:Key="S.Settings.PinOpacity">ความทึบ:</sys:String>
+    <sys:String x:Key="S.Settings.PinClose">ปิด:</sys:String>
+    <sys:String x:Key="S.Settings.PinReset">รีเซ็ต:</sys:String>
+    <sys:String x:Key="S.Settings.PinOr">หรือ</sys:String>
+    <sys:String x:Key="S.Settings.PinNone">ไม่มี</sys:String>
+    <sys:String x:Key="S.Settings.PinWheel">ล้อเมาส์</sys:String>
+    <sys:String x:Key="S.Settings.PinLeftDouble">ดับเบิลคลิกซ้าย</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleClick">คลิกปุ่มกลาง</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleDouble">ดับเบิลคลิกปุ่มกลาง</sys:String>
+    <sys:String x:Key="S.Settings.PinConflictNote">* หากซ้ำกัน แถวที่อยู่สูงกว่าจะมีผล Esc ปิดหมุดได้เสมอ</sys:String>
+    <sys:String x:Key="S.Settings.MouseEnhance">เพิ่มความสามารถเมาส์</sys:String>
+    <sys:String x:Key="S.Settings.MouseEnhanceHint">ปรับความโปร่งใส เลื่อนแนวนอน และปรับขนาดหน้าต่างด้วยปุ่มที่กดค้างและเมาส์</sys:String>
+    <sys:String x:Key="S.Settings.MouseOps">การตั้งค่าเมาส์</sys:String>
+    <sys:String x:Key="S.Settings.MouseWheelGesture">ล้อเมาส์</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenuFold">ตั้งค่าเมนู</sys:String>
+    <sys:String x:Key="S.Note.Title">โน้ตแปะ</sys:String>
+    <sys:String x:Key="S.Note.Recognising">กำลังอ่านรูปภาพ…</sys:String>
+    <sys:String x:Key="S.Note.NothingRead">ไม่พบข้อความในรูปภาพ จึงเปิดโน้ตว่างให้</sys:String>
+    <sys:String x:Key="S.Note.ReadFailed">อ่านรูปภาพไม่สำเร็จ: {0}</sys:String>
+    <sys:String x:Key="S.Note.Edit">แก้ไข</sys:String>
+    <sys:String x:Key="S.Note.Topmost">ไว้บนสุดเสมอ</sys:String>
+    <sys:String x:Key="S.Note.Unpin">เลิกไว้บนสุด</sys:String>
+    <sys:String x:Key="S.Note.Delete">ลบ</sys:String>
+    <sys:String x:Key="S.Note.Save">บันทึก (Ctrl+Enter)</sys:String>
+    <sys:String x:Key="S.Note.Cancel">ยกเลิก (Esc)</sys:String>
+    <sys:String x:Key="S.Note.CopyText">คัดลอกข้อความ</sys:String>
+    <sys:String x:Key="S.Note.PassThrough">คลิกทะลุ</sys:String>
+    <sys:String x:Key="S.Note.Resize">ปรับขนาด</sys:String>
+    <sys:String x:Key="S.Note.AutoSize">ขนาดอัตโนมัติ</sys:String>
+    <sys:String x:Key="S.Note.Empty">(ว่าง)</sys:String>
+    <sys:String x:Key="S.Note.Opacity">ความทึบ</sys:String>
+    <sys:String x:Key="S.Settings.NoteOpacity">ความทึบเริ่มต้น</sys:String>
+    <sys:String x:Key="S.Note.ReadTimeout">การอ่านใช้เวลาเกิน 30 วินาทีจึงหยุดแล้ว</sys:String>
+    <sys:String x:Key="S.Notes.Title">โน้ตแปะ</sys:String>
+    <sys:String x:Key="S.Notes.Subtitle">โน้ตทุกแผ่นบนเดสก์ท็อป เรียงตามเวลาที่บันทึกล่าสุด</sys:String>
+    <sys:String x:Key="S.Notes.New">โน้ตใหม่</sys:String>
+    <sys:String x:Key="S.Notes.Empty">ยังไม่มีโน้ต คัดลอกข้อความหรือรูปภาพแล้วกดปุ่มลัดโน้ตแปะ (ค่าเริ่มต้น F2) หรือคลิกโน้ตใหม่</sys:String>
+    <sys:String x:Key="S.Notes.StateTopmost">บนสุด</sys:String>
+    <sys:String x:Key="S.Notes.StatePassThrough">คลิกทะลุ</sys:String>
+    <sys:String x:Key="S.Notes.Locate">ค้นหา (ย้ายมากลางหน้าจอ)</sys:String>
+    <sys:String x:Key="S.Notes.PassThroughOn">เปิดคลิกทะลุ</sys:String>
+    <sys:String x:Key="S.Notes.PassThroughOff">ปิดคลิกทะลุ</sys:String>
+    <sys:String x:Key="S.Shell.StickyNotes">โน้ตแปะ</sys:String>
+    <sys:String x:Key="S.Tray.NotePassThroughOff">ปิดคลิกทะลุของโน้ต</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteHotkey">โน้ตแปะ</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteHotkeyHint">คัดลอกข้อความหรือรูปภาพแล้วกด เพื่อแปะโน้ตไว้ที่ตัวชี้ รูปภาพจะถูกอ่านเป็นข้อความก่อน</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteNote">ดับเบิลคลิกโน้ตเพื่อแก้ไข ✓ เพื่อบันทึก คลิกขวาเพื่อไว้บนสุด ปรับความทึบ คลิกทะลุ หรือปรับขนาด เมื่อเปิดคลิกทะลุ การคลิกจะทะลุผ่านโน้ต ชี้ที่โน้ตแล้วกดปุ่มลัดโน้ตแปะ หรือปิดได้จากเมนูถาดระบบหรือหน้าโน้ตแปะ</sys:String>
+    <sys:String x:Key="S.Settings.StickyNoteOps">การตั้งค่าโน้ต</sys:String>
+    <sys:String x:Key="S.Settings.NoteOcrLanguage">ภาษาในรูปภาพ</sys:String>
+    <sys:String x:Key="S.Settings.NoteWidth">ความกว้างเริ่มต้น</sys:String>
+    <sys:String x:Key="S.Settings.NoteFontSize">ขนาดตัวอักษร</sys:String>
+    <sys:String x:Key="S.Settings.NotePaperColor">สีกระดาษ</sys:String>
+    <sys:String x:Key="S.Settings.NoteTapeColor">สีเทป</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveTitle">เก็บถาวร</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchive">บันทึกโน้ตที่บันทึกแล้วลงไฟล์ล็อก</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveChoose">เลือกโฟลเดอร์</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveOpen">เปิดโฟลเดอร์</sys:String>
+    <sys:String x:Key="S.Settings.NoteArchiveHint">บันทึกแต่ละครั้งเพิ่มหนึ่งบรรทัด: ลำดับ วันที่และเวลา ข้อความ (การขึ้นบรรทัดใหม่แทนด้วย ↵) ไม่ถูกลบ</sys:String>
+    <sys:String x:Key="S.Settings.NoteCustomColor">กำหนดเอง…</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeStep">ขั้น</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeMinimum">ต่ำสุด</sys:String>
+    <sys:String x:Key="S.Settings.MouseFade">ความโปร่งใสของหน้าต่าง</sys:String>
+    <sys:String x:Key="S.Settings.MouseFadeHint">กดปุ่มค้างแล้วหมุนล้อเมาส์เพื่อปรับความโปร่งใสของหน้าต่างใต้ตัวชี้: ขึ้นให้ทึบขึ้น ลงให้โปร่งขึ้น</sys:String>
+    <sys:String x:Key="S.Settings.MouseScroll">เลื่อนแนวนอน</sys:String>
+    <sys:String x:Key="S.Settings.MouseScrollHint">กดปุ่มค้างแล้วหมุนล้อเมาส์เพื่อเลื่อนเนื้อหาใต้ตัวชี้ไปทางซ้ายขวา</sys:String>
+    <sys:String x:Key="S.Settings.MouseScrollReverse">กลับทิศ</sys:String>
+    <sys:String x:Key="S.Settings.MouseResize">ปรับขนาดหน้าต่าง</sys:String>
+    <sys:String x:Key="S.Settings.MouseResizeHint">กดปุ่มค้างแล้วลากภายในหน้าต่างเพื่อย้ายขอบหรือมุมที่ใกล้ที่สุด หากเริ่มจากตรงกลางจะปรับมุมขวาล่าง</sys:String>
+    <sys:String x:Key="S.Settings.MouseRightDrag">ลากด้วยปุ่มขวา</sys:String>
+    <sys:String x:Key="S.Settings.MouseMiddleDrag">ลากด้วยปุ่มกลาง</sys:String>
+    <sys:String x:Key="S.Settings.MouseLeftDrag">ลากด้วยปุ่มซ้าย</sys:String>
+    <sys:String x:Key="S.Settings.MouseNote">หากเครื่องมือล้อเมาส์ทั้งสองใช้ปุ่มเดียวกัน ความโปร่งใสจะมีผลก่อน โปรแกรมที่ทำงานในฐานะผู้ดูแลระบบจะไม่ได้รับผล หน้าต่างที่ปรับให้โปร่งใสจะกลับเป็นปกติเมื่อแอปนี้ปิด</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenu">เมนูถาดระบบ</sys:String>
+    <sys:String x:Key="S.Settings.TrayMenuHint">สวิตช์ที่ทำเครื่องหมายจะแสดงในเมนูคลิกขวาของไอคอนถาดระบบ คลิกครั้งเดียวเพื่อเปิดหรือปิด</sys:String>
+
+    <sys:String x:Key="S.Settings.OcrFold">การตั้งค่า OCR</sys:String>
+    <sys:String x:Key="S.Settings.OcrFoldTitle">การรู้จำข้อความ (OCR)</sys:String>
+    <sys:String x:Key="S.Settings.OcrFoldHint">โมเดลรู้จำ ขนาดการตรวจจับ และอุปกรณ์</sys:String>
+
+    <sys:String x:Key="S.Pin.PassThrough">คลิกทะลุ</sys:String>
+    <sys:String x:Key="S.Pin.PassThroughOn">เปิดคลิกทะลุแล้ว ชี้ที่หมุดแล้วกดปุ่มลัดปักหมุด หรือใช้เมนูถาดระบบเพื่อปิด</sys:String>
+    <sys:String x:Key="S.Pin.PassThroughOff">ปิดคลิกทะลุแล้ว</sys:String>
+    <sys:String x:Key="S.Tray.PinPassThroughOff">หยุดคลิกทะลุของหมุด</sys:String>
+
+    <sys:String x:Key="S.Settings.PinSelection">ปักหมุดส่วนที่เลือกขณะจับภาพ</sys:String>
+    <sys:String x:Key="S.Settings.PinSelectionHint">ปักหมุดพื้นที่ที่เลือกไว้บนหน้าจอระหว่างการจับภาพ</sys:String>
+    <sys:String x:Key="S.Settings.PinMiddleButton">ปุ่มกลาง</sys:String>
+
+    <sys:String x:Key="S.Pin.Edit">แก้ไข / แปล</sys:String>
+
+</ResourceDictionary>

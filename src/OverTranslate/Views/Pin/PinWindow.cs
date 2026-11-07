@@ -97,7 +97,12 @@ public sealed class PinWindow : Window
         if (!image.IsFrozen && image.CanFreeze) image.Freeze();
         var pin = new PinWindow(image, physX, physY);
         Open.Add(pin);
-        pin.Closed += (_, _) => Open.Remove(pin);
+        TopmostKeeper.Register(pin);
+        pin.Closed += (_, _) =>
+        {
+            Open.Remove(pin);
+            TopmostKeeper.Unregister(pin);
+        };
         pin.Show();
         Log.Info("Pinned a {Width}x{Height} picture at {X},{Y}", image.PixelWidth, image.PixelHeight, physX, physY);
         return pin;
@@ -767,7 +772,7 @@ public sealed class PinWindow : Window
         var dialog = new Microsoft.Win32.SaveFileDialog
         {
             Filter = "PNG|*.png",
-            FileName = $"OverTranslateTH_{DateTime.Now:yyyyMMdd_HHmmss}.png",
+            FileName = $"TTTools_{DateTime.Now:yyyyMMdd_HHmmss}.png",
             InitialDirectory = ScreenshotSaveService.ResolveDirectory(SettingsService.Instance.Current.ScreenshotSavePath),
         };
 
@@ -790,6 +795,8 @@ public sealed class PinWindow : Window
         finally
         {
             Topmost = true;
+            // Back above whatever came forward while the dialog was up.
+            AlwaysOnTop.Reassert(this);
         }
     }
 

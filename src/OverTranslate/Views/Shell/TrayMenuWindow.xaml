@@ -60,7 +60,7 @@
                                   Opacity="0.24" Color="#000000"/>
             </Border.Effect>
 
-            <StackPanel Width="196">
+            <StackPanel MinWidth="196">
 
                 <!-- 截圖翻譯 is deliberately absent: it lives on the shell window's nav rail and on
                      the shortcut. Three entry points for one action was one too many, and this menu
@@ -91,6 +91,33 @@
                                    Width="22" VerticalAlignment="Center"
                                    Foreground="{DynamicResource AppTextSecondary}"/>
                         <TextBlock Text="{DynamicResource S.Tray.PinPassThroughOff}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- 功能開關: the switches chosen in 設定 › 托盤右鍵選單, ticked when on. Clicking one
+                     flips it and leaves the menu open, so several can be set in one go. -->
+                <StackPanel x:Name="TogglesGroup">
+                    <Rectangle Height="1" Margin="8,3" Fill="{DynamicResource AppSeparator}"/>
+                    <TextBlock Text="{DynamicResource S.Tray.Toggles}"
+                               FontFamily="{DynamicResource AppFont}"
+                               FontSize="11"
+                               Foreground="{DynamicResource AppTextSecondary}"
+                               Margin="14,4,14,2"/>
+                    <StackPanel x:Name="TogglesPanel"/>
+                    <Rectangle Height="1" Margin="8,3" Fill="{DynamicResource AppSeparator}"/>
+                </StackPanel>
+
+                <!-- Only while a note lets clicks through: its way back, as for pins above. -->
+                <Button x:Name="NotePassThroughBtn"
+                        Style="{StaticResource TrayMenuItem}"
+                        Visibility="Collapsed"
+                        Click="NotePassThroughBtn_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                   FontSize="14" Text="&#xE70B;"
+                                   Width="22" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource AppTextSecondary}"/>
+                        <TextBlock Text="{DynamicResource S.Tray.NotePassThroughOff}" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 

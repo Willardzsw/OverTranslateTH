@@ -20,8 +20,67 @@ public partial class TrayMenuWindow : Window
     public event EventHandler? ExitRequested;
     public event EventHandler? PinPassThroughOffRequested;
 
+    /// <summary>A feature switch was clicked: the toggle and the state it should now have.</summary>
+    public event Action<OverTranslate.Models.FeatureToggle, bool>? FeatureToggleRequested;
+
+    private const string CheckGlyph = "";
+
+    /// <summary>Fills the 功能開關 group; hidden when no switch is chosen for the menu.</summary>
+    public void SetFeatureToggles(IEnumerable<(OverTranslate.Models.FeatureToggle Toggle, bool On)> toggles)
+    {
+        TogglesPanel.Children.Clear();
+        foreach (var (toggle, initial) in toggles)
+        {
+            bool on = initial;
+            var check = new System.Windows.Controls.TextBlock
+            {
+                FontFamily = new System.Windows.Media.FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"),
+                FontSize = 14,
+                Width = 22,
+                VerticalAlignment = VerticalAlignment.Center,
+                Text = on ? CheckGlyph : "",
+            };
+            check.SetResourceReference(System.Windows.Controls.TextBlock.ForegroundProperty, "AppAccent");
+            var label = new System.Windows.Controls.TextBlock { VerticalAlignment = VerticalAlignment.Center };
+            label.SetResourceReference(System.Windows.Controls.TextBlock.TextProperty,
+                OverTranslate.Models.FeatureToggles.NameKey(toggle));
+            var content = new System.Windows.Controls.StackPanel
+            {
+                Orientation = System.Windows.Controls.Orientation.Horizontal,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            content.Children.Add(check);
+            content.Children.Add(label);
+
+            var item = new Button { Content = content };
+            item.SetResourceReference(StyleProperty, "TrayMenuItem");
+            System.Windows.Automation.AutomationProperties.SetName(item,
+                LocalizationService.Get(OverTranslate.Models.FeatureToggles.NameKey(toggle)));
+            item.Click += (_, _) =>
+            {
+                on = !on;
+                check.Text = on ? CheckGlyph : "";
+                FeatureToggleRequested?.Invoke(toggle, on);
+            };
+            TogglesPanel.Children.Add(item);
+        }
+
+        TogglesGroup.Visibility = TogglesPanel.Children.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
     public void SetPinPassThroughVisible(bool visible) =>
         PinPassThroughBtn.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+
+    public event EventHandler? NotePassThroughOffRequested;
+
+    public void SetNotePassThroughVisible(bool visible) =>
+        NotePassThroughBtn.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+
+    private void NotePassThroughBtn_Click(object sender, RoutedEventArgs e)
+    {
+        NotePassThroughOffRequested?.Invoke(this, EventArgs.Empty);
+        Dismiss();
+    }
 
     private void PinPassThroughBtn_Click(object sender, RoutedEventArgs e)
     {
