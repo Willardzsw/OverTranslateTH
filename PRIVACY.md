@@ -2,7 +2,7 @@
 
 _最后更新：2026-11-05_
 
-TT Tools 是基于 OverTranslate 修改的 Windows 屏幕翻译工具。本说明只适用于本仓库的版本，不适用于原项目。
+TextTack（贴译）是基于 OverTranslate 修改的 Windows 屏幕翻译工具。本说明只适用于本仓库的版本，不适用于原项目。
 
 ## 数据收集
 

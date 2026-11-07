@@ -29,7 +29,7 @@ internal static class AboutLayout
             {
                 settings.UiLanguage = language;
                 var resources = Application.Current.Resources.MergedDictionaries;
-                resources[2] = new ResourceDictionary { Source = new Uri($"pack://application:,,,/TTTools;component/Resources/Strings.{language}.xaml") };
+                resources[2] = new ResourceDictionary { Source = new Uri($"pack://application:,,,/TextTack;component/Resources/Strings.{language}.xaml") };
 
                 var overlay = new AboutOverlay { Visibility = Visibility.Visible };
                 var size = new Size(520, 480);
@@ -46,7 +46,7 @@ internal static class AboutLayout
             }
 
             var font = (System.Windows.Media.FontFamily)Application.Current.Resources["AppFont"];
-            var wordmark = new FormattedText("TT Tools", System.Globalization.CultureInfo.InvariantCulture,
+            var wordmark = new FormattedText("TextTack 贴译", System.Globalization.CultureInfo.InvariantCulture,
                 System.Windows.FlowDirection.LeftToRight,
                 new Typeface(font, FontStyles.Normal, FontWeights.SemiBold, FontStretches.Normal), 15,
                 System.Windows.Media.Brushes.Black, 1);

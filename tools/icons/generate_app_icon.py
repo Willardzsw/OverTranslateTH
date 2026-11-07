@@ -1,4 +1,4 @@
-"""Regenerates the TT Tools icons: two overlapping T letters on a warm tile.
+"""Regenerates the TextTack icons: two overlapping T letters on a warm tile.
 
 Run from the repository root: python tools/icons/generate_app_icon.py
 Writes src/OverTranslate/icons/app.ico, app-compact.ico and docs/images/icon.svg.
@@ -81,7 +81,7 @@ def hex_color(c):
 
 def save_svg(path):
     svg = f'''<?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 100 100" role="img" aria-label="TT Tools">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 100 100" role="img" aria-label="TextTack">
   <defs>
     <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="{hex_color(TILE_START)}"/>

@@ -772,7 +772,7 @@ public sealed class PinWindow : Window
         var dialog = new Microsoft.Win32.SaveFileDialog
         {
             Filter = "PNG|*.png",
-            FileName = $"TTTools_{DateTime.Now:yyyyMMdd_HHmmss}.png",
+            FileName = $"TextTack_{DateTime.Now:yyyyMMdd_HHmmss}.png",
             InitialDirectory = ScreenshotSaveService.ResolveDirectory(SettingsService.Instance.Current.ScreenshotSavePath),
         };
 

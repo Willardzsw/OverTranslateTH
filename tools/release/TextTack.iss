@@ -1,4 +1,4 @@
-﻿; TT Tools installer. Built by tools\release\build-release.ps1.
+﻿; TextTack installer. Built by tools\release\build-release.ps1.
 #ifndef AppVersion
   #error Pass /DAppVersion
 #endif
@@ -8,22 +8,22 @@
 
 [Setup]
 AppId={{6F3B8E52-7C1D-4A96-9E0B-2D41C7A58F13}
-AppName=TT Tools
+AppName=TextTack
 AppVersion={#AppVersion}
-AppVerName=TT Tools {#AppVersion}
+AppVerName=TextTack {#AppVersion}
 AppPublisher=Willardzsw
 AppPublisherURL=https://github.com/Willardzsw/OverTranslateTH
 AppSupportURL=https://github.com/Willardzsw/OverTranslateTH/issues
 ; Per user: settings are written beside the executable, which Program Files would refuse.
 PrivilegesRequired=lowest
-DefaultDirName={localappdata}\Programs\TTTools
+DefaultDirName={localappdata}\Programs\TextTack
 DisableProgramGroupPage=yes
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
-OutputBaseFilename=TTTools-{#AppVersion}-win-x64-Setup
+OutputBaseFilename=TextTack-{#AppVersion}-win-x64-Setup
 SetupIconFile=..\..\src\OverTranslate\icons\app.ico
-UninstallDisplayIcon={app}\TTTools.exe
-UninstallDisplayName=TT Tools
+UninstallDisplayIcon={app}\TextTack.exe
+UninstallDisplayName=TextTack
 LicenseFile=..\..\LICENSE
 Compression=lzma2/max
 SolidCompression=yes
@@ -56,21 +56,28 @@ Type: files; Name: "{app}\OverTranslate.runtimeconfig.json"
 Type: files; Name: "{app}\OverTranslate.pdb"
 Type: files; Name: "{autoprograms}\OverTranslateTH.lnk"
 Type: files; Name: "{autodesktop}\OverTranslateTH.lnk"
+; Upgrading from TT Tools (1.5.x): the program was TTTools.exe and its shortcuts were named TT Tools.
+Type: files; Name: "{app}\TTTools.exe"
+Type: files; Name: "{app}\TTTools.dll"
+Type: files; Name: "{app}\TTTools.deps.json"
+Type: files; Name: "{app}\TTTools.runtimeconfig.json"
+Type: files; Name: "{app}\TTTools.pdb"
+Type: files; Name: "{autoprograms}\TT Tools.lnk"
+Type: files; Name: "{autodesktop}\TT Tools.lnk"
 
 [Icons]
-Name: "{autoprograms}\TT Tools"; Filename: "{app}\TTTools.exe"; AppUserModelID: "Willardzsw.TTTools"
-Name: "{autodesktop}\TT Tools"; Filename: "{app}\TTTools.exe"; AppUserModelID: "Willardzsw.TTTools"; Tasks: desktopicon
+Name: "{autoprograms}\TextTack"; Filename: "{app}\TextTack.exe"; AppUserModelID: "Willardzsw.TextTack"
+Name: "{autodesktop}\TextTack"; Filename: "{app}\TextTack.exe"; AppUserModelID: "Willardzsw.TextTack"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\TTTools.exe"; Description: "{cm:LaunchProgram,TT Tools}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\TextTack.exe"; Description: "{cm:LaunchProgram,TextTack}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 const
   RunKey = 'Software\Microsoft\Windows\CurrentVersion\Run';
-  RunValue = 'TTTools';
-  AumidKey = 'Software\Classes\AppUserModelId\Willardzsw.TTTools';
-
-  LegacyRunValue = 'OverTranslate-Thai-Dev';
+  RunValue = 'TextTack';
+  AumidKey = 'Software\Classes\AppUserModelId\Willardzsw.TextTack';
+  LegacyAumidKey = 'Software\Classes\AppUserModelId\Willardzsw.TTTools';
 
 // Only entries that point into this install: another copy that ran last owns them.
 function PointsIntoApp(const Value: String): Boolean;
@@ -78,16 +85,28 @@ begin
   Result := Pos(Lowercase(AddBackslash(ExpandConstant('{app}'))), Lowercase(Value)) > 0;
 end;
 
-// The startup entry from before the rename pointed at OverTranslate.exe, which is gone now.
+// Moves a startup entry from before a rename, which pointed at an executable that is gone now.
+procedure MigrateRunValue(const LegacyName: String);
+var
+  Value: String;
+begin
+  if RegQueryStringValue(HKCU, RunKey, LegacyName, Value) and PointsIntoApp(Value) then
+  begin
+    RegDeleteValue(HKCU, RunKey, LegacyName);
+    RegWriteStringValue(HKCU, RunKey, RunValue, '"' + ExpandConstant('{app}\TextTack.exe') + '"');
+  end;
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   Value: String;
 begin
-  if (CurStep = ssPostInstall)
-    and RegQueryStringValue(HKCU, RunKey, LegacyRunValue, Value) and PointsIntoApp(Value) then
+  if CurStep = ssPostInstall then
   begin
-    RegDeleteValue(HKCU, RunKey, LegacyRunValue);
-    RegWriteStringValue(HKCU, RunKey, RunValue, '"' + ExpandConstant('{app}\TTTools.exe') + '"');
+    MigrateRunValue('TTTools');
+    MigrateRunValue('OverTranslate-Thai-Dev');
+    if RegQueryStringValue(HKCU, LegacyAumidKey, 'IconUri', Value) and PointsIntoApp(Value) then
+      RegDeleteKeyIncludingSubkeys(HKCU, LegacyAumidKey);
   end;
 end;
 

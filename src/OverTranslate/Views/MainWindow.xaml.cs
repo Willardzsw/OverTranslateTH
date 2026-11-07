@@ -141,7 +141,7 @@ public partial class MainWindow : Window
         _notifyIcon = new NotifyIcon
         {
             Icon = AppIconService.CreateTrayIcon(),
-            Text = "TT Tools",
+            Text = "TextTack",
             Visible = true
         };
 

@@ -4,7 +4,7 @@
 
 ## 启动和使用
 
-1. 双击桌面的 `TT Tools` 快捷方式。也可运行项目根目录的 `Start-Thai.cmd`，或直接运行 `src\OverTranslate\bin\Release\net8.0-windows10.0.26100.0\win-x64\TTTools.exe`。
+1. 双击桌面的 `TextTack` 快捷方式。也可运行项目根目录的 `Start-Thai.cmd`，或直接运行 `src\OverTranslate\bin\Release\net8.0-windows10.0.26100.0\win-x64\TextTack.exe`。
 2. 在截图翻译的源语言中明确选 **泰语 / Thai / TH**。`AUTO` 仍使用原来的中英日识别模型，不会自动切换泰语。
 3. 选择目标语言，例如简体中文；翻译服务选择 OpenAI。沿用原项目已有的 OpenAI 兼容接口、模型设置和逐块翻译流程。
 4. 测试版配置是新的独立配置。开发过程中没有读取、导入、复制或输出原安装的 API 密钥；需要真实服务测试时，由用户在测试版设置界面自行填写服务器、模型和密钥，不要把密钥发到聊天中。
@@ -29,7 +29,7 @@
 
 ### 模型规模与显卡（2026-11-04）
 
-启动入口：桌面的 `TT Tools` 快捷方式直接打开程序；项目根目录的 `Start-Thai.cmd` 保留给从源码构建时使用。固定程序目录为 `src/OverTranslate/bin/Release/net8.0-windows10.0.26100.0/win-x64/`，Windows 开机启动项 `TTTools` 指向其中的最新版 `TTTools.exe`（旧的 `OverTranslate-Thai-Dev` 启动项由程序自动迁移）。保留该目录原有的 `profile-thai` 配置；额外的 Debug、OCR 性能/界面构建副本及旧启动脚本已清理。更新前先检查进程；若程序仍在运行，必须请用户退出并等待，不强制结束、不另建输出目录绕过文件占用。
+启动入口：桌面的 `TextTack` 快捷方式直接打开程序；项目根目录的 `Start-Thai.cmd` 保留给从源码构建时使用。固定程序目录为 `src/OverTranslate/bin/Release/net8.0-windows10.0.26100.0/win-x64/`，Windows 开机启动项 `TextTack` 指向其中的最新版 `TextTack.exe`（旧的 `TTTools`、`OverTranslate-Thai-Dev` 启动项由程序自动迁移）。保留该目录原有的 `profile-thai` 配置；额外的 Debug、OCR 性能/界面构建副本及旧启动脚本已清理。更新前先检查进程；若程序仍在运行，必须请用户退出并等待，不强制结束、不另建输出目录绕过文件占用。
 
 在同一张 OCR 设置卡中可选择：
 

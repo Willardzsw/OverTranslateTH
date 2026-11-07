@@ -220,7 +220,8 @@
     <sys:String x:Key="S.Secret.Hide">ซ่อน</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">TT Tools ยังทำงานอยู่</sys:String>
+    <sys:String x:Key="S.App.Name">TextTack</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">TextTack ยังทำงานอยู่</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">ย่อไว้ที่ถาดระบบแล้ว กด {0} เพื่อเริ่มแปลภาพหน้าจอ</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">ปุ่มลัดของคุณ</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">ไม่มีคีย์ API</sys:String>

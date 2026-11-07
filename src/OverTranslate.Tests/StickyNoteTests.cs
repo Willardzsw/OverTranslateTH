@@ -42,6 +42,29 @@ public class StickyNoteTests
     }
 
     [Fact]
+    public void DefaultFolder_MovesTheFolderFromBeforeTheRename()
+    {
+        var documents = Path.Combine(Path.GetTempPath(), "tt-docs-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Assert.Equal(Path.Combine(documents, "TextTack"), StickyNoteArchive.ResolveDefaultFolder(documents));
+
+            var legacy = Directory.CreateDirectory(Path.Combine(documents, "TT Tools")).FullName;
+            File.WriteAllText(Path.Combine(legacy, StickyNoteArchive.FileName), "1 2026-01-02 03:04:05 old");
+
+            var folder = StickyNoteArchive.ResolveDefaultFolder(documents);
+
+            Assert.Equal(Path.Combine(documents, "TextTack"), folder);
+            Assert.False(Directory.Exists(legacy));
+            Assert.Equal("1 2026-01-02 03:04:05 old", File.ReadAllText(Path.Combine(folder, StickyNoteArchive.FileName)));
+        }
+        finally
+        {
+            if (Directory.Exists(documents)) Directory.Delete(documents, recursive: true);
+        }
+    }
+
+    [Fact]
     public void NextNumber_StartsAtOne_ForAMissingOrEmptyLog()
     {
         var path = Path.Combine(Path.GetTempPath(), "tt-missing-" + Guid.NewGuid().ToString("N") + ".log");

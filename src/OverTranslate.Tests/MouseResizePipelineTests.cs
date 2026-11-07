@@ -80,7 +80,7 @@ public class MouseResizePipelineTests
         {
             CreateHandle(new CreateParams
             {
-                Caption = "TT Tools mouse test",
+                Caption = "TextTack mouse test",
                 Style = unchecked((int)0x10CF0000), // WS_OVERLAPPEDWINDOW | WS_VISIBLE
                 ExStyle = 0x00000008, // WS_EX_TOPMOST
                 X = 200, Y = 200, Width = 600, Height = 400,

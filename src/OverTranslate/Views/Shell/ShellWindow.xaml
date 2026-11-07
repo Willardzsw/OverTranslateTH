@@ -12,7 +12,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:OverTranslate.Views.Shell"
         xmlns:settings="clr-namespace:OverTranslate.Views.Settings"
-        Title="TT Tools"
+        Title="{DynamicResource S.App.Name}"
         Width="1280" Height="760"
         MinWidth="1024" MinHeight="640"
         WindowStartupLocation="CenterScreen"
@@ -77,7 +77,7 @@
                        Margin="6,0,0,0"
                        VerticalAlignment="Center"
                        RenderOptions.BitmapScalingMode="HighQuality"/>
-                <TextBlock Text="TT Tools"
+                <TextBlock Text="{DynamicResource S.App.Name}"
                            FontFamily="{DynamicResource AppFont}"
                            FontSize="12"
                            Margin="8,0,0,0"
@@ -190,7 +190,7 @@
                     <StackPanel x:Name="BrandText"
                                 Grid.Row="0" Grid.Column="1"
                                 Margin="12,0,0,0">
-                        <TextBlock Text="TT Tools"
+                        <TextBlock Text="{DynamicResource S.App.Name}"
                                    FontFamily="{DynamicResource AppFont}"
                                    FontSize="15"
                                    FontWeight="SemiBold"

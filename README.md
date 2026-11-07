@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="docs/images/icon.svg" width="140" alt="TT Tools icon"/>
+  <img src="docs/images/icon.svg" width="140" alt="TextTack icon"/>
 </p>
 
-<h1 align="center">TT Tools</h1>
+<h1 align="center">TextTack 贴译</h1>
 
 <p align="center">带泰语 OCR 的 Windows 屏幕翻译工具</p>
 
@@ -28,8 +28,8 @@
 
 到 [Releases](https://github.com/Willardzsw/OverTranslateTH/releases/latest) 下载，需要 Windows 10/11 x64，不用另装 .NET：
 
-- **安装版** `TTTools-<版本>-win-x64-Setup.exe`：装到当前用户目录，不需要管理员权限。
-- **便携版** `TTTools-<版本>-win-x64-Portable.zip`：解压后运行 `TTTools.exe`。请解压到可写的文件夹，不要放进 `Program Files`。
+- **安装版** `TextTack-<版本>-win-x64-Setup.exe`：装到当前用户目录，不需要管理员权限。
+- **便携版** `TextTack-<版本>-win-x64-Portable.zip`：解压后运行 `TextTack.exe`。请解压到可写的文件夹，不要放进 `Program Files`。
 
 程序没有代码签名，Windows SmartScreen 可能提示“未知发布者”，可以选择“更多信息”“仍要运行”。程序不会自动更新，新版本需要手动下载；覆盖安装或替换程序文件时，请保留 `profile-thai` 文件夹。卸载时这个文件夹也会保留，其中含有你填写的 API 密钥，不再使用时请手动删除。
 

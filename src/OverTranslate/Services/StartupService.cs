@@ -6,17 +6,17 @@ namespace OverTranslate.Services;
 public static class StartupService
 {
     internal const string RunKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-    internal const string AppName = "TTTools";
+    internal const string AppName = "TextTack";
 
-    /// <summary>The entry's name before the program was renamed TT Tools.</summary>
-    internal const string LegacyAppName = "OverTranslate-Thai-Dev";
+    /// <summary>The entry's names from before the program was renamed TextTack, newest first.</summary>
+    internal static readonly string[] LegacyAppNames = ["TTTools", "OverTranslate-Thai-Dev"];
 
     public static bool IsEnabled
     {
         get
         {
             using var key = Registry.CurrentUser.OpenSubKey(RunKey, writable: false);
-            return key?.GetValue(AppName) is not null || key?.GetValue(LegacyAppName) is not null;
+            return key?.GetValue(AppName) is not null || HasLegacyEntry(key);
         }
     }
 
@@ -25,7 +25,8 @@ public static class StartupService
         using var key = Registry.CurrentUser.OpenSubKey(RunKey, writable: true);
         if (key is null) return;
 
-        key.DeleteValue(LegacyAppName, throwOnMissingValue: false);
+        foreach (var legacy in LegacyAppNames)
+            key.DeleteValue(legacy, throwOnMissingValue: false);
         if (enable)
         {
             var exePath = Environment.ProcessPath
@@ -48,7 +49,7 @@ public static class StartupService
         try
         {
             using var key = Registry.CurrentUser.OpenSubKey(RunKey, writable: false);
-            if (key?.GetValue(LegacyAppName) is null) return;
+            if (!HasLegacyEntry(key)) return;
         }
         catch
         {
@@ -57,5 +58,8 @@ public static class StartupService
 
         Set(true);
     }
+
+    private static bool HasLegacyEntry(RegistryKey? key) =>
+        key is not null && LegacyAppNames.Any(name => key.GetValue(name) is not null);
 
 }

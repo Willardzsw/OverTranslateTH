@@ -31,7 +31,7 @@ internal static class RealtimePageLayout
             {
                 settings.UiLanguage = language;
                 var resources = Application.Current.Resources.MergedDictionaries;
-                resources[2] = new ResourceDictionary { Source = new Uri($"pack://application:,,,/TTTools;component/Resources/Strings.{language}.xaml") };
+                resources[2] = new ResourceDictionary { Source = new Uri($"pack://application:,,,/TextTack;component/Resources/Strings.{language}.xaml") };
 
                 var page = new RealtimePage();
                 var size = new Size(900, 900);

@@ -91,9 +91,30 @@ public static class StickyNoteArchive
 {
     public const string FileName = "StickyNotes.log";
 
-    /// <summary>Documents\TT Tools.</summary>
-    public static string DefaultFolder =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TT Tools");
+    /// <summary>
+    /// Documents\TextTack. The folder from before the rename (Documents\TT Tools) is moved here the
+    /// first time it is needed; if that move fails, the old folder keeps being used so no note is lost.
+    /// </summary>
+    public static string DefaultFolder => DefaultFolderLazy.Value;
+
+    private static readonly Lazy<string> DefaultFolderLazy = new(() =>
+        ResolveDefaultFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)));
+
+    internal static string ResolveDefaultFolder(string documents)
+    {
+        var current = Path.Combine(documents, "TextTack");
+        var legacy = Path.Combine(documents, "TT Tools");
+        if (Directory.Exists(current) || !Directory.Exists(legacy)) return current;
+        try
+        {
+            Directory.Move(legacy, current);
+            return current;
+        }
+        catch
+        {
+            return legacy;
+        }
+    }
 
     public static string FolderFor(StickyNoteSettings s) =>
         string.IsNullOrWhiteSpace(s.ArchiveFolder) ? DefaultFolder : s.ArchiveFolder;

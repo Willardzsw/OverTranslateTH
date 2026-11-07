@@ -17,10 +17,10 @@ internal static class NotificationIdentityService
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    internal const string Aumid = "Willardzsw.TTTools";
-    internal const string LegacyAumid = "Willardzsw.OverTranslateTH";
+    internal const string Aumid = "Willardzsw.TextTack";
+    internal static readonly string[] LegacyAumids = ["Willardzsw.TTTools", "Willardzsw.OverTranslateTH"];
     internal const string AumidKeyPath = @"Software\Classes\AppUserModelId";
-    internal const string DisplayName = "TT Tools";
+    internal const string DisplayName = "TextTack";
 
     /// <summary>The application icon, shipped beside the executable for this alone.</summary>
     internal const string IconRelativePath = @"icons\app.ico";
@@ -33,8 +33,9 @@ internal static class NotificationIdentityService
             Marshal.ThrowExceptionForHR(SetCurrentProcessExplicitAppUserModelID(Aumid));
             using var root = Registry.CurrentUser.CreateSubKey(AumidKeyPath);
             Write(root, Aumid, Path.Combine(AppContext.BaseDirectory, IconRelativePath));
-            // The registration from before the rename to TT Tools.
-            root.DeleteSubKeyTree(LegacyAumid, throwOnMissingSubKey: false);
+            // The registrations from before the rename to TextTack.
+            foreach (var legacy in LegacyAumids)
+                root.DeleteSubKeyTree(legacy, throwOnMissingSubKey: false);
         }
         catch (Exception ex)
         {

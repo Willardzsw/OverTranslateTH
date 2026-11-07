@@ -276,7 +276,7 @@ public static class LocalizationService
                     var loaded = new ResourceDictionary
                     {
                         Source = new Uri(
-                            "pack://application:,,,/TTTools;component/Resources/Strings.zh-Hant.xaml",
+                            "pack://application:,,,/TextTack;component/Resources/Strings.zh-Hant.xaml",
                             UriKind.Absolute)
                     };
 

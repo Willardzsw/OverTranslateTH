@@ -37,7 +37,7 @@ public class NotificationIdentityTests : IDisposable
         Assert.True(NotificationIdentityService.Write(_root, NotificationIdentityService.Aumid, @"C:\Apps\TH\icons\app.ico"));
 
         using var key = _root.OpenSubKey(NotificationIdentityService.Aumid)!;
-        Assert.Equal("TT Tools", key.GetValue("DisplayName"));
+        Assert.Equal("TextTack", key.GetValue("DisplayName"));
         Assert.Equal(@"C:\Apps\TH\icons\app.ico", key.GetValue("IconUri"));
     }
 

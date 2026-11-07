@@ -229,7 +229,8 @@
     <sys:String x:Key="S.Secret.Hide">숨기기</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">TT Tools가 실행 중입니다</sys:String>
+    <sys:String x:Key="S.App.Name">TextTack</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">TextTack가 실행 중입니다</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">시스템 트레이로 최소화했습니다. {0} 키로 캡처 번역을 시작할 수 있습니다.</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">설정한 단축키</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">API 키가 없습니다</sys:String>

@@ -225,7 +225,8 @@
     <sys:String x:Key="S.Secret.Hide">隐藏内容</sys:String>
 
     <!-- ── Tray notifications and capture balloons ── -->
-    <sys:String x:Key="S.Main.MinimizedTitle">TT Tools 已最小化</sys:String>
+    <sys:String x:Key="S.App.Name">TextTack 贴译</sys:String>
+    <sys:String x:Key="S.Main.MinimizedTitle">TextTack 已最小化</sys:String>
     <sys:String x:Key="S.Main.MinimizedBody">程序已最小化到系统托盘，可使用 {0} 开始进行截图翻译。</sys:String>
     <sys:String x:Key="S.Main.DefaultShortcutName">已设置的快捷键</sys:String>
     <sys:String x:Key="S.Main.MissingApiKeyTitle">缺少 API Key</sys:String>

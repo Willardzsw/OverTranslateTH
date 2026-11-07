@@ -18,7 +18,7 @@ internal static class DebugPanelLayout
         {
             Application.Current.Resources.MergedDictionaries[0] = new ResourceDictionary
             {
-                Source = new Uri($"pack://application:,,,/TTTools;component/Themes/{theme}Theme.xaml")
+                Source = new Uri($"pack://application:,,,/TextTack;component/Themes/{theme}Theme.xaml")
             };
             var toolbar = new ToolbarWindow(0, 0, 680, 100, "EN", "ZH-HANT");
             try
